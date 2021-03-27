@@ -2,6 +2,14 @@
 
     <PropertyGroup>
         <TargetFramework>net35</TargetFramework>
+        <DebugType>embedded</DebugType>
+        <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <OutputPath>C:\games\Koikatu\BepInEx\plugins</OutputPath>
     </PropertyGroup>
 
     <ItemGroup>
