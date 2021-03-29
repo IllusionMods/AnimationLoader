@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Xml.Serialization;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,28 +23,58 @@ namespace AnimationLoader.Koikatu
         public const string GUID = "SwapAnim";
         public const string Version = "1.0.0";
 
-        private Harmony harmony;
-        private static Dictionary<EMode, List<SwapAnimationInfo>> AnimationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
+        private const string ManifestRootElement = "AnimationLoader";
+        private const string ManifestArrayItem = "Animation";
+
+        private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
         private static SwapAnimationInfo swapAnimationInfo;
         private static List<HSceneProc.AnimationListInfo>[] lstAnimInfo;
         private static PositionCategory category;
 
         private void Awake()
         {
-            harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
+            Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
         }
 
-        private void OnDestroy()
+        private void Start()
         {
-            harmony.UnpatchAll(nameof(SwapAnim));
+            var animationElements = Sideloader.Sideloader.Manifests.Values
+                .Select(x => x.manifestDocument?.Root?.Element(ManifestRootElement))
+                .Where(x => x != null)
+                .SelectMany(x => x.Elements(ManifestArrayItem));
+            
+            foreach(var animElem in animationElements)
+            {
+                var reader = animElem.CreateReader();
+                var serializer = new XmlSerializer(typeof(SwapAnimationInfo));
+                var data = (SwapAnimationInfo)serializer.Deserialize(reader);
+                reader.Close();
+                            
+                if(!animationDict.TryGetValue(data.Mode, out var list))
+                    animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
+                list.Add(data);
+            }
         }
-        
+
 #if DEBUG
         private void Update()
         {
             if(Input.GetKeyDown(KeyCode.RightControl))
             {
-                Init();
+                Logger.LogMessage("Loading json data");
+                LoadJson();
+            }
+        }
+
+        private static void LoadJson()
+        {
+            animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
+            foreach(var f in new DirectoryInfo("anim_imports").GetFiles("*.json"))
+            {
+                var sai = JsonUtility.FromJson<SwapAnimationInfo>(File.ReadAllText(f.FullName));
+                if(!animationDict.TryGetValue(sai.Mode, out var list))
+                    animationDict[sai.Mode] = list = new List<SwapAnimationInfo>();
+                list.Add(sai);
             }
         }
 #endif
@@ -101,7 +132,7 @@ namespace AnimationLoader.Koikatu
             glg.constraintCount = 15;
             glg.childAlignment = TextAnchor.UpperRight;
 
-            if(!AnimationDict.TryGetValue(first.mode, out var swapAnimations)) return;
+            if(!animationDict.TryGetValue(first.mode, out var swapAnimations)) return;
 
             foreach(var anim in swapAnimations.Where(x => (int)x.kindHoushi == first.kindHoushi && (!x.categories.Any() || x.categories.Contains(category))))
             {
@@ -149,14 +180,12 @@ namespace AnimationLoader.Koikatu
         {
             if(swapAnimationInfo == null) return;
 
-            var abF = AssetBundle.LoadFromFile(swapAnimationInfo.PathFemale);
-            var racF = abF.LoadAllAssets<RuntimeAnimatorController>().First(x => x.animationClips.Length > 0 && x.animationClips[0] != null && !string.IsNullOrEmpty(x.animationClips[0].name)); //thanks omega/katarsys
-            abF.Unload(false);
-
-            var abM = AssetBundle.LoadFromFile(swapAnimationInfo.PathMale);
-            var racM = abM.LoadAllAssets<RuntimeAnimatorController>().First(x => x.animationClips.Length > 0 && x.animationClips[0] != null && !string.IsNullOrEmpty(x.animationClips[0].name)); //thanks omega/katarsys
-            abM.Unload(false);
-
+            var racF = AssetBundleManager.LoadAllAsset(swapAnimationInfo.PathFemale, typeof(RuntimeAnimatorController)).GetAllAssets<RuntimeAnimatorController>()
+                .First(x => x.animationClips.Length > 0 && x.animationClips[0] != null && !string.IsNullOrEmpty(x.animationClips[0].name));
+            
+            var racM = AssetBundleManager.LoadAllAsset(swapAnimationInfo.PathMale, typeof(RuntimeAnimatorController)).GetAllAssets<RuntimeAnimatorController>()
+                .First(x => x.animationClips.Length > 0 && x.animationClips[0] != null && !string.IsNullOrEmpty(x.animationClips[0].name));
+            
             var t_hsp = Traverse.Create(Singleton<HSceneProc>.Instance);
 
             var female = t_hsp.Field<List<ChaControl>>("lstFemale").Value[0];
@@ -185,24 +214,7 @@ namespace AnimationLoader.Koikatu
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "CreateAllAnimationList")]
         private static void post_HSceneProc_CreateAllAnimationList(HSceneProc __instance)
         {
-            Init();
-        }
-
-        private static void Init()
-        {
-            // "master" list, can we still use this term
             lstAnimInfo = Traverse.Create(Singleton<HSceneProc>.Instance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
-
-            AnimationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
-
-            //todo: manifests
-            foreach(var f in new DirectoryInfo("anim_imports").GetFiles("*.json"))
-            {
-                var sai = JsonUtility.FromJson<SwapAnimationInfo>(File.ReadAllText(f.FullName));
-                if(!AnimationDict.TryGetValue(sai.Mode, out var list))
-                    AnimationDict[sai.Mode] = list = new List<SwapAnimationInfo>();
-                list.Add(sai);
-            }
         }
 
         private static AnimatorOverrideController SetupAnimatorOverrideController(RuntimeAnimatorController src, RuntimeAnimatorController over)
@@ -218,16 +230,26 @@ namespace AnimationLoader.Koikatu
             return aoc;
         }
         
+        [XmlRoot("Animation")]
+        [Serializable]
         public class SwapAnimationInfo
         {
+            [XmlElement]
             public string PathFemale;
+            [XmlElement]
             public string PathMale;
 
+            [XmlElement]
             public string AnimationName;
 
+            [XmlElement]
             public EMode Mode;
+            [XmlElement]
             public KindHoushi kindHoushi;
+            [XmlArray]
+            [XmlArrayItem("category", Type = typeof(PositionCategory))]
             public PositionCategory[] categories;
+            [XmlElement]
             public int DonorPoseId;
         }
 
