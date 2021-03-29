@@ -21,62 +21,32 @@ namespace AnimationLoader.Koikatu
     {
         public const string GUID = "SwapAnim";
         public const string Version = "1.0.0";
-    
-        // void Awake()
-        // {
-        //     var nai = Singleton<HSceneProc>.Instance.flags.nowAnimationInfo;
-        //     Console.WriteLine($"{nai.id}, {nai.mode}, {nai.nameAnimation}, {nai.posture}, {nai.numCtrl}, {nai.kindHoushi}, {nai}");
-        //     var lstAnimInfo = Traverse.Create(Singleton<HSceneProc>.Instance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
-        //     for (var i = 0; i < 10; i++)
-        //     {
-        //         File.WriteAllLines($"lst{i}.txt", lstAnimInfo[i].Select(x => $"{x.id}, {x.mode}, {x.nameAnimation}, {x.posture}, {x.numCtrl}, {x.kindHoushi}, {x}").ToArray());
-        //     }
-        // }
 
-        public class SwapAnimationInfo
-        {
-            public string PathFemale;
-            public string PathMale;
-
-            public string AnimationName;
-
-            public EMode Mode;
-            public KindHoushi kindHoushi;
-            public PositionCategory[] categories;
-            public int DonorPoseId;
-        }
-
-        public enum KindHoushi
-        {
-            Hand = 0,
-            Mouth = 1,
-            Breasts = 2
-        }
-
-        public enum PositionCategory
-        {
-            LieDown = 0,
-            Stand = 1,
-            SitChair = 2,
-            Stool = 3,
-            SofaBench = 4,
-            BacklessBench = 5,
-            SchoolDesk = 6,
-            Desk = 7,
-            Wall = 8,
-            StandPool = 9,
-            SitDesk = 10,
-            SquadDesk = 11,
-        }
-
-        private readonly Harmony hi = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
-        private void OnDestroy() => hi.UnpatchAll(nameof(SwapAnim));
-
+        private Harmony harmony;
         private static Dictionary<EMode, List<SwapAnimationInfo>> AnimationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
         private static SwapAnimationInfo swapAnimationInfo;
         private static List<HSceneProc.AnimationListInfo>[] lstAnimInfo;
-
         private static PositionCategory category;
+
+        private void Awake()
+        {
+            harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
+        }
+
+        private void OnDestroy()
+        {
+            harmony.UnpatchAll(nameof(SwapAnim));
+        }
+        
+#if DEBUG
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.RightControl))
+            {
+                Init();
+            }
+        }
+#endif
 
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "ChangeAnimator")]
         private static void post_HSceneProc_ChangeAnimator(HSceneProc.AnimationListInfo _nextAinmInfo)
@@ -218,16 +188,6 @@ namespace AnimationLoader.Koikatu
             Init();
         }
 
-#if DEBUG
-        private void Update()
-        {
-            if(Input.GetKeyDown(KeyCode.RightControl))
-            {
-                Init();
-            }
-        }
-#endif
-
         private static void Init()
         {
             // "master" list, can we still use this term
@@ -256,6 +216,42 @@ namespace AnimationLoader.Koikatu
                 aoc[ac.name] = ac;
             aoc.name = over.name;
             return aoc;
+        }
+        
+        public class SwapAnimationInfo
+        {
+            public string PathFemale;
+            public string PathMale;
+
+            public string AnimationName;
+
+            public EMode Mode;
+            public KindHoushi kindHoushi;
+            public PositionCategory[] categories;
+            public int DonorPoseId;
+        }
+
+        public enum KindHoushi
+        {
+            Hand = 0,
+            Mouth = 1,
+            Breasts = 2
+        }
+
+        public enum PositionCategory
+        {
+            LieDown = 0,
+            Stand = 1,
+            SitChair = 2,
+            Stool = 3,
+            SofaBench = 4,
+            BacklessBench = 5,
+            SchoolDesk = 6,
+            Desk = 7,
+            Wall = 8,
+            StandPool = 9,
+            SitDesk = 10,
+            SquadDesk = 11,
         }
     }
 }
