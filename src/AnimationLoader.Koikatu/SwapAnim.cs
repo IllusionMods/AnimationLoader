@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
+using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using TMPro;
 using UnityEngine;
@@ -25,6 +27,7 @@ namespace AnimationLoader.Koikatu
 
         private const string ManifestRootElement = "AnimationLoader";
         private const string ManifestArrayItem = "Animation";
+        private static readonly XmlSerializer xmlSerializer = new XmlSerializer(typeof(SwapAnimationInfo));
 
         private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
         private static SwapAnimationInfo swapAnimationInfo;
@@ -46,8 +49,7 @@ namespace AnimationLoader.Koikatu
             foreach(var animElem in animationElements)
             {
                 var reader = animElem.CreateReader();
-                var serializer = new XmlSerializer(typeof(SwapAnimationInfo));
-                var data = (SwapAnimationInfo)serializer.Deserialize(reader);
+                var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
                 reader.Close();
                             
                 if(!animationDict.TryGetValue(data.Mode, out var list))
@@ -61,20 +63,29 @@ namespace AnimationLoader.Koikatu
         {
             if(Input.GetKeyDown(KeyCode.RightControl))
             {
-                Logger.LogMessage("Loading json data");
-                LoadJson();
+                Logger.LogMessage("Loading testing animations");
+                LoadLooseXml();
             }
         }
 
-        private static void LoadJson()
+        private static void LoadLooseXml()
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
-            foreach(var f in new DirectoryInfo("anim_imports").GetFiles("*.json"))
+
+            var path = Path.Combine(Paths.ConfigPath, "AnimationLoader.xml");
+
+            var doc = XDocument.Load(path);
+            var animationElements = doc.Root?.Element(ManifestRootElement).Elements(ManifestArrayItem);
+            
+            foreach(var animElem in animationElements)
             {
-                var sai = JsonUtility.FromJson<SwapAnimationInfo>(File.ReadAllText(f.FullName));
-                if(!animationDict.TryGetValue(sai.Mode, out var list))
-                    animationDict[sai.Mode] = list = new List<SwapAnimationInfo>();
-                list.Add(sai);
+                var reader = animElem.CreateReader();
+                var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
+                reader.Close();
+                            
+                if(!animationDict.TryGetValue(data.Mode, out var list))
+                    animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
+                list.Add(data);
             }
         }
 #endif
@@ -142,13 +153,13 @@ namespace AnimationLoader.Koikatu
 
                 aic.info = Clone_AnimationListInfo(lstAnimInfo[(int)first.mode].First(x => x.id == anim.DonorPoseId));
 
-                var label = btn.transform.Find("TextMeshPro Text").GetComponent<TextMeshProUGUI>();
+                var label = btn.GetComponentInChildren<TextMeshProUGUI>();
 
                 var image = btn.transform.FindLoop("Background").gameObject.GetComponent<Image>();
-                image.color = new Color(0.7f, 0.9f, 1); //TODO: customise
+                image.color = new Color(0.96f, 1f, 0.9f);
 
                 label.text = anim.AnimationName;
-                label.color = new Color(0.5f, 0.5f, 1f); //TODO: customise
+                label.color = Color.black;
 
                 //TODO: wat
                 var tgl = btn.GetComponent<Toggle>();
@@ -181,10 +192,10 @@ namespace AnimationLoader.Koikatu
             if(swapAnimationInfo == null) return;
 
             var racF = AssetBundleManager.LoadAllAsset(swapAnimationInfo.PathFemale, typeof(RuntimeAnimatorController)).GetAllAssets<RuntimeAnimatorController>()
-                .First(x => x.animationClips.Length > 0 && x.animationClips[0] != null && !string.IsNullOrEmpty(x.animationClips[0].name));
+                .FirstOrDefault(x => x.animationClips.Length > 0 && x.animationClips[0] != null && !string.IsNullOrEmpty(x.animationClips[0].name));
             
             var racM = AssetBundleManager.LoadAllAsset(swapAnimationInfo.PathMale, typeof(RuntimeAnimatorController)).GetAllAssets<RuntimeAnimatorController>()
-                .First(x => x.animationClips.Length > 0 && x.animationClips[0] != null && !string.IsNullOrEmpty(x.animationClips[0].name));
+                .FirstOrDefault(x => x.animationClips.Length > 0 && x.animationClips[0] != null && !string.IsNullOrEmpty(x.animationClips[0].name));
             
             var t_hsp = Traverse.Create(Singleton<HSceneProc>.Instance);
 
@@ -193,7 +204,9 @@ namespace AnimationLoader.Koikatu
             ////TODO: lstFemale[1], male1
 
             female.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(female.animBody.runtimeAnimatorController, racF);
-            male.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(male.animBody.runtimeAnimatorController, racM);
+            
+            if(racM != null)
+                male.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(male.animBody.runtimeAnimatorController, racM);
 
             var mi = t_hsp.Field<List<MotionIK>>("lstMotionIK").Value;
             mi.ForEach(mik => mik.Release());
@@ -274,6 +287,7 @@ namespace AnimationLoader.Koikatu
             StandPool = 9,
             SitDesk = 10,
             SquadDesk = 11,
+            Ground3P = 1100,
         }
     }
 }
