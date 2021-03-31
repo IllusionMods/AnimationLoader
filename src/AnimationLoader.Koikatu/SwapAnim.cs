@@ -164,10 +164,10 @@ namespace AnimationLoader.Koikatu
                 var label = btn.GetComponentInChildren<TextMeshProUGUI>();
 
                 var image = btn.transform.FindLoop("Background").gameObject.GetComponent<Image>();
-                image.color = new Color(0.96f, 1f, 0.9f);
+                image.color = new Color(0.95f, 1f, 0.90f);
 
                 label.text = anim.AnimationName;
-                label.color = Color.black;
+                label.color = Color.white;
 
                 //TODO: wat
                 var tgl = btn.GetComponent<Toggle>();
