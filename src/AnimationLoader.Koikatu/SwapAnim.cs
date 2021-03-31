@@ -23,7 +23,7 @@ namespace AnimationLoader.Koikatu
     public class SwapAnim : BaseUnityPlugin
     {
         public const string GUID = "SwapAnim";
-        public const string Version = "1.0.1";
+        public const string Version = "1.0.2";
 
         private const string ManifestRootElement = "AnimationLoader";
         private const string ManifestArrayItem = "Animation";
@@ -33,10 +33,18 @@ namespace AnimationLoader.Koikatu
         private static SwapAnimationInfo swapAnimationInfo;
         private static List<HSceneProc.AnimationListInfo>[] lstAnimInfo;
         private static PositionCategory category;
+        private static readonly Type vrType = Type.GetType("VRHScene, Assembly-CSharp");
 
         private void Awake()
         {
-            Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
+            var harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
+
+            if(vrType != null)
+            {
+                harmony.Patch(AccessTools.Method(vrType, "ChangeAnimator"), postfix: new HarmonyMethod(AccessTools.Method(typeof(SwapAnim), nameof(post_HSceneProc_ChangeAnimator))));
+                harmony.Patch(AccessTools.Method(vrType, "ChangeCategory"), prefix: new HarmonyMethod(AccessTools.Method(typeof(SwapAnim), nameof(pre_HSceneProc_ChangeCategory))));
+                harmony.Patch(AccessTools.Method(vrType, "CreateAllAnimationList"), postfix: new HarmonyMethod(AccessTools.Method(typeof(SwapAnim), nameof(post_HSceneProc_CreateAllAnimationList))));
+            }
         }
 
         private void Start()
@@ -169,7 +177,8 @@ namespace AnimationLoader.Koikatu
 
                 //todo: hide all new indicators?
                 var newIndicator = btn.transform.FindLoop("New");
-                newIndicator.SetActive(false);
+                if(newIndicator != null)
+                    newIndicator.SetActive(false);
 
                 btn.GetComponent<PointerAction>().listClickAction.Add(() =>
                 {
@@ -197,7 +206,8 @@ namespace AnimationLoader.Koikatu
             var racM = AssetBundleManager.LoadAllAsset(swapAnimationInfo.PathMale, typeof(RuntimeAnimatorController)).GetAllAssets<RuntimeAnimatorController>()
                 .FirstOrDefault(x => x.animationClips.Length > 0 && x.animationClips[0] != null && !string.IsNullOrEmpty(x.animationClips[0].name));
             
-            var t_hsp = Traverse.Create(Singleton<HSceneProc>.Instance);
+            var instance = vrType == null ? Singleton<HSceneProc>.Instance : FindObjectOfType(vrType);
+            var t_hsp = Traverse.Create(instance);
 
             var female = t_hsp.Field<List<ChaControl>>("lstFemale").Value[0];
             var male = t_hsp.Field<ChaControl>("male").Value;
@@ -227,7 +237,8 @@ namespace AnimationLoader.Koikatu
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "CreateAllAnimationList")]
         private static void post_HSceneProc_CreateAllAnimationList(HSceneProc __instance)
         {
-            lstAnimInfo = Traverse.Create(Singleton<HSceneProc>.Instance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
+            var instance = vrType == null ? Singleton<HSceneProc>.Instance : FindObjectOfType(vrType);
+            lstAnimInfo = Traverse.Create(instance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
         }
 
         private static AnimatorOverrideController SetupAnimatorOverrideController(RuntimeAnimatorController src, RuntimeAnimatorController over)
