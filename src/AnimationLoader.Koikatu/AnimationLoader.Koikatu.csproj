@@ -18,4 +18,5 @@
       <PackageReference Include="Sideloader.Koikatu" Version="16.2.1" />
     </ItemGroup>
 
+    <Import Project="..\SkipAllRefs.targets" />
 </Project>
