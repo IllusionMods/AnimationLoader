@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
-using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using Illusion.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,7 +29,7 @@ namespace AnimationLoader.Koikatu
         private const string ManifestArrayItem = "Animation";
         private static readonly XmlSerializer xmlSerializer = new XmlSerializer(typeof(SwapAnimationInfo));
 
-        private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
+        private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
         private static SwapAnimationInfo swapAnimationInfo;
         private static List<HSceneProc.AnimationListInfo>[] lstAnimInfo;
         private static PositionCategory category;
@@ -54,16 +54,7 @@ namespace AnimationLoader.Koikatu
                 .Where(x => x != null)
                 .SelectMany(x => x.Elements(ManifestArrayItem));
             
-            foreach(var animElem in animationElements)
-            {
-                var reader = animElem.CreateReader();
-                var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
-                reader.Close();
-                            
-                if(!animationDict.TryGetValue(data.Mode, out var list))
-                    animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
-                list.Add(data);
-            }
+            LoadXmlAnimations(animationElements);
         }
 
 #if DEBUG
@@ -71,19 +62,25 @@ namespace AnimationLoader.Koikatu
         {
             if(Input.GetKeyDown(KeyCode.RightControl))
             {
-                Logger.LogMessage("Loading testing animations");
-                LoadLooseXml();
+                var path = Path.Combine(Paths.ConfigPath, "AnimationLoader.xml");
+                if(File.Exists(path))
+                {
+                    Logger.LogMessage("Loading test animations");
+                    var doc = XDocument.Load(path);
+                    var animationElements = doc.Root?.Element(ManifestRootElement).Elements(ManifestArrayItem);
+                    LoadXmlAnimations(animationElements);
+                }
+                else
+                {
+                    Logger.LogMessage("Place AnimationLoader.xml in the config folder to test animations");
+                }
             }
         }
+#endif
 
-        private static void LoadLooseXml()
+        private void LoadXmlAnimations(IEnumerable<XElement> animationElements)
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
-
-            var path = Path.Combine(Paths.ConfigPath, "AnimationLoader.xml");
-
-            var doc = XDocument.Load(path);
-            var animationElements = doc.Root?.Element(ManifestRootElement).Elements(ManifestArrayItem);
             
             foreach(var animElem in animationElements)
             {
@@ -96,7 +93,6 @@ namespace AnimationLoader.Koikatu
                 list.Add(data);
             }
         }
-#endif
 
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "ChangeAnimator")]
         private static void post_HSceneProc_ChangeAnimator(HSceneProc.AnimationListInfo _nextAinmInfo)
@@ -108,12 +104,6 @@ namespace AnimationLoader.Koikatu
         private static void pre_HSceneProc_ChangeCategory(int _category)
         {
             category = (PositionCategory)_category;
-        }
-
-        //todo: not this
-        private static HSceneProc.AnimationListInfo Clone_AnimationListInfo(HSceneProc.AnimationListInfo orig)
-        {
-            return JsonUtility.FromJson<HSceneProc.AnimationListInfo>(JsonUtility.ToJson(orig));
         }
 
         [HarmonyTranspiler, HarmonyPatch(typeof(HSprite), "OnChangePlaySelect")]
@@ -159,7 +149,7 @@ namespace AnimationLoader.Koikatu
                 var btn = Instantiate(__instance.objMotionListNode, _objParent.transform, false);
                 var aic = btn.AddComponent<HSprite.AnimationInfoComponent>();
 
-                aic.info = Clone_AnimationListInfo(lstAnimInfo[(int)first.mode].First(x => x.id == anim.DonorPoseId));
+                aic.info = lstAnimInfo[(int)first.mode].First(x => x.id == anim.DonorPoseId).DeepCopy();
 
                 var label = btn.GetComponentInChildren<TextMeshProUGUI>();
 
