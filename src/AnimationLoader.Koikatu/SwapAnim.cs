@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using BepInEx.Logging;
 using Illusion.Extensions;
 using TMPro;
 using UnityEngine;
@@ -25,6 +26,8 @@ namespace AnimationLoader.Koikatu
         public const string GUID = "SwapAnim";
         public const string Version = "1.0.2";
 
+        private new static ManualLogSource Logger;
+
         private const string ManifestRootElement = "AnimationLoader";
         private const string ManifestArrayItem = "Animation";
         private static readonly XmlSerializer xmlSerializer = new XmlSerializer(typeof(SwapAnimationInfo));
@@ -37,6 +40,7 @@ namespace AnimationLoader.Koikatu
 
         private void Awake()
         {
+            Logger = base.Logger;
             var harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
 
             if(vrType != null)
@@ -126,8 +130,8 @@ namespace AnimationLoader.Koikatu
         [HarmonyPostfix, HarmonyPatch(typeof(HSprite), "LoadMotionList")]
         private static void post_HSprite_LoadMotionList(HSprite __instance, List<HSceneProc.AnimationListInfo> _lstAnimInfo, GameObject _objParent)
         {
-            if(_lstAnimInfo == null || _lstAnimInfo.Count == 0) return;
-            var first = _lstAnimInfo[0];
+            if(_lstAnimInfo == null || _lstAnimInfo.Count == 0)
+                return;
 
             //TODO: scrollable list?
             DestroyImmediate(_objParent.GetComponent<VerticalLayoutGroup>());
@@ -140,17 +144,24 @@ namespace AnimationLoader.Koikatu
             glg.constraint = GridLayoutGroup.Constraint.FixedRowCount;
             glg.constraintCount = 15;
             glg.childAlignment = TextAnchor.UpperRight;
-
+            
+            var first = _lstAnimInfo[0];
             if(!animationDict.TryGetValue(first.mode, out var swapAnimations))
                 return;
 
             foreach(var anim in swapAnimations.Where(x => (int)x.kindHoushi == first.kindHoushi && (!x.categories.Any() || x.categories.Contains(category))))
             {
-                var tg = _objParent.GetComponent<ToggleGroup>();
+                var animListInfo = lstAnimInfo[(int)first.mode].FirstOrDefault(x => x.id == anim.DonorPoseId).DeepCopy();
+                if(animListInfo == null)
+                {
+                    Logger.LogWarning($"No donor: {anim.Mode} {anim.DonorPoseId}");
+                    continue;
+                }
+                
                 var btn = Instantiate(__instance.objMotionListNode, _objParent.transform, false);
+                
                 var aic = btn.AddComponent<HSprite.AnimationInfoComponent>();
-
-                aic.info = lstAnimInfo[(int)first.mode].First(x => x.id == anim.DonorPoseId).DeepCopy();
+                aic.info = animListInfo;
                 
                 if(anim.NeckDonorId != null && anim.NeckDonorId != anim.DonorPoseId)
                     aic.info.paramFemale.fileMotionNeck = lstAnimInfo[(int)first.mode].First(x => x.id == anim.NeckDonorId).paramFemale.fileMotionNeck;
@@ -158,15 +169,15 @@ namespace AnimationLoader.Koikatu
                 if(anim.IsFemaleInitiative != null)
                     aic.info.isFemaleInitiative = anim.IsFemaleInitiative.Value;
 
-                var label = btn.GetComponentInChildren<TextMeshProUGUI>();
-
                 var image = btn.transform.FindLoop("Background").gameObject.GetComponent<Image>();
                 image.color = new Color(0.96f, 1f, 0.9f);
 
+                var label = btn.GetComponentInChildren<TextMeshProUGUI>();
                 label.text = anim.AnimationName;
                 label.color = Color.black;
 
                 //TODO: wat
+                var tg = _objParent.GetComponent<ToggleGroup>();
                 var tgl = btn.GetComponent<Toggle>();
                 tgl.group = tg;
                 tgl.enabled = false;
