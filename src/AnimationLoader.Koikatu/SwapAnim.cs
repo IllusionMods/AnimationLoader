@@ -141,7 +141,8 @@ namespace AnimationLoader.Koikatu
             glg.constraintCount = 15;
             glg.childAlignment = TextAnchor.UpperRight;
 
-            if(!animationDict.TryGetValue(first.mode, out var swapAnimations)) return;
+            if(!animationDict.TryGetValue(first.mode, out var swapAnimations))
+                return;
 
             foreach(var anim in swapAnimations.Where(x => (int)x.kindHoushi == first.kindHoushi && (!x.categories.Any() || x.categories.Contains(category))))
             {
@@ -150,6 +151,12 @@ namespace AnimationLoader.Koikatu
                 var aic = btn.AddComponent<HSprite.AnimationInfoComponent>();
 
                 aic.info = lstAnimInfo[(int)first.mode].First(x => x.id == anim.DonorPoseId).DeepCopy();
+                
+                if(anim.NeckDonorId != null && anim.NeckDonorId != anim.DonorPoseId)
+                    aic.info.paramFemale.fileMotionNeck = lstAnimInfo[(int)first.mode].First(x => x.id == anim.NeckDonorId).paramFemale.fileMotionNeck;
+
+                if(anim.IsFemaleInitiative != null)
+                    aic.info.isFemaleInitiative = anim.IsFemaleInitiative.Value;
 
                 var label = btn.GetComponentInChildren<TextMeshProUGUI>();
 
@@ -263,8 +270,14 @@ namespace AnimationLoader.Koikatu
             [XmlArray]
             [XmlArrayItem("category", Type = typeof(PositionCategory))]
             public PositionCategory[] categories;
+            
             [XmlElement]
             public int DonorPoseId;
+            [XmlElement]
+            public int? NeckDonorId;
+
+            [XmlElement]
+            public bool? IsFemaleInitiative;
         }
 
         public enum KindHoushi
