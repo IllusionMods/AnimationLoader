@@ -20,11 +20,11 @@ using static HFlag;
 
 namespace AnimationLoader.Koikatu
 {
-    [BepInPlugin(GUID, "SwapAnim", Version)]
+    [BepInPlugin(GUID, "Animation Loader", Version)]
     public class SwapAnim : BaseUnityPlugin
     {
         public const string GUID = "SwapAnim";
-        public const string Version = "1.0.2";
+        public const string Version = "1.0.3";
 
         private new static ManualLogSource Logger;
 
@@ -76,7 +76,7 @@ namespace AnimationLoader.Koikatu
                 }
                 else
                 {
-                    Logger.LogMessage("Place AnimationLoader.xml in the config folder to test animations");
+                    Logger.LogMessage("Make a manifest format AnimationLoader.xml in the config folder to test animations");
                 }
             }
         }
@@ -151,8 +151,8 @@ namespace AnimationLoader.Koikatu
 
             foreach(var anim in swapAnimations.Where(x => (int)x.kindHoushi == first.kindHoushi && (!x.categories.Any() || x.categories.Contains(category))))
             {
-                var animListInfo = lstAnimInfo[(int)first.mode].FirstOrDefault(x => x.id == anim.DonorPoseId).DeepCopy();
-                if(animListInfo == null)
+                var donorInfo = lstAnimInfo[(int)first.mode].FirstOrDefault(x => x.id == anim.DonorPoseId).DeepCopy();
+                if(donorInfo == null)
                 {
                     Logger.LogWarning($"No donor: {anim.Mode} {anim.DonorPoseId}");
                     continue;
@@ -161,7 +161,7 @@ namespace AnimationLoader.Koikatu
                 var btn = Instantiate(__instance.objMotionListNode, _objParent.transform, false);
                 
                 var aic = btn.AddComponent<HSprite.AnimationInfoComponent>();
-                aic.info = animListInfo;
+                aic.info = donorInfo;
                 
                 if(anim.NeckDonorId != null && anim.NeckDonorId != anim.DonorPoseId)
                     aic.info.paramFemale.fileMotionNeck = lstAnimInfo[(int)first.mode].First(x => x.id == anim.NeckDonorId).paramFemale.fileMotionNeck;
@@ -206,7 +206,8 @@ namespace AnimationLoader.Koikatu
 
         private static void SwapAnimation()
         {
-            if(swapAnimationInfo == null) return;
+            if(swapAnimationInfo == null)
+                return;
 
             var racF = AssetBundleManager.LoadAllAsset(swapAnimationInfo.PathFemale, typeof(RuntimeAnimatorController)).GetAllAssets<RuntimeAnimatorController>()
                 .FirstOrDefault(x => x.animationClips.Length > 0 && x.animationClips[0] != null && !string.IsNullOrEmpty(x.animationClips[0].name));
