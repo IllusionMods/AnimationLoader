@@ -41,8 +41,8 @@ namespace AnimationLoader.Koikatu
         private void Awake()
         {
             Logger = base.Logger;
+            
             var harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
-
             if(vrType != null)
             {
                 harmony.Patch(AccessTools.Method(vrType, "ChangeAnimator"), postfix: new HarmonyMethod(AccessTools.Method(typeof(SwapAnim), nameof(post_HSceneProc_ChangeAnimator))));
@@ -53,39 +53,39 @@ namespace AnimationLoader.Koikatu
 
         private void Start()
         {
-            var animationElements = Sideloader.Sideloader.Manifests.Values
-                .Select(x => x.manifestDocument?.Root?.Element(ManifestRootElement))
-                .Where(x => x != null)
-                .SelectMany(x => x.Elements(ManifestArrayItem));
-            
-            LoadXmlAnimations(animationElements);
+            LoadXmls(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
         }
 
 #if DEBUG
         private void Update()
         {
             if(Input.GetKeyDown(KeyCode.RightControl))
+                LoadTestXml();
+        }
+
+        private void LoadTestXml()
+        {
+            var path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
+            if(Directory.Exists(path))
             {
-                var path = Path.Combine(Paths.ConfigPath, "AnimationLoader.xml");
-                if(File.Exists(path))
+                var docs = Directory.GetFiles(path, "*.xml").Select(XDocument.Load).ToList();
+                if(docs.Count > 0)
                 {
                     Logger.LogMessage("Loading test animations");
-                    var doc = XDocument.Load(path);
-                    var animationElements = doc.Root?.Element(ManifestRootElement).Elements(ManifestArrayItem);
-                    LoadXmlAnimations(animationElements);
-                }
-                else
-                {
-                    Logger.LogMessage("Make a manifest format AnimationLoader.xml in the config folder to test animations");
+                    LoadXmls(docs);
+                    return;
                 }
             }
+            
+            Logger.LogMessage("Make a manifest format .xml in the config/AnimationLoader folder to test animations");
         }
 #endif
 
-        private void LoadXmlAnimations(IEnumerable<XElement> animationElements)
+        private void LoadXmls(IEnumerable<XDocument> documents)
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
-            
+
+            var animationElements = documents.Select(x => x.Root?.Element(ManifestRootElement)).Where(x => x != null).SelectMany(x => x.Elements(ManifestArrayItem));
             foreach(var animElem in animationElements)
             {
                 var reader = animElem.CreateReader();
@@ -158,32 +158,29 @@ namespace AnimationLoader.Koikatu
                     continue;
                 }
                 
-                var btn = Instantiate(__instance.objMotionListNode, _objParent.transform, false);
-                
-                var aic = btn.AddComponent<HSprite.AnimationInfoComponent>();
-                aic.info = donorInfo;
-                
                 if(anim.NeckDonorId != null && anim.NeckDonorId != anim.DonorPoseId)
-                    aic.info.paramFemale.fileMotionNeck = lstAnimInfo[(int)first.mode].First(x => x.id == anim.NeckDonorId).paramFemale.fileMotionNeck;
+                    donorInfo.paramFemale.fileMotionNeck = lstAnimInfo[(int)first.mode].First(x => x.id == anim.NeckDonorId).paramFemale.fileMotionNeck;
 
+                if(anim.FileMotionNeck != null)
+                    donorInfo.paramFemale.fileMotionNeck = anim.FileMotionNeck;
+                
                 if(anim.IsFemaleInitiative != null)
-                    aic.info.isFemaleInitiative = anim.IsFemaleInitiative.Value;
-
-                var image = btn.transform.FindLoop("Background").gameObject.GetComponent<Image>();
-                image.color = new Color(0.96f, 1f, 0.9f);
+                    donorInfo.isFemaleInitiative = anim.IsFemaleInitiative.Value;
+                
+                var btn = Instantiate(__instance.objMotionListNode, _objParent.transform, false);
+                btn.AddComponent<HSprite.AnimationInfoComponent>().info = donorInfo;
+                btn.transform.FindLoop("Background").GetComponent<Image>().color = new Color(0.96f, 1f, 0.9f);
 
                 var label = btn.GetComponentInChildren<TextMeshProUGUI>();
                 label.text = anim.AnimationName;
                 label.color = Color.black;
 
                 //TODO: wat
-                var tg = _objParent.GetComponent<ToggleGroup>();
                 var tgl = btn.GetComponent<Toggle>();
-                tgl.group = tg;
+                tgl.group = _objParent.GetComponent<ToggleGroup>();
                 tgl.enabled = false;
                 tgl.enabled = true;
 
-                //todo: hide all new indicators?
                 var newIndicator = btn.transform.FindLoop("New");
                 if(newIndicator != null)
                     newIndicator.SetActive(false);
@@ -198,8 +195,9 @@ namespace AnimationLoader.Koikatu
                         __instance.OnChangePlaySelect(btn);
                     }
                 });
+                
                 btn.SetActive(true);
-                if(__instance.flags.nowAnimationInfo == aic.info)
+                if(__instance.flags.nowAnimationInfo == donorInfo)
                     btn.GetComponent<Toggle>().isOn = true;
             }
         }
@@ -252,7 +250,9 @@ namespace AnimationLoader.Koikatu
 
         private static AnimatorOverrideController SetupAnimatorOverrideController(RuntimeAnimatorController src, RuntimeAnimatorController over)
         {
-            if(src == null || over == null) return null;
+            if(src == null || over == null)
+                return null;
+            
             var aoc = new AnimatorOverrideController(src);
             var target = new AnimatorOverrideController(over);
             foreach(var ac in src.animationClips.Where(x => x != null)) //thanks omega/katarsys
@@ -269,6 +269,7 @@ namespace AnimationLoader.Koikatu
         {
             [XmlElement]
             public string PathFemale;
+            
             [XmlElement]
             public string PathMale;
 
@@ -277,16 +278,22 @@ namespace AnimationLoader.Koikatu
 
             [XmlElement]
             public EMode Mode;
+            
             [XmlElement]
             public KindHoushi kindHoushi;
+            
             [XmlArray]
             [XmlArrayItem("category", Type = typeof(PositionCategory))]
-            public PositionCategory[] categories;
+            public PositionCategory[] categories = new PositionCategory[0];
             
             [XmlElement]
             public int DonorPoseId;
+            
             [XmlElement]
             public int? NeckDonorId;
+            
+            [XmlElement]
+            public string FileMotionNeck;
 
             [XmlElement]
             public bool? IsFemaleInitiative;
