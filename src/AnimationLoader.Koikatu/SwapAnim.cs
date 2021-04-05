@@ -38,6 +38,14 @@ namespace AnimationLoader.Koikatu
         private static PositionCategory category;
         private static readonly Type vrType = Type.GetType("VRHScene, Assembly-CSharp");
 
+        private static readonly Dictionary<string, string> SiruPasteFiles = new Dictionary<string, string>
+        {
+            {"Butt", "siru_t_khs_n06"},
+            {"FaceTits", "siru_t_khh_32"},
+            {"TitsPussy", "siru_t_khs_n07"},
+            {"Tits", "siru_t_khh_11"},
+        };
+
         private void Awake()
         {
             Logger = base.Logger;
@@ -166,6 +174,9 @@ namespace AnimationLoader.Koikatu
                 
                 if(anim.IsFemaleInitiative != null)
                     donorInfo.isFemaleInitiative = anim.IsFemaleInitiative.Value;
+
+                if(anim.FileSiruPaste != null && SiruPasteFiles.TryGetValue(anim.FileSiruPaste, out var fileSiruPaste))
+                    donorInfo.paramFemale.fileSiruPaste = fileSiruPaste;
                 
                 var btn = Instantiate(__instance.objMotionListNode, _objParent.transform, false);
                 btn.AddComponent<HSprite.AnimationInfoComponent>().info = donorInfo;
@@ -297,6 +308,9 @@ namespace AnimationLoader.Koikatu
 
             [XmlElement]
             public bool? IsFemaleInitiative;
+
+            [XmlElement]
+            public string FileSiruPaste;
         }
 
         public enum KindHoushi
