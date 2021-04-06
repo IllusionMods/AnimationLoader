@@ -40,10 +40,12 @@ namespace AnimationLoader.Koikatu
 
         private static readonly Dictionary<string, string> SiruPasteFiles = new Dictionary<string, string>
         {
-            {"Butt", "siru_t_khs_n06"},
-            {"FaceTits", "siru_t_khh_32"},
-            {"TitsPussy", "siru_t_khs_n07"},
-            {"Tits", "siru_t_khh_11"},
+            {"", ""},
+            {"butt", "siru_t_khs_n06"},
+            {"facetits", "siru_t_khh_32"},
+            {"titspussy", "siru_t_khs_n07"},
+            {"tits", "siru_t_khh_11"},
+            {"pussy", "siru_t_khs_n07"}, // have to make this manually, for now copy TitsPussy
         };
 
         private void Awake()
@@ -175,7 +177,7 @@ namespace AnimationLoader.Koikatu
                 if(anim.IsFemaleInitiative != null)
                     donorInfo.isFemaleInitiative = anim.IsFemaleInitiative.Value;
 
-                if(anim.FileSiruPaste != null && SiruPasteFiles.TryGetValue(anim.FileSiruPaste, out var fileSiruPaste))
+                if(anim.FileSiruPaste != null && SiruPasteFiles.TryGetValue(anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
                     donorInfo.paramFemale.fileSiruPaste = fileSiruPaste;
                 
                 var btn = Instantiate(__instance.objMotionListNode, _objParent.transform, false);
