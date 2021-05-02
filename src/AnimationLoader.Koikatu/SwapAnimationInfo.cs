@@ -9,9 +9,15 @@ namespace AnimationLoader.Koikatu
     {
         [XmlElement]
         public string PathFemale;
+
+        [XmlElement]
+        public string ControllerFemale;
         
         [XmlElement]
         public string PathMale;
+
+        [XmlElement]
+        public string ControllerMale;
 
         [XmlElement]
         public string AnimationName;
