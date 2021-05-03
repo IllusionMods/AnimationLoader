@@ -140,20 +140,32 @@ namespace AnimationLoader.Koikatu
         [HarmonyPostfix, HarmonyPatch(typeof(HSprite), "LoadMotionList")]
         private static void post_HSprite_LoadMotionList(HSprite __instance, List<HSceneProc.AnimationListInfo> _lstAnimInfo, GameObject _objParent)
         {
+            var elements = _objParent.transform.Cast<Transform>().ToList();
+
+            var go = DefaultControls.CreateScrollView(new DefaultControls.Resources());
+            go.name = $"ScrollView ({_objParent.name})";
+            go.transform.SetParent(_objParent.transform, false);
+            
+            var scroll = go.GetComponent<ScrollRect>();
+            scroll.horizontal = false;
+            scroll.scrollSensitivity = 40f;
+            scroll.movementType = ScrollRect.MovementType.Clamped;
+            scroll.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+            scroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+            DestroyImmediate(scroll.GetComponent<Image>());
+            DestroyImmediate(scroll.horizontalScrollbar.gameObject);
+            DestroyImmediate(scroll.verticalScrollbar.gameObject);
+            
+            scroll.gameObject.AddComponent<LayoutElement>();
+
+            CopyComponent(_objParent.GetComponent<VerticalLayoutGroup>(), scroll.content.gameObject);
+            CopyComponent(_objParent.GetComponent<ContentSizeFitter>(), scroll.content.gameObject);
+            
+            foreach(var item in elements)
+                item.SetParent(scroll.content);
+            
             if(_lstAnimInfo == null || _lstAnimInfo.Count == 0)
                 return;
-
-            //TODO: scrollable list?
-            DestroyImmediate(_objParent.GetComponent<VerticalLayoutGroup>());
-            DestroyImmediate(_objParent.GetComponent<GridLayoutGroup>());
-            DestroyImmediate(_objParent.GetComponent<ContentSizeFitter>());
-            var glg = _objParent.AddComponent<GridLayoutGroup>();
-            glg.cellSize = new Vector2(200, 35);
-            glg.startAxis = GridLayoutGroup.Axis.Vertical;
-            glg.startCorner = GridLayoutGroup.Corner.UpperRight;
-            glg.constraint = GridLayoutGroup.Constraint.FixedRowCount;
-            glg.constraintCount = 15;
-            glg.childAlignment = TextAnchor.UpperRight;
             
             var first = _lstAnimInfo[0];
             if(!animationDict.TryGetValue(first.mode, out var swapAnimations))
@@ -180,7 +192,7 @@ namespace AnimationLoader.Koikatu
                 if(anim.FileSiruPaste != null && SiruPasteFiles.TryGetValue(anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
                     donorInfo.paramFemale.fileSiruPaste = fileSiruPaste;
                 
-                var btn = Instantiate(__instance.objMotionListNode, _objParent.transform, false);
+                var btn = Instantiate(__instance.objMotionListNode, scroll.content.gameObject.transform, false);
                 btn.AddComponent<HSprite.AnimationInfoComponent>().info = donorInfo;
                 btn.transform.FindLoop("Background").GetComponent<Image>().color = new Color(0.96f, 1f, 0.9f);
 
@@ -270,6 +282,26 @@ namespace AnimationLoader.Koikatu
                 aoc[ac.name] = ac;
             aoc.name = over.name;
             return aoc;
+        }
+        
+        private static T CopyComponent<T>(T original, GameObject destination) where T : Component
+        {
+            var type = original.GetType();
+            var dst = destination.GetComponent(type) as T;
+            if (!dst) dst = destination.AddComponent(type) as T;
+            var fields = type.GetFields();
+            foreach (var field in fields)
+            {
+                if (field.IsStatic) continue;
+                field.SetValue(dst, field.GetValue(original));
+            }
+            var props = type.GetProperties();
+            foreach (var prop in props)
+            {
+                if (!prop.CanWrite || !prop.CanWrite || prop.Name == "name") continue;
+                prop.SetValue(dst, prop.GetValue(original, null), null);
+            }
+            return dst;
         }
     }
 }
