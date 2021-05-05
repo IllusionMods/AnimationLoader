@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using BepInEx;
 using HarmonyLib;
 using IllusionUtility.GetUtility;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using Illusion.Extensions;
 using TMPro;
@@ -24,25 +26,31 @@ namespace AnimationLoader.Koikatu
     public class SwapAnim : BaseUnityPlugin
     {
         public const string GUID = "SwapAnim";
-        public const string Version = "1.0.3";
+        public const string Version = "1.0.4";
 
-        private new static ManualLogSource Logger;
+        private static ConfigEntry<bool> SortPositions { get; set; }
 
         private const string ManifestRootElement = "AnimationLoader";
         private const string ManifestArrayItem = "Animation";
         private static readonly XmlSerializer xmlSerializer = new XmlSerializer(typeof(SwapAnimationInfo));
 
+        private new static ManualLogSource Logger;
+        private static SwapAnim plugin;
+        
         private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
         private static SwapAnimationInfo swapAnimationInfo;
         private static List<HSceneProc.AnimationListInfo>[] lstAnimInfo;
         private static PositionCategory category;
         private static readonly Type vrType = Type.GetType("VRHScene, Assembly-CSharp");
+        private static readonly Color buttonColor = new Color(0.92f, 0.92f, 0.92f, 1f);
+        private static readonly Dictionary<GameObject, float> scrollPos = new Dictionary<GameObject, float>();
 
         private static readonly Dictionary<string, string> SiruPasteFiles = new Dictionary<string, string>
         {
             {"", ""},
             {"butt", "siru_t_khs_n06"},
             {"facetits", "siru_t_khh_32"},
+            {"facetitspussy", "siru_t_khh_32"}, // have to make this manually, for now copy FaceTits
             {"titspussy", "siru_t_khs_n07"},
             {"tits", "siru_t_khh_11"},
             {"pussy", "siru_t_khs_n07"}, // have to make this manually, for now copy TitsPussy
@@ -51,6 +59,9 @@ namespace AnimationLoader.Koikatu
         private void Awake()
         {
             Logger = base.Logger;
+            plugin = this;
+
+            SortPositions = Config.Bind("", nameof(SortPositions), true);
             
             var harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
             if(vrType != null)
@@ -140,32 +151,33 @@ namespace AnimationLoader.Koikatu
         [HarmonyPostfix, HarmonyPatch(typeof(HSprite), "LoadMotionList")]
         private static void post_HSprite_LoadMotionList(HSprite __instance, List<HSceneProc.AnimationListInfo> _lstAnimInfo, GameObject _objParent)
         {
-            var elements = _objParent.transform.Cast<Transform>().ToList();
+            if(_lstAnimInfo == null || _lstAnimInfo.Count == 0)
+                return;
+            
+            var buttons = _objParent.transform.Cast<Transform>().ToList();
 
             var go = DefaultControls.CreateScrollView(new DefaultControls.Resources());
-            go.name = $"ScrollView ({_objParent.name})";
             go.transform.SetParent(_objParent.transform, false);
-            
             var scroll = go.GetComponent<ScrollRect>();
             scroll.horizontal = false;
-            scroll.scrollSensitivity = 40f;
+            scroll.scrollSensitivity = 32f;
             scroll.movementType = ScrollRect.MovementType.Clamped;
             scroll.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
             scroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
-            DestroyImmediate(scroll.GetComponent<Image>());
             DestroyImmediate(scroll.horizontalScrollbar.gameObject);
             DestroyImmediate(scroll.verticalScrollbar.gameObject);
-            
-            scroll.gameObject.AddComponent<LayoutElement>();
+            DestroyImmediate(scroll.GetComponent<Image>());
+            scroll.viewport.sizeDelta = new Vector2(0, 56f);
 
-            CopyComponent(_objParent.GetComponent<VerticalLayoutGroup>(), scroll.content.gameObject);
-            CopyComponent(_objParent.GetComponent<ContentSizeFitter>(), scroll.content.gameObject);
+            var vlg = _objParent.GetComponent<VerticalLayoutGroup>();
+            var csf = _objParent.GetComponent<ContentSizeFitter>();
+            vlg.enabled = false;
+            csf.enabled = false;
+            CopyComponent(vlg, scroll.content.gameObject).enabled = true;
+            CopyComponent(csf, scroll.content.gameObject).enabled = true;
             
-            foreach(var item in elements)
-                item.SetParent(scroll.content);
+            buttons.ForEach(x => x.SetParent(scroll.content));
             
-            if(_lstAnimInfo == null || _lstAnimInfo.Count == 0)
-                return;
             
             var first = _lstAnimInfo[0];
             if(!animationDict.TryGetValue(first.mode, out var swapAnimations))
@@ -182,19 +194,16 @@ namespace AnimationLoader.Koikatu
                 
                 if(anim.NeckDonorId != null && anim.NeckDonorId != anim.DonorPoseId)
                     donorInfo.paramFemale.fileMotionNeck = lstAnimInfo[(int)first.mode].First(x => x.id == anim.NeckDonorId).paramFemale.fileMotionNeck;
-
                 if(anim.FileMotionNeck != null)
                     donorInfo.paramFemale.fileMotionNeck = anim.FileMotionNeck;
-                
                 if(anim.IsFemaleInitiative != null)
                     donorInfo.isFemaleInitiative = anim.IsFemaleInitiative.Value;
-
                 if(anim.FileSiruPaste != null && SiruPasteFiles.TryGetValue(anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
                     donorInfo.paramFemale.fileSiruPaste = fileSiruPaste;
                 
-                var btn = Instantiate(__instance.objMotionListNode, scroll.content.gameObject.transform, false);
+                var btn = Instantiate(__instance.objMotionListNode, scroll.content, false);
                 btn.AddComponent<HSprite.AnimationInfoComponent>().info = donorInfo;
-                btn.transform.FindLoop("Background").GetComponent<Image>().color = new Color(0.96f, 1f, 0.9f);
+                btn.transform.FindLoop("Background").GetComponent<Image>().color = buttonColor;
 
                 var label = btn.GetComponentInChildren<TextMeshProUGUI>();
                 label.text = anim.AnimationName;
@@ -206,24 +215,38 @@ namespace AnimationLoader.Koikatu
                 tgl.enabled = false;
                 tgl.enabled = true;
 
-                var newIndicator = btn.transform.FindLoop("New");
-                if(newIndicator != null)
-                    newIndicator.SetActive(false);
-
                 btn.GetComponent<PointerAction>().listClickAction.Add(() =>
                 {
-                    //var nai = __instance.flags.nowAnimationInfo;
-                    //force position change even if position appears to match. Prevents clicks from being eaten.
-                    //if (nai.mode != aic.info.mode || nai.id != aic.info.id)
-                    {
-                        swapAnimationInfo = anim;
-                        __instance.OnChangePlaySelect(btn);
-                    }
+                    swapAnimationInfo = anim;
+                    __instance.OnChangePlaySelect(btn);
                 });
                 
                 btn.SetActive(true);
                 if(__instance.flags.nowAnimationInfo == donorInfo)
                     btn.GetComponent<Toggle>().isOn = true;
+            }
+
+            // order all buttons by name and disable New
+            foreach(var t in scroll.content.Cast<Transform>().OrderBy(x => x.GetComponentInChildren<TextMeshProUGUI>().text))
+            {
+                var newT = t.FindLoop("New");
+                if(newT) newT.gameObject.SetActive(false);
+                
+                if(SortPositions.Value)
+                    t.SetAsLastSibling();
+            }
+            
+            // save scroll position;
+            if(scrollPos.TryGetValue(_objParent, out var val))
+                plugin.StartCoroutine(SetScrollPosition(val));
+            else
+                scrollPos.Add(_objParent, 0f);
+            scroll.onValueChanged.AddListener(v => scrollPos[_objParent] = v.y);
+
+            IEnumerator SetScrollPosition(float value)
+            {
+                yield return new WaitForEndOfFrame();
+                scroll.verticalNormalizedPosition = value;
             }
         }
 
