@@ -42,7 +42,7 @@ namespace AnimationLoader.Koikatu
         private static List<HSceneProc.AnimationListInfo>[] lstAnimInfo;
         private static PositionCategory category;
         private static readonly Type vrType = Type.GetType("VRHScene, Assembly-CSharp");
-        private static readonly Color buttonColor = new Color(0.92f, 0.92f, 0.92f, 1f);
+        private static readonly Color buttonColor = new Color(0.96f, 1f, 0.9f);
         private static readonly Dictionary<GameObject, float> scrollPos = new Dictionary<GameObject, float>();
 
         private static readonly Dictionary<string, string> SiruPasteFiles = new Dictionary<string, string>
