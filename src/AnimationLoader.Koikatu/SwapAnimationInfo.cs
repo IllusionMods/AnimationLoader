@@ -46,6 +46,9 @@ namespace AnimationLoader.Koikatu
 
         [XmlElement]
         public string FileSiruPaste;
+
+        [XmlElement]
+        public int? MotionIKDonor;
     }
 
     public enum KindHoushi
