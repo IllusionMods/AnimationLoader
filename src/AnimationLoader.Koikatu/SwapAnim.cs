@@ -66,7 +66,7 @@ namespace AnimationLoader.Koikatu
             var harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
             if(vrType != null)
             {
-                harmony.Patch(AccessTools.Method(vrType, "ChangeAnimator"), postfix: new HarmonyMethod(AccessTools.Method(typeof(SwapAnim), nameof(post_HSceneProc_ChangeAnimator))));
+                harmony.Patch(AccessTools.Method(vrType, "ChangeAnimator"), postfix: new HarmonyMethod(AccessTools.Method(typeof(SwapAnim), nameof(SwapAnimation))));
                 harmony.Patch(AccessTools.Method(vrType, "ChangeCategory"), prefix: new HarmonyMethod(AccessTools.Method(typeof(SwapAnim), nameof(pre_HSceneProc_ChangeCategory))));
                 harmony.Patch(AccessTools.Method(vrType, "CreateAllAnimationList"), postfix: new HarmonyMethod(AccessTools.Method(typeof(SwapAnim), nameof(post_HSceneProc_CreateAllAnimationList))));
             }
@@ -117,12 +117,6 @@ namespace AnimationLoader.Koikatu
                     animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
                 list.Add(data);
             }
-        }
-
-        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "ChangeAnimator")]
-        private static void post_HSceneProc_ChangeAnimator(HSceneProc.AnimationListInfo _nextAinmInfo)
-        {
-            SwapAnimation();
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "ChangeCategory")]
@@ -183,9 +177,10 @@ namespace AnimationLoader.Koikatu
             if(!animationDict.TryGetValue(first.mode, out var swapAnimations))
                 return;
 
+            var animListInfo = lstAnimInfo[(int)first.mode];
             foreach(var anim in swapAnimations.Where(x => (int)x.kindHoushi == first.kindHoushi && (!x.categories.Any() || x.categories.Contains(category))))
             {
-                var donorInfo = lstAnimInfo[(int)first.mode].FirstOrDefault(x => x.id == anim.DonorPoseId).DeepCopy();
+                var donorInfo = animListInfo.FirstOrDefault(x => x.id == anim.DonorPoseId).DeepCopy();
                 if(donorInfo == null)
                 {
                     Logger.LogWarning($"No donor: {anim.Mode} {anim.DonorPoseId}");
@@ -193,13 +188,15 @@ namespace AnimationLoader.Koikatu
                 }
                 
                 if(anim.NeckDonorId != null && anim.NeckDonorId != anim.DonorPoseId)
-                    donorInfo.paramFemale.fileMotionNeck = lstAnimInfo[(int)first.mode].First(x => x.id == anim.NeckDonorId).paramFemale.fileMotionNeck;
+                    donorInfo.paramFemale.fileMotionNeck = animListInfo.First(x => x.id == anim.NeckDonorId).paramFemale.fileMotionNeck;
                 if(anim.FileMotionNeck != null)
                     donorInfo.paramFemale.fileMotionNeck = anim.FileMotionNeck;
                 if(anim.IsFemaleInitiative != null)
                     donorInfo.isFemaleInitiative = anim.IsFemaleInitiative.Value;
                 if(anim.FileSiruPaste != null && SiruPasteFiles.TryGetValue(anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
                     donorInfo.paramFemale.fileSiruPaste = fileSiruPaste;
+                //if(anim.MotionIKDonor != null && anim.NeckDonorId != anim.DonorPoseId)
+                //    donorInfo.paramFemale.path.file = animListInfo.First(x => x.id == anim.MotionIKDonor).paramFemale.path.file;
                 
                 var btn = Instantiate(__instance.objMotionListNode, scroll.content, false);
                 btn.AddComponent<HSprite.AnimationInfoComponent>().info = donorInfo;
@@ -250,6 +247,7 @@ namespace AnimationLoader.Koikatu
             }
         }
 
+        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "ChangeAnimator")]
         private static void SwapAnimation()
         {
             if(swapAnimationInfo == null)
