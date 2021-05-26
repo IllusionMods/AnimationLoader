@@ -29,6 +29,7 @@ namespace AnimationLoader.Koikatu
         public const string Version = "1.0.4";
 
         private static ConfigEntry<bool> SortPositions { get; set; }
+        private static ConfigEntry<KeyboardShortcut> ReloadManifests { get; set; }
 
         private const string ManifestRootElement = "AnimationLoader";
         private const string ManifestArrayItem = "Animation";
@@ -61,7 +62,8 @@ namespace AnimationLoader.Koikatu
             Logger = base.Logger;
             plugin = this;
 
-            SortPositions = Config.Bind("", nameof(SortPositions), true);
+            SortPositions = Config.Bind("", nameof(SortPositions), true, new ConfigDescription("Sort positions alphabetically"));
+            ReloadManifests = Config.Bind("", nameof(ReloadManifests), new KeyboardShortcut(KeyCode.None), new ConfigDescription("Load positions from all manifest format xml files inside config/AnimationLoader folder"));
             
             var harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
             if(vrType != null)
@@ -77,10 +79,9 @@ namespace AnimationLoader.Koikatu
             LoadXmls(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
         }
 
-#if DEBUG
         private void Update()
         {
-            if(Input.GetKeyDown(KeyCode.RightControl))
+            if(ReloadManifests.Value.IsDown())
                 LoadTestXml();
         }
 
@@ -100,9 +101,8 @@ namespace AnimationLoader.Koikatu
             
             Logger.LogMessage("Make a manifest format .xml in the config/AnimationLoader folder to test animations");
         }
-#endif
 
-        private void LoadXmls(IEnumerable<XDocument> documents)
+        private static void LoadXmls(IEnumerable<XDocument> documents)
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
 
