@@ -85,7 +85,7 @@ namespace AnimationLoader.Koikatu
                 LoadTestXml();
         }
 
-        private void LoadTestXml()
+        private static void LoadTestXml()
         {
             var path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
             if(Directory.Exists(path))
@@ -233,7 +233,8 @@ namespace AnimationLoader.Koikatu
                     t.SetAsLastSibling();
             }
             
-            // save scroll position;
+            // save scroll position, disabled for now because its trash
+            /*
             if(scrollPos.TryGetValue(_objParent, out var val))
                 plugin.StartCoroutine(SetScrollPosition(val));
             else
@@ -245,6 +246,7 @@ namespace AnimationLoader.Koikatu
                 yield return new WaitForEndOfFrame();
                 scroll.verticalNormalizedPosition = value;
             }
+            */
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "ChangeAnimator")]
