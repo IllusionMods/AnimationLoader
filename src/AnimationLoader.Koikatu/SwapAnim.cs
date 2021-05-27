@@ -3,7 +3,6 @@ using System.Collections;
 using BepInEx;
 using HarmonyLib;
 using IllusionUtility.GetUtility;
-using SceneAssist;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,6 +12,7 @@ using System.Xml.Serialization;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using Illusion.Extensions;
+using Studio;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -325,6 +325,55 @@ namespace AnimationLoader.Koikatu
                 prop.SetValue(dst, prop.GetValue(original, null), null);
             }
             return dst;
+        }
+
+        [HarmonyPostfix, HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]
+        private static void LoadStudioAnims(Studio.Info __instance, ref IEnumerator __result)
+        {
+            __result = __result.AppendCo(() =>
+            {
+                int grpId = 999;
+                foreach(var keyVal in animationDict)
+                {
+                    CreateGroup(0);
+                    CreateGroup(1);
+
+                    void CreateGroup(byte sex)
+                    {
+                        var grp = new Info.GroupInfo{ name = $"AL {(sex == 0 ? "M" : "F")} {keyVal.Key}" };
+                        __instance.dicAGroupCategory.Add(grpId, grp);
+                        var animGrp = new Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>();
+                        __instance.dicAnimeLoadInfo.Add(grpId++, animGrp);
+            
+                        int catId = 0;
+                        foreach(var swapAnimInfo in keyVal.Value)
+                        {
+                            grp.dicCategory.Add(catId, swapAnimInfo.AnimationName);
+                            var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
+                            animGrp.Add(catId++, animCat);
+
+                            var path = sex == 0 ? swapAnimInfo.PathMale : swapAnimInfo.PathFemale;
+                            var ctrl = sex == 0 ? swapAnimInfo.ControllerMale : swapAnimInfo.ControllerFemale;
+                
+                            var controller = AssetBundleManager.LoadAsset(path, ctrl, typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
+                            if(controller != null)
+                            {
+                                var clips = controller.animationClips;
+                                for(int i = 0; i < clips.Length; i++)
+                                {
+                                    animCat.Add(i, new Info.AnimeLoadInfo
+                                    {
+                                        name = clips[i].name,
+                                        bundlePath = path,
+                                        fileName = ctrl,
+                                        clip = clips[i].name,
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
     }
 }
