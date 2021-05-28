@@ -212,7 +212,7 @@ namespace AnimationLoader.Koikatu
                 tgl.enabled = false;
                 tgl.enabled = true;
 
-                btn.GetComponent<PointerAction>().listClickAction.Add(() =>
+                btn.GetComponent<SceneAssist.PointerAction>().listClickAction.Add(() =>
                 {
                     swapAnimationInfo = anim;
                     __instance.OnChangePlaySelect(btn);
