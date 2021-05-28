@@ -26,7 +26,7 @@ namespace AnimationLoader.Koikatu
     public class SwapAnim : BaseUnityPlugin
     {
         public const string GUID = "SwapAnim";
-        public const string Version = "1.0.4";
+        public const string Version = "1.0.5";
 
         private static ConfigEntry<bool> SortPositions { get; set; }
         private static ConfigEntry<KeyboardShortcut> ReloadManifests { get; set; }
