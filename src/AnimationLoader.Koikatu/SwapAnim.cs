@@ -27,10 +27,12 @@ namespace AnimationLoader.Koikatu
     public class SwapAnim : BaseUnityPlugin
     {
         public const string GUID = "SwapAnim";
-        public const string Version = "1.0.5";
+        public const string Version = "1.0.6";
 
         private static ConfigEntry<bool> SortPositions { get; set; }
+        private static ConfigEntry<bool> UseGrid { get; set; }
         private static ConfigEntry<KeyboardShortcut> ReloadManifests { get; set; }
+        private const string GeneralSection = "General";
 
         private const string ManifestRootElement = "AnimationLoader";
         private const string ManifestArrayItem = "Animation";
@@ -63,8 +65,9 @@ namespace AnimationLoader.Koikatu
             Logger = base.Logger;
             plugin = this;
 
-            SortPositions = Config.Bind("", nameof(SortPositions), true, new ConfigDescription("Sort positions alphabetically"));
-            ReloadManifests = Config.Bind("", nameof(ReloadManifests), new KeyboardShortcut(KeyCode.None), new ConfigDescription("Load positions from all manifest format xml files inside config/AnimationLoader folder"));
+            SortPositions = Config.Bind(GeneralSection, nameof(SortPositions), true, new ConfigDescription("Sort positions alphabetically"));
+            ReloadManifests = Config.Bind(GeneralSection, nameof(ReloadManifests), new KeyboardShortcut(KeyCode.None), new ConfigDescription("Load positions from all manifest format xml files inside config/AnimationLoader folder"));
+            UseGrid = Config.Bind(GeneralSection, nameof(UseGrid), false, new ConfigDescription("If you don't want to use the scrollable list for some reason"));
             
             var harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
             if(vrType != null)
@@ -150,30 +153,50 @@ namespace AnimationLoader.Koikatu
         {
             if(_lstAnimInfo == null || _lstAnimInfo.Count == 0)
                 return;
-            
-            var buttons = _objParent.transform.Cast<Transform>().ToList();
 
-            var go = DefaultControls.CreateScrollView(new DefaultControls.Resources());
-            go.transform.SetParent(_objParent.transform, false);
-            var scroll = go.GetComponent<ScrollRect>();
-            scroll.horizontal = false;
-            scroll.scrollSensitivity = 32f;
-            scroll.movementType = ScrollRect.MovementType.Clamped;
-            scroll.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
-            scroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
-            DestroyImmediate(scroll.horizontalScrollbar.gameObject);
-            DestroyImmediate(scroll.verticalScrollbar.gameObject);
-            DestroyImmediate(scroll.GetComponent<Image>());
-            scroll.viewport.sizeDelta = new Vector2(0, 56f);
 
-            var vlg = _objParent.GetComponent<VerticalLayoutGroup>();
-            var csf = _objParent.GetComponent<ContentSizeFitter>();
-            vlg.enabled = false;
-            csf.enabled = false;
-            CopyComponent(vlg, scroll.content.gameObject).enabled = true;
-            CopyComponent(csf, scroll.content.gameObject).enabled = true;
+            var buttonParent = _objParent.transform;
+            if(UseGrid.Value)
+            {
+                DestroyImmediate(_objParent.GetComponent<VerticalLayoutGroup>());
+                DestroyImmediate(_objParent.GetComponent<GridLayoutGroup>());
+                DestroyImmediate(_objParent.GetComponent<ContentSizeFitter>());
+                var glg = _objParent.AddComponent<GridLayoutGroup>();
+                glg.cellSize = new Vector2(200, 35);
+                glg.startAxis = GridLayoutGroup.Axis.Vertical;
+                glg.startCorner = GridLayoutGroup.Corner.UpperRight;
+                glg.constraint = GridLayoutGroup.Constraint.FixedRowCount;
+                glg.constraintCount = 15;
+                glg.childAlignment = TextAnchor.UpperRight;
+            }
+            else
+            {
+                var buttons = _objParent.transform.Cast<Transform>().ToList();
+                
+                var go = DefaultControls.CreateScrollView(new DefaultControls.Resources());
+                go.transform.SetParent(_objParent.transform, false);
+                var scroll = go.GetComponent<ScrollRect>();
+                scroll.horizontal = false;
+                scroll.scrollSensitivity = 32f;
+                scroll.movementType = ScrollRect.MovementType.Clamped;
+                scroll.horizontalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+                scroll.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+                DestroyImmediate(scroll.horizontalScrollbar.gameObject);
+                DestroyImmediate(scroll.verticalScrollbar.gameObject);
+                DestroyImmediate(scroll.GetComponent<Image>());
+                scroll.viewport.sizeDelta = new Vector2(0, 56f);
+
+                var vlg = _objParent.GetComponent<VerticalLayoutGroup>();
+                var csf = _objParent.GetComponent<ContentSizeFitter>();
+                vlg.enabled = false;
+                csf.enabled = false;
+                CopyComponent(vlg, scroll.content.gameObject).enabled = true;
+                CopyComponent(csf, scroll.content.gameObject).enabled = true;
             
-            buttons.ForEach(x => x.SetParent(scroll.content));
+                buttons.ForEach(x => x.SetParent(scroll.content));
+
+                buttonParent = scroll.content;
+            }
             
             
             var first = _lstAnimInfo[0];
@@ -201,7 +224,7 @@ namespace AnimationLoader.Koikatu
                 //if(anim.MotionIKDonor != null && anim.NeckDonorId != anim.DonorPoseId)
                 //    donorInfo.paramFemale.path.file = animListInfo.First(x => x.id == anim.MotionIKDonor).paramFemale.path.file;
                 
-                var btn = Instantiate(__instance.objMotionListNode, scroll.content, false);
+                var btn = Instantiate(__instance.objMotionListNode, buttonParent, false);
                 btn.AddComponent<HSprite.AnimationInfoComponent>().info = donorInfo;
                 btn.transform.FindLoop("Background").GetComponent<Image>().color = buttonColor;
 
@@ -227,7 +250,7 @@ namespace AnimationLoader.Koikatu
             }
 
             // order all buttons by name and disable New
-            foreach(var t in scroll.content.Cast<Transform>().OrderBy(x => x.GetComponentInChildren<TextMeshProUGUI>().text))
+            foreach(var t in buttonParent.Cast<Transform>().OrderBy(x => x.GetComponentInChildren<TextMeshProUGUI>().text))
             {
                 var newT = t.FindLoop("New");
                 if(newT) newT.gameObject.SetActive(false);
