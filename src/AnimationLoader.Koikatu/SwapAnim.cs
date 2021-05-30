@@ -12,6 +12,7 @@ using System.Xml.Serialization;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using Illusion.Extensions;
+using Sideloader.AutoResolver;
 using Studio;
 using TMPro;
 using UnityEngine;
@@ -105,17 +106,19 @@ namespace AnimationLoader.Koikatu
         private static void LoadXmls(IEnumerable<XDocument> documents)
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
-
-            var animationElements = documents.Select(x => x.Root?.Element(ManifestRootElement)).Where(x => x != null).SelectMany(x => x.Elements(ManifestArrayItem));
-            foreach(var animElem in animationElements)
+            foreach(var manifest in documents.Select(x => x.Root?.Element(ManifestRootElement)).Where(x => x != null))
             {
-                var reader = animElem.CreateReader();
-                var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
-                reader.Close();
-                            
-                if(!animationDict.TryGetValue(data.Mode, out var list))
-                    animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
-                list.Add(data);
+                foreach(var animElem in manifest.Elements(ManifestArrayItem))
+                {
+                    var reader = animElem.CreateReader();
+                    var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
+                    reader.Close();
+                    data.Guid = manifest.Element("guid")?.Value;
+                                
+                    if(!animationDict.TryGetValue(data.Mode, out var list))
+                        animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
+                    list.Add(data);
+                }
             }
         }
 
@@ -343,14 +346,14 @@ namespace AnimationLoader.Koikatu
                         var grp = new Info.GroupInfo{ name = $"AL {(sex == 0 ? "M" : "F")} {keyVal.Key}" };
                         __instance.dicAGroupCategory.Add(grpId, grp);
                         var animGrp = new Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>();
-                        __instance.dicAnimeLoadInfo.Add(grpId++, animGrp);
+                        __instance.dicAnimeLoadInfo.Add(grpId, animGrp);
             
                         int catId = 0;
                         foreach(var swapAnimInfo in keyVal.Value)
                         {
                             grp.dicCategory.Add(catId, swapAnimInfo.AnimationName);
                             var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
-                            animGrp.Add(catId++, animCat);
+                            animGrp.Add(catId, animCat);
 
                             var path = sex == 0 ? swapAnimInfo.PathMale : swapAnimInfo.PathFemale;
                             var ctrl = sex == 0 ? swapAnimInfo.ControllerMale : swapAnimInfo.ControllerFemale;
@@ -361,7 +364,22 @@ namespace AnimationLoader.Koikatu
                                 var clips = controller.animationClips;
                                 for(int i = 0; i < clips.Length; i++)
                                 {
-                                    animCat.Add(i, new Info.AnimeLoadInfo
+                                    var CurrentSlotID = Traverse.Create(typeof(UniversalAutoResolver)).Field("CurrentSlotID");
+                                    var newSlot = CurrentSlotID.GetValue<int>() + 1;
+                                    CurrentSlotID.SetValue(newSlot);
+
+                                    var resolveInfo = new StudioResolveInfo
+                                    {
+                                        GUID = swapAnimInfo.Guid,
+                                        Slot = i,
+                                        ResolveItem = true,
+                                        LocalSlot = newSlot,
+                                        Group = grpId,
+                                        Category = catId
+                                    };
+                                    UniversalAutoResolver.LoadedStudioResolutionInfo.Add(resolveInfo);
+                                    
+                                    animCat.Add(newSlot, new Info.AnimeLoadInfo
                                     {
                                         name = clips[i].name,
                                         bundlePath = path,
@@ -370,7 +388,11 @@ namespace AnimationLoader.Koikatu
                                     });
                                 }
                             }
+
+                            catId++;
                         }
+
+                        grpId++;
                     }
                 }
             });
