@@ -9,6 +9,9 @@ namespace AnimationLoader.Koikatu
     {
         [XmlIgnore]
         public string Guid;
+
+        [XmlElement]
+        public int StudioId;
         
         [XmlElement]
         public string PathFemale;

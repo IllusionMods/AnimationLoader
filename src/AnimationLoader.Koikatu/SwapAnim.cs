@@ -380,12 +380,11 @@ namespace AnimationLoader.Koikatu
                         var animGrp = new Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>();
                         __instance.dicAnimeLoadInfo.Add(grpId, animGrp);
             
-                        int catId = 0;
                         foreach(var swapAnimInfo in keyVal.Value)
                         {
-                            grp.dicCategory.Add(catId, swapAnimInfo.AnimationName);
+                            grp.dicCategory.Add(swapAnimInfo.StudioId, swapAnimInfo.AnimationName);
                             var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
-                            animGrp.Add(catId, animCat);
+                            animGrp.Add(swapAnimInfo.StudioId, animCat);
 
                             var path = sex == 0 ? swapAnimInfo.PathMale : swapAnimInfo.PathFemale;
                             var ctrl = sex == 0 ? swapAnimInfo.ControllerMale : swapAnimInfo.ControllerFemale;
@@ -396,20 +395,17 @@ namespace AnimationLoader.Koikatu
                                 var clips = controller.animationClips;
                                 for(int i = 0; i < clips.Length; i++)
                                 {
-                                    var CurrentSlotID = Traverse.Create(typeof(UniversalAutoResolver)).Field("CurrentSlotID");
-                                    var newSlot = CurrentSlotID.GetValue<int>() + 1;
-                                    CurrentSlotID.SetValue(newSlot);
+                                    var newSlot = UniversalAutoResolver.IncrementCurrentSlotID();
 
-                                    var resolveInfo = new StudioResolveInfo
+                                    UniversalAutoResolver.LoadedStudioResolutionInfo.Add(new StudioResolveInfo
                                     {
                                         GUID = swapAnimInfo.Guid,
                                         Slot = i,
                                         ResolveItem = true,
                                         LocalSlot = newSlot,
                                         Group = grpId,
-                                        Category = catId
-                                    };
-                                    UniversalAutoResolver.LoadedStudioResolutionInfo.Add(resolveInfo);
+                                        Category = swapAnimInfo.StudioId
+                                    });
                                     
                                     animCat.Add(newSlot, new Info.AnimeLoadInfo
                                     {
@@ -420,8 +416,6 @@ namespace AnimationLoader.Koikatu
                                     });
                                 }
                             }
-
-                            catId++;
                         }
 
                         grpId++;
