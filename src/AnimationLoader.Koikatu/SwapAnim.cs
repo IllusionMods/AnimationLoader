@@ -106,21 +106,27 @@ namespace AnimationLoader.Koikatu
             Logger.LogMessage("Make a manifest format .xml in the config/AnimationLoader folder to test animations");
         }
 
-        private static void LoadXmls(IEnumerable<XDocument> documents)
+        private static void LoadXmls(IEnumerable<XDocument> manifests)
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
-            foreach(var manifest in documents.Select(x => x.Root?.Element(ManifestRootElement)).Where(x => x != null))
+            foreach(var manifest in manifests.Select(x => x.Root))
             {
-                foreach(var animElem in manifest.Elements(ManifestArrayItem))
+                var guid = manifest.Element("guid").Value;
+                var animRoot = manifest.Element(ManifestRootElement);
+
+                if(animRoot != null)
                 {
-                    var reader = animElem.CreateReader();
-                    var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
-                    reader.Close();
-                    data.Guid = manifest.Element("guid")?.Value;
-                                
-                    if(!animationDict.TryGetValue(data.Mode, out var list))
-                        animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
-                    list.Add(data);
+                    foreach(var animElem in animRoot.Elements(ManifestArrayItem))
+                    {
+                        var reader = animElem.CreateReader();
+                        var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
+                        data.Guid = guid;
+                        reader.Close();
+                        
+                        if(!animationDict.TryGetValue(data.Mode, out var list))
+                            animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
+                        list.Add(data);
+                    }
                 }
             }
         }
