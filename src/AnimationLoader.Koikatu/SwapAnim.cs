@@ -285,7 +285,7 @@ namespace AnimationLoader.Koikatu
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "ChangeAnimator")]
-        private static void SwapAnimation()
+        private static void SwapAnimation(object __instance)
         {
             if(swapAnimationInfo == null)
                 return;
@@ -293,9 +293,7 @@ namespace AnimationLoader.Koikatu
             var racF = AssetBundleManager.LoadAsset(swapAnimationInfo.PathFemale, swapAnimationInfo.ControllerFemale, typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
             var racM = AssetBundleManager.LoadAsset(swapAnimationInfo.PathMale, swapAnimationInfo.ControllerMale, typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
             
-            var instance = vrType == null ? Singleton<HSceneProc>.Instance : FindObjectOfType(vrType);
-            var t_hsp = Traverse.Create(instance);
-
+            var t_hsp = Traverse.Create(__instance);
             var female = t_hsp.Field<List<ChaControl>>("lstFemale").Value[0];
             var male = t_hsp.Field<ChaControl>("male").Value;
             ////TODO: lstFemale[1], male1
@@ -321,10 +319,9 @@ namespace AnimationLoader.Koikatu
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "CreateAllAnimationList")]
-        private static void post_HSceneProc_CreateAllAnimationList(HSceneProc __instance)
+        private static void post_HSceneProc_CreateAllAnimationList(object __instance)
         {
-            var instance = vrType == null ? Singleton<HSceneProc>.Instance : FindObjectOfType(vrType);
-            lstAnimInfo = Traverse.Create(instance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
+            lstAnimInfo = Traverse.Create(__instance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
         }
 
         private static AnimatorOverrideController SetupAnimatorOverrideController(RuntimeAnimatorController src, RuntimeAnimatorController over)
@@ -395,7 +392,7 @@ namespace AnimationLoader.Koikatu
                                 var clips = controller.animationClips;
                                 for(int i = 0; i < clips.Length; i++)
                                 {
-                                    var newSlot = UniversalAutoResolver.IncrementCurrentSlotID();
+                                    var newSlot = UniversalAutoResolver.GetUniqueSlotID();
 
                                     UniversalAutoResolver.LoadedStudioResolutionInfo.Add(new StudioResolveInfo
                                     {
