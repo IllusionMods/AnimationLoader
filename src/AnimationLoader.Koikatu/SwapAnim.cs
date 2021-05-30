@@ -172,7 +172,10 @@ namespace AnimationLoader.Koikatu
             else
             {
                 var buttons = _objParent.transform.Cast<Transform>().ToList();
-                
+
+                //var tex = new Texture2D(1, 1);
+                //tex.SetPixel(1, 1, Color.red);
+                //var sprite = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
                 var go = DefaultControls.CreateScrollView(new DefaultControls.Resources());
                 go.transform.SetParent(_objParent.transform, false);
                 var scroll = go.GetComponent<ScrollRect>();
