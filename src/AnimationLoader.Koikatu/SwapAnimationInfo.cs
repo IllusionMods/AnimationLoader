@@ -7,6 +7,9 @@ namespace AnimationLoader.Koikatu
     [Serializable]
     public class SwapAnimationInfo
     {
+        [XmlIgnore]
+        public string Guid;
+        
         [XmlElement]
         public string PathFemale;
 
