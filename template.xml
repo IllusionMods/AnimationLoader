@@ -10,9 +10,11 @@
 	<AnimationLoader>
 		<!-- Any number of animations can be contained in one zipmod -->
 		<Animation>
-			<!--Required - Path inside the zipmod to the assetbundle containing the female animation controller -->
+			<!-- Required - Any positive integer, should be unique within your mod -->
+			<StudioId>0</StudioId>
+			<!-- Required - Path inside the zipmod to the assetbundle containing the female animation controller -->
 			<PathFemale>anim_imports/kplug/female/02_40.unity3d</PathFemale>
-			<!--Required - Path inside the zipmod to the to assetbundle containing the male animation controller -->
+			<!-- Required - Path inside the zipmod to the to assetbundle containing the male animation controller -->
 			<PathMale>anim_imports/kplug/male/02_40.unity3d</PathMale>
 			<!-- Required - name of the female animation controller asset -->
 			<ControllerFemale>khh_f_60</ControllerFemale>
@@ -20,7 +22,7 @@
 			<ControllerMale>khh_m_60</ControllerMale>
 			<!-- Required - The name that is displayed in the animation list in game -->
 			<AnimationName>Name</AnimationName>
-			<!-- Required - The type of animation (see EMode enum below for possible values) -->
+			<!-- Required - The type of animation (see EMode enum below for possible values, only houshi and sonyu are supported at the moment for freeh) -->
 			<Mode>houshi</Mode>
 			<!-- Required if Mode is Houshi - The type of houshi animation (value can be Hand, Mouth or Breasts) -->
 			<kindHoushi>Hand</kindHoushi>
