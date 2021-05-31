@@ -11,7 +11,7 @@ namespace AnimationLoader.Koikatu
         public string Guid;
 
         [XmlElement]
-        public int StudioId;
+        public int StudioId = -1;
         
         [XmlElement]
         public string PathFemale;
@@ -42,7 +42,7 @@ namespace AnimationLoader.Koikatu
         public int DonorPoseId;
         
         [XmlElement]
-        public int? NeckDonorId;
+        public int NeckDonorId = -1;
         
         [XmlElement]
         public string FileMotionNeck;
@@ -54,7 +54,7 @@ namespace AnimationLoader.Koikatu
         public string FileSiruPaste;
 
         [XmlElement]
-        public int? MotionIKDonor;
+        public int MotionIKDonor = -1;
     }
 
     public enum KindHoushi
