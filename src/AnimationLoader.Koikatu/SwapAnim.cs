@@ -72,9 +72,9 @@ namespace AnimationLoader.Koikatu
             var harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
             if(vrType != null)
             {
-                harmony.Patch(AccessTools.Method(vrType, "ChangeAnimator"), postfix: new HarmonyMethod(AccessTools.Method(typeof(SwapAnim), nameof(SwapAnimation))));
-                harmony.Patch(AccessTools.Method(vrType, "ChangeCategory"), prefix: new HarmonyMethod(AccessTools.Method(typeof(SwapAnim), nameof(pre_HSceneProc_ChangeCategory))));
-                harmony.Patch(AccessTools.Method(vrType, "CreateAllAnimationList"), postfix: new HarmonyMethod(AccessTools.Method(typeof(SwapAnim), nameof(post_HSceneProc_CreateAllAnimationList))));
+                harmony.Patch(AccessTools.Method(vrType, "ChangeAnimator"), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(SwapAnimation)));
+                harmony.Patch(AccessTools.Method(vrType, "ChangeCategory"), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(ChangeCategory)));
+                harmony.Patch(AccessTools.Method(vrType, "CreateAllAnimationList"), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(RefreshAnimationList)));
             }
         }
 
@@ -113,32 +113,31 @@ namespace AnimationLoader.Koikatu
             {
                 var guid = manifest.Element("guid").Value;
                 var animRoot = manifest.Element(ManifestRootElement);
-
-                if(animRoot != null)
+                if(animRoot == null)
+                    continue;
+                
+                foreach(var animElem in animRoot.Elements(ManifestArrayItem))
                 {
-                    foreach(var animElem in animRoot.Elements(ManifestArrayItem))
-                    {
-                        var reader = animElem.CreateReader();
-                        var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
-                        data.Guid = guid;
-                        reader.Close();
+                    var reader = animElem.CreateReader();
+                    var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
+                    data.Guid = guid;
+                    reader.Close();
                         
-                        if(!animationDict.TryGetValue(data.Mode, out var list))
-                            animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
-                        list.Add(data);
-                    }
+                    if(!animationDict.TryGetValue(data.Mode, out var list))
+                        animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
+                    list.Add(data);
                 }
             }
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "ChangeCategory")]
-        private static void pre_HSceneProc_ChangeCategory(int _category)
+        private static void ChangeCategory(int _category)
         {
             category = (PositionCategory)_category;
         }
 
         [HarmonyTranspiler, HarmonyPatch(typeof(HSprite), "OnChangePlaySelect")]
-        private static IEnumerable<CodeInstruction> tpl_HSprite_OnChangePlaySelect(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> OnChangePlaySelect(IEnumerable<CodeInstruction> instructions)
         {
             //force position change even if position appears to match. Prevents clicks from being eaten.
             return new CodeMatcher(instructions)
@@ -155,7 +154,7 @@ namespace AnimationLoader.Koikatu
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(HSprite), "LoadMotionList")]
-        private static void post_HSprite_LoadMotionList(HSprite __instance, List<HSceneProc.AnimationListInfo> _lstAnimInfo, GameObject _objParent)
+        private static void LoadMotionList(HSprite __instance, List<HSceneProc.AnimationListInfo> _lstAnimInfo, GameObject _objParent)
         {
             if(_lstAnimInfo == null || _lstAnimInfo.Count == 0)
                 return;
@@ -222,7 +221,7 @@ namespace AnimationLoader.Koikatu
                     continue;
                 }
                 
-                if(anim.NeckDonorId != null && anim.NeckDonorId != anim.DonorPoseId)
+                if(anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
                     donorInfo.paramFemale.fileMotionNeck = animListInfo.First(x => x.id == anim.NeckDonorId).paramFemale.fileMotionNeck;
                 if(anim.FileMotionNeck != null)
                     donorInfo.paramFemale.fileMotionNeck = anim.FileMotionNeck;
@@ -230,7 +229,7 @@ namespace AnimationLoader.Koikatu
                     donorInfo.isFemaleInitiative = anim.IsFemaleInitiative.Value;
                 if(anim.FileSiruPaste != null && SiruPasteFiles.TryGetValue(anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
                     donorInfo.paramFemale.fileSiruPaste = fileSiruPaste;
-                //if(anim.MotionIKDonor != null && anim.NeckDonorId != anim.DonorPoseId)
+                //if(anim.MotionIKDonor >= 0 && anim.NeckDonorId != anim.DonorPoseId)
                 //    donorInfo.paramFemale.path.file = animListInfo.First(x => x.id == anim.MotionIKDonor).paramFemale.path.file;
                 
                 var btn = Instantiate(__instance.objMotionListNode, buttonParent, false);
@@ -319,7 +318,7 @@ namespace AnimationLoader.Koikatu
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "CreateAllAnimationList")]
-        private static void post_HSceneProc_CreateAllAnimationList(object __instance)
+        private static void RefreshAnimationList(object __instance)
         {
             lstAnimInfo = Traverse.Create(__instance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
         }
@@ -377,7 +376,7 @@ namespace AnimationLoader.Koikatu
                         var animGrp = new Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>();
                         __instance.dicAnimeLoadInfo.Add(grpId, animGrp);
             
-                        foreach(var swapAnimInfo in keyVal.Value)
+                        foreach(var swapAnimInfo in keyVal.Value.Where(x => x.StudioId >= 0))
                         {
                             grp.dicCategory.Add(swapAnimInfo.StudioId, swapAnimInfo.AnimationName);
                             var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
@@ -387,31 +386,31 @@ namespace AnimationLoader.Koikatu
                             var ctrl = sex == 0 ? swapAnimInfo.ControllerMale : swapAnimInfo.ControllerFemale;
                 
                             var controller = AssetBundleManager.LoadAsset(path, ctrl, typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
-                            if(controller != null)
+                            if(controller == null)
+                                continue;
+                            
+                            var clips = controller.animationClips;
+                            for(int i = 0; i < clips.Length; i++)
                             {
-                                var clips = controller.animationClips;
-                                for(int i = 0; i < clips.Length; i++)
-                                {
-                                    var newSlot = UniversalAutoResolver.GetUniqueSlotID();
+                                var newSlot = UniversalAutoResolver.GetUniqueSlotID();
 
-                                    UniversalAutoResolver.LoadedStudioResolutionInfo.Add(new StudioResolveInfo
-                                    {
-                                        GUID = swapAnimInfo.Guid,
-                                        Slot = i,
-                                        ResolveItem = true,
-                                        LocalSlot = newSlot,
-                                        Group = grpId,
-                                        Category = swapAnimInfo.StudioId
-                                    });
-                                    
-                                    animCat.Add(newSlot, new Info.AnimeLoadInfo
-                                    {
-                                        name = clips[i].name,
-                                        bundlePath = path,
-                                        fileName = ctrl,
-                                        clip = clips[i].name,
-                                    });
-                                }
+                                UniversalAutoResolver.LoadedStudioResolutionInfo.Add(new StudioResolveInfo
+                                {
+                                    GUID = swapAnimInfo.Guid,
+                                    Slot = i,
+                                    ResolveItem = true,
+                                    LocalSlot = newSlot,
+                                    Group = grpId,
+                                    Category = swapAnimInfo.StudioId
+                                });
+                                
+                                animCat.Add(newSlot, new Info.AnimeLoadInfo
+                                {
+                                    name = clips[i].name,
+                                    bundlePath = path,
+                                    fileName = ctrl,
+                                    clip = clips[i].name,
+                                });
                             }
                         }
 
