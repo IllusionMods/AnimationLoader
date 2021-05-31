@@ -11,6 +11,7 @@
 		<!-- Any number of animations can be contained in one zipmod -->
 		<Animation>
 			<!-- Required - Any positive integer, should be unique within your mod -->
+			<!-- Never change StudioId, Mode or the order of the animation clips in updates to your mod to keep compatibility with studio scenes using these animations -->
 			<StudioId>0</StudioId>
 			<!-- Required - Path inside the zipmod to the assetbundle containing the female animation controller -->
 			<PathFemale>anim_imports/kplug/female/02_40.unity3d</PathFemale>
@@ -26,7 +27,7 @@
 			<Mode>houshi</Mode>
 			<!-- Required if Mode is Houshi - The type of houshi animation (value can be Hand, Mouth or Breasts) -->
 			<kindHoushi>Hand</kindHoushi>
-			<!-- Optional - Any mixture of these categories can be applied simultaneously, if empty, position will be available everywhere -->
+			<!-- Optional - Any mixture of these categories can be applied simultaneously, if array is empty, position will be available everywhere -->
 			<categories>
 				<category>LieDown</category>
 				<category>Stand</category>
