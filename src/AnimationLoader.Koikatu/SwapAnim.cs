@@ -177,10 +177,7 @@ namespace AnimationLoader.Koikatu
             else
             {
                 var buttons = _objParent.transform.Cast<Transform>().ToList();
-
-                //var tex = new Texture2D(1, 1);
-                //tex.SetPixel(1, 1, Color.red);
-                //var sprite = Sprite.Create(tex, new Rect(0f, 0f, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+                
                 var go = DefaultControls.CreateScrollView(new DefaultControls.Resources());
                 go.transform.SetParent(_objParent.transform, false);
                 var scroll = go.GetComponent<ScrollRect>();
@@ -192,7 +189,11 @@ namespace AnimationLoader.Koikatu
                 DestroyImmediate(scroll.horizontalScrollbar.gameObject);
                 DestroyImmediate(scroll.verticalScrollbar.gameObject);
                 DestroyImmediate(scroll.GetComponent<Image>());
-                scroll.viewport.sizeDelta = new Vector2(0, 56f);
+                scroll.viewport.sizeDelta = new Vector2(0f, 56f);
+
+                var copyTarget = GameObject.Find("Canvas").transform.Find("clothesFileWindow/Window/WinRect/ListArea/Scroll View/Scrollbar Vertical").gameObject;
+                var newScrollbar = Instantiate(copyTarget, go.transform);
+                scroll.verticalScrollbar = newScrollbar.GetComponent<Scrollbar>();
 
                 var vlg = _objParent.GetComponent<VerticalLayoutGroup>();
                 var csf = _objParent.GetComponent<ContentSizeFitter>();
