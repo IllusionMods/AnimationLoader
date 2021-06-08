@@ -28,7 +28,7 @@ namespace AnimationLoader.Koikatu
     public class SwapAnim : BaseUnityPlugin
     {
         public const string GUID = "essuhauled.animationloader";
-        public const string Version = "1.0.6";
+        public const string Version = "1.0.7";
 
         private static ConfigEntry<bool> SortPositions { get; set; }
         private static ConfigEntry<bool> UseGrid { get; set; }
