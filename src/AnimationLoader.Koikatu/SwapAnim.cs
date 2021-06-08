@@ -159,8 +159,9 @@ namespace AnimationLoader.Koikatu
             if(_lstAnimInfo == null || _lstAnimInfo.Count == 0)
                 return;
 
-
+            
             var buttonParent = _objParent.transform;
+            Transform scrollT = null;
             if(UseGrid.Value)
             {
                 DestroyImmediate(_objParent.GetComponent<VerticalLayoutGroup>());
@@ -189,7 +190,6 @@ namespace AnimationLoader.Koikatu
                 DestroyImmediate(scroll.horizontalScrollbar.gameObject);
                 DestroyImmediate(scroll.verticalScrollbar.gameObject);
                 DestroyImmediate(scroll.GetComponent<Image>());
-                scroll.viewport.sizeDelta = new Vector2(0f, 56f);
 
                 var copyTarget = GameObject.Find("Canvas").transform.Find("clothesFileWindow/Window/WinRect/ListArea/Scroll View/Scrollbar Vertical").gameObject;
                 var newScrollbar = Instantiate(copyTarget, go.transform);
@@ -205,6 +205,7 @@ namespace AnimationLoader.Koikatu
                 buttons.ForEach(x => x.SetParent(scroll.content));
 
                 buttonParent = scroll.content;
+                scrollT = scroll.gameObject.transform;
             }
             
             
@@ -258,8 +259,9 @@ namespace AnimationLoader.Koikatu
                     btn.GetComponent<Toggle>().isOn = true;
             }
 
+            var allButtons = buttonParent.Cast<Transform>().OrderBy(x => x.GetComponentInChildren<TextMeshProUGUI>().text).ToList();
             // order all buttons by name and disable New
-            foreach(var t in buttonParent.Cast<Transform>().OrderBy(x => x.GetComponentInChildren<TextMeshProUGUI>().text))
+            foreach(var t in allButtons)
             {
                 var newT = t.FindLoop("New");
                 if(newT) newT.gameObject.SetActive(false);
@@ -267,6 +269,9 @@ namespace AnimationLoader.Koikatu
                 if(SortPositions.Value)
                     t.SetAsLastSibling();
             }
+
+            if(allButtons.Count > 8)
+                scrollT.SetRect(0f, 0f, 1f, 1f, 0f, -100f, 0f, 100f);
             
             // save scroll position, disabled for now because its trash
             /*
