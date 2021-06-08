@@ -24,6 +24,7 @@ using static HFlag;
 namespace AnimationLoader.Koikatu
 {
     [BepInPlugin(GUID, "Animation Loader", Version)]
+    [BepInDependency(Sideloader.Sideloader.GUID, Sideloader.Sideloader.Version)]
     public class SwapAnim : BaseUnityPlugin
     {
         public const string GUID = "essuhauled.animationloader";
