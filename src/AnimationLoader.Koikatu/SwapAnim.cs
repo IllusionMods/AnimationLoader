@@ -26,7 +26,7 @@ namespace AnimationLoader.Koikatu
     [BepInPlugin(GUID, "Animation Loader", Version)]
     public class SwapAnim : BaseUnityPlugin
     {
-        public const string GUID = "SwapAnim";
+        public const string GUID = "essuhauled.animationloader";
         public const string Version = "1.0.6";
 
         private static ConfigEntry<bool> SortPositions { get; set; }
