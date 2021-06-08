@@ -195,6 +195,7 @@ namespace AnimationLoader.Koikatu
                 var copyTarget = GameObject.Find("Canvas").transform.Find("clothesFileWindow/Window/WinRect/ListArea/Scroll View/Scrollbar Vertical").gameObject;
                 var newScrollbar = Instantiate(copyTarget, go.transform);
                 scroll.verticalScrollbar = newScrollbar.GetComponent<Scrollbar>();
+                newScrollbar.transform.SetRect(1f, 0f, 1f, 1f, -8f, 0f, 10f);
 
                 var vlg = _objParent.GetComponent<VerticalLayoutGroup>();
                 var csf = _objParent.GetComponent<ContentSizeFitter>();
