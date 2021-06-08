@@ -195,7 +195,7 @@ namespace AnimationLoader.Koikatu
                 var copyTarget = GameObject.Find("Canvas").transform.Find("clothesFileWindow/Window/WinRect/ListArea/Scroll View/Scrollbar Vertical").gameObject;
                 var newScrollbar = Instantiate(copyTarget, go.transform);
                 scroll.verticalScrollbar = newScrollbar.GetComponent<Scrollbar>();
-                newScrollbar.transform.SetRect(1f, 0f, 1f, 1f, -8f, 0f, 10f);
+                newScrollbar.transform.SetRect(1f, 0f, 1f, 1f, 0f, 0f, 18f);
 
                 var vlg = _objParent.GetComponent<VerticalLayoutGroup>();
                 var csf = _objParent.GetComponent<ContentSizeFitter>();
@@ -270,10 +270,18 @@ namespace AnimationLoader.Koikatu
                 
                 if(SortPositions.Value)
                     t.SetAsLastSibling();
+
+                var textMeshGo = t.FindLoop("TextMeshPro Text").gameObject;
+                var textMesh = textMeshGo.GetComponent<TextMeshProUGUI>();
+                textMesh.enableWordWrapping = false;
+                var slideEffect = textMeshGo.AddComponent<TextMeshSlideEffectCtrl>();
+                slideEffect.transBase = (RectTransform)t;
+                slideEffect.textMesh = textMesh;
+                slideEffect.speed = 80f;
             }
 
             if(allButtons.Count > 8)
-                scrollT.SetRect(0f, 0f, 1f, 1f, 0f, -100f, 0f, 100f);
+                scrollT.SetRect(0f, 0f, 1f, 1f, -5f, -100f, -5f, 100f);
             
             // save scroll position, disabled for now because its trash
             /*
