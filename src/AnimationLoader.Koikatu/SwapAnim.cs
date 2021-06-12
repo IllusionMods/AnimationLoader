@@ -6,9 +6,11 @@ using IllusionUtility.GetUtility;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection.Emit;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using ADV.Commands.Base;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using Illusion.Extensions;
@@ -59,6 +61,19 @@ namespace AnimationLoader.Koikatu
             {"titspussy", "siru_t_khs_n07"},
             {"tits", "siru_t_khh_11"},
             {"pussy", "siru_t_khs_n07"}, // have to make this manually, for now copy TitsPussy
+        };
+
+        private static readonly Dictionary<string, int> EModeGroups = new Dictionary<string, int>
+        {
+            { "aibu1", 998 },
+            { "houshi0", 999 },
+            { "houshi1", 1000 },
+            { "sonyu0", 1001 },
+            { "sonyu1", 1002 },
+            { "masturbation1", 1003 },
+            { "peeping0", 1004 },
+            { "peeping1", 1005 },
+            { "lesbian1", 1006 },
         };
 
         private void Awake()
@@ -261,8 +276,8 @@ namespace AnimationLoader.Koikatu
                     btn.GetComponent<Toggle>().isOn = true;
             }
 
-            var allButtons = buttonParent.Cast<Transform>().OrderBy(x => x.GetComponentInChildren<TextMeshProUGUI>().text).ToList();
             // order all buttons by name and disable New
+            var allButtons = buttonParent.Cast<Transform>().OrderBy(x => x.GetComponentInChildren<TextMeshProUGUI>().text).ToList();
             foreach(var t in allButtons)
             {
                 var newT = t.FindLoop("New");
@@ -305,17 +320,22 @@ namespace AnimationLoader.Koikatu
             if(swapAnimationInfo == null)
                 return;
 
-            var racF = AssetBundleManager.LoadAsset(swapAnimationInfo.PathFemale, swapAnimationInfo.ControllerFemale, typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
-            var racM = AssetBundleManager.LoadAsset(swapAnimationInfo.PathMale, swapAnimationInfo.ControllerMale, typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
+            RuntimeAnimatorController femaleCtrl = null;
+            RuntimeAnimatorController maleCtrl = null;
+            if(!string.IsNullOrEmpty(swapAnimationInfo.PathFemale) && !string.IsNullOrEmpty(swapAnimationInfo.ControllerFemale))
+                femaleCtrl = AssetBundleManager.LoadAsset(swapAnimationInfo.PathFemale, swapAnimationInfo.ControllerFemale, typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
+            if(!string.IsNullOrEmpty(swapAnimationInfo.PathMale) && !string.IsNullOrEmpty(swapAnimationInfo.ControllerMale))
+                maleCtrl = AssetBundleManager.LoadAsset(swapAnimationInfo.PathMale, swapAnimationInfo.ControllerMale, typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
             
             var t_hsp = Traverse.Create(__instance);
             var female = t_hsp.Field<List<ChaControl>>("lstFemale").Value[0];
             var male = t_hsp.Field<ChaControl>("male").Value;
             ////TODO: lstFemale[1], male1
 
-            female.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(female.animBody.runtimeAnimatorController, racF);
-            if(racM != null)
-                male.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(male.animBody.runtimeAnimatorController, racM);
+            if(femaleCtrl != null)
+                female.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(female.animBody.runtimeAnimatorController, femaleCtrl);
+            if(maleCtrl != null)
+                male.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(male.animBody.runtimeAnimatorController, maleCtrl);
 
             var mi = t_hsp.Field<List<MotionIK>>("lstMotionIK").Value;
             mi.ForEach(mik => mik.Release());
@@ -379,7 +399,6 @@ namespace AnimationLoader.Koikatu
         {
             __result = __result.AppendCo(() =>
             {
-                int grpId = 999;
                 foreach(var keyVal in animationDict)
                 {
                     CreateGroup(0);
@@ -388,22 +407,28 @@ namespace AnimationLoader.Koikatu
                     void CreateGroup(byte sex)
                     {
                         var grp = new Info.GroupInfo{ name = $"AL {(sex == 0 ? "M" : "F")} {keyVal.Key}" };
-                        __instance.dicAGroupCategory.Add(grpId, grp);
                         var animGrp = new Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>();
-                        __instance.dicAnimeLoadInfo.Add(grpId, animGrp);
+
+                        var grpKey = $"{keyVal.Key}{sex}";
+                        if(!EModeGroups.TryGetValue(grpKey, out var grpId))
+                            return;
             
                         foreach(var swapAnimInfo in keyVal.Value.Where(x => x.StudioId >= 0))
                         {
-                            grp.dicCategory.Add(swapAnimInfo.StudioId, swapAnimInfo.AnimationName);
-                            var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
-                            animGrp.Add(swapAnimInfo.StudioId, animCat);
-
                             var path = sex == 0 ? swapAnimInfo.PathMale : swapAnimInfo.PathFemale;
                             var ctrl = sex == 0 ? swapAnimInfo.ControllerMale : swapAnimInfo.ControllerFemale;
-                
+
+                            if(string.IsNullOrEmpty(path) || string.IsNullOrEmpty(ctrl))
+                                continue;
+                            
                             var controller = AssetBundleManager.LoadAsset(path, ctrl, typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
                             if(controller == null)
                                 continue;
+                            
+                            var animName = string.IsNullOrEmpty(swapAnimInfo.AnimationName) ? ctrl : swapAnimInfo.AnimationName;
+                            grp.dicCategory.Add(swapAnimInfo.StudioId, animName);
+                            var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
+                            animGrp.Add(swapAnimInfo.StudioId, animCat);
                             
                             var clips = controller.animationClips;
                             for(int i = 0; i < clips.Length; i++)
@@ -430,7 +455,11 @@ namespace AnimationLoader.Koikatu
                             }
                         }
 
-                        grpId++;
+                        if(animGrp.Count > 0)
+                        {
+                            __instance.dicAGroupCategory.Add(grpId, grp);
+                            __instance.dicAnimeLoadInfo.Add(grpId, animGrp);
+                        }
                     }
                 }
             });
