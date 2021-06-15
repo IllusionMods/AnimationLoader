@@ -289,10 +289,17 @@ namespace AnimationLoader.Koikatu
                 var textMeshGo = t.FindLoop("TextMeshPro Text").gameObject;
                 var textMesh = textMeshGo.GetComponent<TextMeshProUGUI>();
                 textMesh.enableWordWrapping = false;
-                var slideEffect = textMeshGo.AddComponent<TextMeshSlideEffectCtrl>();
-                slideEffect.transBase = (RectTransform)t;
-                slideEffect.textMesh = textMesh;
-                slideEffect.speed = 80f;
+                textMesh.overflowMode = TextOverflowModes.Overflow;
+
+                var rectT = (RectTransform)t;
+                if(rectT.sizeDelta.x < textMesh.preferredWidth)
+                {
+                    textMesh.alignment = TextAlignmentOptions.CaplineLeft;
+
+                    var txtScroll = textMeshGo.AddComponent<TextScroll>();
+                    txtScroll.textMesh = textMesh;
+                    txtScroll.transBase = rectT;
+                }
             }
 
             if(allButtons.Count > 8)
