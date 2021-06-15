@@ -29,8 +29,8 @@ namespace AnimationLoader.Koikatu
         {
             while(move)
             {
-                if(Math.Abs(textMesh.margin.x) > transBase.sizeDelta.x + 10f)
-                    MarginSet(0f);
+                if(textMesh.preferredWidth - Math.Abs(textMesh.margin.x) < transBase.sizeDelta.x * 0.5f)
+                    MarginSet(transBase.sizeDelta.x * 0.5f);
                 else
                     MarginAdd(-speed * Time.deltaTime);
                 
