@@ -6,11 +6,9 @@ using IllusionUtility.GetUtility;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection.Emit;
 using System.Xml.Linq;
 using System.Xml.Serialization;
-using ADV.Commands.Base;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using Illusion.Extensions;
@@ -42,7 +40,6 @@ namespace AnimationLoader.Koikatu
         private static readonly XmlSerializer xmlSerializer = new XmlSerializer(typeof(SwapAnimationInfo));
 
         private new static ManualLogSource Logger;
-        private static SwapAnim plugin;
         
         private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
         private static SwapAnimationInfo swapAnimationInfo;
@@ -50,7 +47,6 @@ namespace AnimationLoader.Koikatu
         private static PositionCategory category;
         private static readonly Type vrType = Type.GetType("VRHScene, Assembly-CSharp");
         private static readonly Color buttonColor = new Color(0.96f, 1f, 0.9f);
-        private static readonly Dictionary<GameObject, float> scrollPos = new Dictionary<GameObject, float>();
 
         private static readonly Dictionary<string, string> SiruPasteFiles = new Dictionary<string, string>
         {
@@ -79,7 +75,6 @@ namespace AnimationLoader.Koikatu
         private void Awake()
         {
             Logger = base.Logger;
-            plugin = this;
 
             SortPositions = Config.Bind(GeneralSection, nameof(SortPositions), true, new ConfigDescription("Sort positions alphabetically"));
             ReloadManifests = Config.Bind(GeneralSection, nameof(ReloadManifests), new KeyboardShortcut(KeyCode.None), new ConfigDescription("Load positions from all manifest format xml files inside config/AnimationLoader folder"));
@@ -289,8 +284,9 @@ namespace AnimationLoader.Koikatu
                 var textMeshGo = t.FindLoop("TextMeshPro Text").gameObject;
                 var textMesh = textMeshGo.GetComponent<TextMeshProUGUI>();
                 textMesh.enableWordWrapping = false;
-                textMesh.overflowMode = TextOverflowModes.Overflow;
+                textMesh.overflowMode = TextOverflowModes.Overflow; // disable ... in text
 
+                // add scrolling text if text is long enough
                 var rectT = (RectTransform)t;
                 if(rectT.sizeDelta.x < textMesh.preferredWidth)
                 {
@@ -304,21 +300,6 @@ namespace AnimationLoader.Koikatu
 
             if(allButtons.Count > 8)
                 scrollT.SetRect(0f, 0f, 1f, 1f, -5f, -100f, -5f, 100f);
-            
-            // save scroll position, disabled for now because its trash
-            /*
-            if(scrollPos.TryGetValue(_objParent, out var val))
-                plugin.StartCoroutine(SetScrollPosition(val));
-            else
-                scrollPos.Add(_objParent, 0f);
-            scroll.onValueChanged.AddListener(v => scrollPos[_objParent] = v.y);
-
-            IEnumerator SetScrollPosition(float value)
-            {
-                yield return new WaitForEndOfFrame();
-                scroll.verticalNormalizedPosition = value;
-            }
-            */
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "ChangeAnimator")]
