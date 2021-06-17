@@ -16,6 +16,7 @@ using Sideloader.AutoResolver;
 using Studio;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static HFlag;
 
@@ -206,6 +207,11 @@ namespace AnimationLoader.Koikatu
                 var newScrollbar = Instantiate(copyTarget, go.transform);
                 scroll.verticalScrollbar = newScrollbar.GetComponent<Scrollbar>();
                 newScrollbar.transform.SetRect(1f, 0f, 1f, 1f, 0f, 0f, 18f);
+                
+                var triggerEvent = new EventTrigger.TriggerEvent();
+                triggerEvent.AddListener(x => GlobalMethod.SetCameraMoveFlag(__instance.flags.ctrlCamera, false));
+                var eventTrigger = newScrollbar.AddComponent<EventTrigger>();
+                eventTrigger.triggers.Add(new EventTrigger.Entry{eventID = EventTriggerType.PointerDown, callback = triggerEvent });
 
                 var vlg = _objParent.GetComponent<VerticalLayoutGroup>();
                 var csf = _objParent.GetComponent<ContentSizeFitter>();
@@ -271,10 +277,11 @@ namespace AnimationLoader.Koikatu
                     btn.GetComponent<Toggle>().isOn = true;
             }
 
-            // order all buttons by name and disable New
+            // order all buttons by name
             var allButtons = buttonParent.Cast<Transform>().OrderBy(x => x.GetComponentInChildren<TextMeshProUGUI>().text).ToList();
             foreach(var t in allButtons)
             {
+                // disable New text
                 var newT = t.FindLoop("New");
                 if(newT) newT.gameObject.SetActive(false);
                 
@@ -284,7 +291,7 @@ namespace AnimationLoader.Koikatu
                 var textMeshGo = t.FindLoop("TextMeshPro Text").gameObject;
                 var textMesh = textMeshGo.GetComponent<TextMeshProUGUI>();
                 textMesh.enableWordWrapping = false;
-                textMesh.overflowMode = TextOverflowModes.Overflow; // disable ... in text
+                textMesh.overflowMode = TextOverflowModes.Overflow; // disable ... after text
 
                 // add scrolling text if text is long enough
                 var rectT = (RectTransform)t;
@@ -310,9 +317,9 @@ namespace AnimationLoader.Koikatu
 
             RuntimeAnimatorController femaleCtrl = null;
             RuntimeAnimatorController maleCtrl = null;
-            if(!string.IsNullOrEmpty(swapAnimationInfo.PathFemale) && !string.IsNullOrEmpty(swapAnimationInfo.ControllerFemale))
+            if(!string.IsNullOrEmpty(swapAnimationInfo.PathFemale) || !string.IsNullOrEmpty(swapAnimationInfo.ControllerFemale))
                 femaleCtrl = AssetBundleManager.LoadAsset(swapAnimationInfo.PathFemale, swapAnimationInfo.ControllerFemale, typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
-            if(!string.IsNullOrEmpty(swapAnimationInfo.PathMale) && !string.IsNullOrEmpty(swapAnimationInfo.ControllerMale))
+            if(!string.IsNullOrEmpty(swapAnimationInfo.PathMale) || !string.IsNullOrEmpty(swapAnimationInfo.ControllerMale))
                 maleCtrl = AssetBundleManager.LoadAsset(swapAnimationInfo.PathMale, swapAnimationInfo.ControllerMale, typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
             
             var t_hsp = Traverse.Create(__instance);
