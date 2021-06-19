@@ -86,6 +86,7 @@ namespace AnimationLoader.Koikatu
             {
                 harmony.Patch(AccessTools.Method(vrType, "ChangeAnimator"), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(SwapAnimation)));
                 harmony.Patch(AccessTools.Method(vrType, "ChangeCategory"), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(ChangeCategory)));
+                harmony.Patch(AccessTools.Method(vrType, "Start"), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(ResetCategory)));
                 harmony.Patch(AccessTools.Method(vrType, "CreateAllAnimationList"), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(RefreshAnimationList)));
             }
         }
@@ -134,7 +135,7 @@ namespace AnimationLoader.Koikatu
                     var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
                     data.Guid = guid;
                     reader.Close();
-                        
+                    
                     if(!animationDict.TryGetValue(data.Mode, out var list))
                         animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
                     list.Add(data);
@@ -146,6 +147,12 @@ namespace AnimationLoader.Koikatu
         private static void ChangeCategory(int _category)
         {
             category = (PositionCategory)_category;
+        }
+
+        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.Start))]
+        private static void ResetCategory()
+        {
+            category = default;
         }
 
         [HarmonyTranspiler, HarmonyPatch(typeof(HSprite), "OnChangePlaySelect")]
