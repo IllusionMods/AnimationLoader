@@ -312,7 +312,7 @@ namespace AnimationLoader.Koikatu
                 }
             }
 
-            if(allButtons.Count > 8)
+            if(scrollT != null && allButtons.Count > 8)
                 scrollT.SetRect(0f, 0f, 1f, 1f, -5f, -100f, -5f, 100f);
         }
 
