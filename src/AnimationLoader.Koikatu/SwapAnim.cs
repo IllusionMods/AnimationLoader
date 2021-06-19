@@ -29,7 +29,7 @@ namespace AnimationLoader.Koikatu
     public class SwapAnim : BaseUnityPlugin
     {
         public const string GUID = "essuhauled.animationloader";
-        public const string Version = "1.0.7";
+        public const string Version = "1.0.8";
 
         private static ConfigEntry<bool> SortPositions { get; set; }
         private static ConfigEntry<bool> UseGrid { get; set; }
@@ -84,10 +84,10 @@ namespace AnimationLoader.Koikatu
             var harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
             if(vrType != null)
             {
-                harmony.Patch(AccessTools.Method(vrType, "ChangeAnimator"), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(SwapAnimation)));
-                harmony.Patch(AccessTools.Method(vrType, "ChangeCategory"), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(ChangeCategory)));
-                harmony.Patch(AccessTools.Method(vrType, "Start"), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(ResetCategory)));
-                harmony.Patch(AccessTools.Method(vrType, "CreateAllAnimationList"), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(RefreshAnimationList)));
+                harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.ChangeAnimator)), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(SwapAnimation)));
+                harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.ChangeCategory)), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(ChangeCategory)));
+                harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.Start)), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(ResetCategory)));
+                harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.CreateAllAnimationList)), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(RefreshAnimationList)));
             }
         }
 
@@ -143,7 +143,7 @@ namespace AnimationLoader.Koikatu
             }
         }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), "ChangeCategory")]
+        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.ChangeCategory))]
         private static void ChangeCategory(int _category)
         {
             category = (PositionCategory)_category;
@@ -155,7 +155,7 @@ namespace AnimationLoader.Koikatu
             category = default;
         }
 
-        [HarmonyTranspiler, HarmonyPatch(typeof(HSprite), "OnChangePlaySelect")]
+        [HarmonyTranspiler, HarmonyPatch(typeof(HSprite), nameof(HSprite.OnChangePlaySelect))]
         private static IEnumerable<CodeInstruction> OnChangePlaySelect(IEnumerable<CodeInstruction> instructions)
         {
             //force position change even if position appears to match. Prevents clicks from being eaten.
@@ -172,7 +172,7 @@ namespace AnimationLoader.Koikatu
                 .InstructionEnumeration();
         }
 
-        [HarmonyPostfix, HarmonyPatch(typeof(HSprite), "LoadMotionList")]
+        [HarmonyPostfix, HarmonyPatch(typeof(HSprite), nameof(HSprite.LoadMotionList))]
         private static void LoadMotionList(HSprite __instance, List<HSceneProc.AnimationListInfo> _lstAnimInfo, GameObject _objParent)
         {
             if(_lstAnimInfo == null || _lstAnimInfo.Count == 0)
@@ -316,7 +316,7 @@ namespace AnimationLoader.Koikatu
                 scrollT.SetRect(0f, 0f, 1f, 1f, -5f, -100f, -5f, 100f);
         }
 
-        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "ChangeAnimator")]
+        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.ChangeAnimator))]
         private static void SwapAnimation(object __instance)
         {
             if(swapAnimationInfo == null)
@@ -355,7 +355,7 @@ namespace AnimationLoader.Koikatu
             swapAnimationInfo = null;
         }
 
-        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), "CreateAllAnimationList")]
+        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateAllAnimationList))]
         private static void RefreshAnimationList(object __instance)
         {
             lstAnimInfo = Traverse.Create(__instance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
