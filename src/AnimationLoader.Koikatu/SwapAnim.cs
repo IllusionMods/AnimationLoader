@@ -181,7 +181,7 @@ namespace AnimationLoader.Koikatu
             
             var buttonParent = _objParent.transform;
             Transform scrollT = null;
-            if(UseGrid.Value)
+            if(vrType != null || UseGrid.Value)
             {
                 DestroyImmediate(_objParent.GetComponent<VerticalLayoutGroup>());
                 DestroyImmediate(_objParent.GetComponent<GridLayoutGroup>());
