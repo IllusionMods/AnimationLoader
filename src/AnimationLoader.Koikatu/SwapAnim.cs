@@ -86,7 +86,7 @@ namespace AnimationLoader.Koikatu
             {
                 harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.ChangeAnimator)), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(SwapAnimation)));
                 harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.ChangeCategory)), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(ChangeCategory)));
-                harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.Start)), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(ResetCategory)));
+                harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.Start)), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(InitCategory)));
                 harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.CreateAllAnimationList)), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(RefreshAnimationList)));
             }
         }
@@ -149,10 +149,10 @@ namespace AnimationLoader.Koikatu
             category = (PositionCategory)_category;
         }
 
-        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.Start))]
-        private static void ResetCategory()
+        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.Start))]
+        private static void InitCategory(HSceneProc __instance, ref IEnumerator __result)
         {
-            category = default;
+            __result = __result.AppendCo(() => category = (PositionCategory)__instance.lstInitCategory.First());
         }
 
         [HarmonyTranspiler, HarmonyPatch(typeof(HSprite), nameof(HSprite.OnChangePlaySelect))]
