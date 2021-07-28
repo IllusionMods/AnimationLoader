@@ -45,7 +45,6 @@ namespace AnimationLoader.Koikatu
         
         private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
         private static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo> swapAnimationMapping;
-        private static PositionCategory category;
         private static readonly Type vrType = Type.GetType("VRHScene, Assembly-CSharp");
         private static readonly Color buttonColor = new Color(0.96f, 1f, 0.9f);
 
@@ -85,8 +84,6 @@ namespace AnimationLoader.Koikatu
             if(vrType != null)
             {
                 harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.ChangeAnimator)), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(SwapAnimation)));
-                harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.ChangeCategory)), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(ChangeCategory)));
-                harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.Start)), prefix: new HarmonyMethod(typeof(SwapAnim), nameof(InitCategory)));
                 harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.CreateAllAnimationList)), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(ExtendList)));
             }
         }
@@ -142,18 +139,6 @@ namespace AnimationLoader.Koikatu
                     list.Add(data);
                 }
             }
-        }
-
-        [HarmonyPrefix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.ChangeCategory))]
-        private static void ChangeCategory(int _category)
-        {
-            category = (PositionCategory)_category;
-        }
-
-        [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.Start))]
-        private static void InitCategory(HSceneProc __instance, ref IEnumerator __result)
-        {
-            __result = __result.AppendCo(() => category = (PositionCategory)__instance.lstInitCategory.First());
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateAllAnimationList))]
