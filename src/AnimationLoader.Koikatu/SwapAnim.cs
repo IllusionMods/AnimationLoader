@@ -131,7 +131,6 @@ namespace AnimationLoader.Koikatu
                     var reader = animElem.CreateReader();
                     var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
                     data.Guid = guid;
-                    data.Id = UniversalAutoResolver.GetUniqueSlotID();
                     reader.Close();
                     
                     if(!animationDict.TryGetValue(data.Mode, out var list))
@@ -158,10 +157,11 @@ namespace AnimationLoader.Koikatu
                     continue;
                 }
                 var animListInfo = lstAnimInfo[(int)anim.Mode];
-                var donorInfo = animListInfo.FirstOrDefault(x => x.id == anim.DonorPoseId).DeepCopy();
+                var donorInfo = animListInfo.FirstOrDefault(x => x.id == anim.DonorPoseId)?.DeepCopy();
                 if (donorInfo == null)
                 {
                     Logger.LogWarning($"No donor: {anim.Mode} {anim.DonorPoseId}");
+                    continue;
                 }
 
                 if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
@@ -173,9 +173,6 @@ namespace AnimationLoader.Koikatu
                 if (anim.FileSiruPaste != null && SiruPasteFiles.TryGetValue(anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
                     donorInfo.paramFemale.fileSiruPaste = fileSiruPaste;
 
-                donorInfo.id = anim.Id;
-                donorInfo.nameAnimation = anim.AnimationName;
-                donorInfo.stateRestriction = 0;
                 donorInfo.lstCategory = anim.categories.Select(c =>
                     {
                         var cat = new HSceneProc.Category();
@@ -186,10 +183,6 @@ namespace AnimationLoader.Koikatu
 
                 Logger.LogDebug("Adding anim " + anim.AnimationName + " to EMode " + anim.Mode);
                 animListInfo.Add(donorInfo);
-
-                // unlocks the position for lstUseAnimInfossssss
-                hlist.TryGetValue((int)anim.Mode, out var value);
-                value.Add(donorInfo.id);
 
                 swapAnimationMapping[donorInfo] = anim;
             }
@@ -278,15 +271,10 @@ namespace AnimationLoader.Koikatu
             {
                 var btn = Instantiate(__instance.objMotionListNode, buttonParent, false);
                 btn.AddComponent<HSprite.AnimationInfoComponent>().info = anim;
-                if (anim.id >= UniversalAutoResolver.BaseSlotID)
-                {
-                    btn.transform.FindLoop("Background").GetComponent<Image>().color = buttonColor;
-                }
-
                 var label = btn.GetComponentInChildren<TextMeshProUGUI>();
                 label.text = anim.nameAnimation;
                 label.color = Color.black;
-
+                
                 //TODO: wat
                 var tgl = btn.GetComponent<Toggle>();
                 tgl.group = _objParent.GetComponent<ToggleGroup>();
@@ -297,10 +285,17 @@ namespace AnimationLoader.Koikatu
                 {
                     __instance.OnChangePlaySelect(btn);
                 });
-                
+
                 btn.SetActive(true);
                 if(__instance.flags.nowAnimationInfo == anim)
                     btn.GetComponent<Toggle>().isOn = true;
+
+                swapAnimationMapping.TryGetValue(anim, out var swap);
+                if (swap != null)
+                {
+                    btn.transform.FindLoop("Background").GetComponent<Image>().color = buttonColor;
+                    label.text = swap.AnimationName;
+                }
             }
 
             // order all buttons by name
