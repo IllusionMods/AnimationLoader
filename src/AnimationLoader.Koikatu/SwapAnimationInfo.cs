@@ -10,9 +10,6 @@ namespace AnimationLoader.Koikatu
         [XmlIgnore]
         public string Guid;
 
-        [XmlIgnore]
-        public int Id = -1;
-
         [XmlElement]
         public int StudioId = -1;
         
