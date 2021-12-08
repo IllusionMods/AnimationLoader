@@ -14,5 +14,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)SwapAnim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SwapAnimationInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TextScroll.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities.cs" />
   </ItemGroup>
 </Project>
