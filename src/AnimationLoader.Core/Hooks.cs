@@ -118,12 +118,12 @@ namespace AnimationLoader
 #endif
                     animListInfo.Add(donorInfo);
                     swapAnimationMapping[donorInfo] = anim;
-#if DEBUG && KKS
-                    Logger.LogWarning($"Added {countAL + countKKS} animations: KKS - {countKKS} AnimationLoader - {countAL} ");
-                    // Saves information used in the templates
-                    // Utilities.SaveAnimInfo();
-#endif
                 }
+#if DEBUG && KKS
+                Logger.LogWarning($"Added {countAL + countKKS} animations: KKS - {countKKS} AnimationLoader - {countAL} ");
+                // Saves information used in the templates
+                // Utilities.SaveAnimInfo();
+#endif
             }
 
 
