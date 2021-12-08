@@ -14,7 +14,7 @@ namespace AnimationLoader
     {
         internal class Utilities
         {
-            internal static void SaveAnimInfo()
+            static internal void SaveAnimInfo()
             {
                 if (_hprocInstance == null)
                 {
@@ -53,7 +53,7 @@ namespace AnimationLoader
                 return tmp;
             }
 
-            // Tried a few ways to make it work with/without casting did not work check why later
+            // TODO: Tried a few ways to make it work with/without casting did not work check why later
             static internal string CategoryList(List<HSceneProc.Category> categories)
             {
                 string tmp = "";
@@ -72,6 +72,17 @@ namespace AnimationLoader
                     }
                 }
                 return "\" { " + tmp + " }\"";
+            }
+
+            static internal int CountAnimations(List<HSceneProc.AnimationListInfo>[] lstAnimInfo)
+            {
+                int count = 0;
+
+                foreach (var c in lstAnimInfo)
+                {
+                    count += c.Count;
+                }
+                return count;
             }
         }
     }

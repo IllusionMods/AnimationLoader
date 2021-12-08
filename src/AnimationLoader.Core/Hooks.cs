@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 
-using Cysharp.Threading.Tasks.Linq;
-
 using HarmonyLib;
 
 using Illusion.Extensions;
@@ -60,10 +58,20 @@ namespace AnimationLoader
 #if KK
                 var hlist = Singleton<Game>.Instance.glSaveData.playHList;
 #elif KKS
-            var hlist = Game.globalData.playHList;
+                var hlist = Game.globalData.playHList;
 #endif
+                if (_hprocInstance == null)
+                {
+                    _hprocInstance = (HSceneProc)__instance;
+                }
+
                 var lstAnimInfo = Traverse.Create(__instance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
                 swapAnimationMapping = new Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>();
+#if DEBUG && KKS
+                int countKKS = 0;
+                int countAL = 0;
+                countKKS = Utilities.CountAnimations(lstAnimInfo);
+#endif
                 foreach (var anim in animationDict.SelectMany(
                     e => e.Value,
                     (e, a) => a
@@ -75,6 +83,7 @@ namespace AnimationLoader
                         continue;
                     }
                     var animListInfo = lstAnimInfo[(int)anim.Mode];
+
                     var donorInfo = animListInfo.FirstOrDefault(x => x.id == anim.DonorPoseId)?.DeepCopy();
                     if (donorInfo == null)
                     {
@@ -103,21 +112,20 @@ namespace AnimationLoader
 #if KKS
                     // Update name so it shows on button text label
                     donorInfo.nameAnimation = anim.AnimationName;
-                    //count++;
+#if DEBUG
+                    countAL++;
+#endif
 #endif
                     animListInfo.Add(donorInfo);
                     swapAnimationMapping[donorInfo] = anim;
 #if DEBUG && KKS
-                    //foreach (var anim in lstAnimInfo)
-                    //{
-                    //    countKKS = anim.Count;
-                    //}
-                    //Logger.LogWarning($"Added {count + countKKS} animations: KKS - {countKKS} AnimationLoader - {count} ");
+                    Logger.LogWarning($"Added {countAL + countKKS} animations: KKS - {countKKS} AnimationLoader - {countAL} ");
                     // Saves information used in the templates
                     // Utilities.SaveAnimInfo();
 #endif
                 }
             }
+
 
             [HarmonyTranspiler]
             [HarmonyPatch(typeof(HSprite), nameof(HSprite.OnChangePlaySelect))]
