@@ -4,15 +4,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.Koikatu", "src\AnimationLoader.Koikatu\AnimationLoader.Koikatu.csproj", "{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{538C1A8E-E673-45F6-A2F6-5C662DB09C6B} = {538C1A8E-E673-45F6-A2F6-5C662DB09C6B}
+	EndProjectSection
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AnimationLoader.Core", "src\AnimationLoader.Core\AnimationLoader.Core.shproj", "{00801BD1-C46B-47FD-947B-F27ACC392CB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationLoader.KoikatsuSunshine", "src\AnimationLoader.KoikatsuSunshine\AnimationLoader.KoikatsuSunshine.csproj", "{538C1A8E-E673-45F6-A2F6-5C662DB09C6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.KoikatsuSunshine", "src\AnimationLoader.KoikatsuSunshine\AnimationLoader.KoikatsuSunshine.csproj", "{538C1A8E-E673-45F6-A2F6-5C662DB09C6B}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{00801bd1-c46b-47fd-947b-f27acc392cb2}*SharedItemsImports = 13
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{3ef70928-3925-4f6c-96e9-0ef3b9228e0d}*SharedItemsImports = 5
+		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{538c1a8e-e673-45f6-a2f6-5c662db09c6b}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

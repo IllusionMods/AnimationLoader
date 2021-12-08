@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//
+// Entry for KKS
+//
+using BepInEx;
+using KKAPI;
 
-namespace AnimationLoader.KoikatsuSunshine
+
+namespace AnimationLoader
 {
-    public class Class1
+    //
+    // TODO:
+    // Only load for main game no Studio
+    // Not loading any type of animations in Studio the loading is just taking time at the moment
+    //
+    [BepInPlugin(GUID, DisplayName, Version)]
+    [BepInDependency(Sideloader.Sideloader.GUID, Sideloader.Sideloader.Version)]
+    [BepInDependency(KoikatuAPI.GUID, KoikatuAPI.VersionConst)]
+    [BepInProcess(KoikatuAPI.GameProcessName)]
+    [BepInProcess(KoikatuAPI.StudioProcessName)]
+    public partial class SwapAnim : BaseUnityPlugin
     {
     }
 }

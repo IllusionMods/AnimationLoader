@@ -28,6 +28,7 @@ namespace AnimationLoader
     public partial class SwapAnim
     {
         public const string GUID = "essuhauled.animationloader";
+        public const string DisplayName = "Animation Loader";
         public const string Version = "1.0.8";
 
         private static ConfigEntry<bool> SortPositions { get; set; }
@@ -141,7 +142,11 @@ namespace AnimationLoader
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateAllAnimationList))]
         private static void ExtendList(object __instance) {
             // add new animations to the complete list
+#if KK
             var hlist = Singleton<Game>.Instance.glSaveData.playHList;
+#elif KKS
+            var hlist = Game.globalData.playHList;
+#endif
             var lstAnimInfo = Traverse.Create(__instance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
             swapAnimationMapping = new Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>();
             foreach (var anim in animationDict.SelectMany(
