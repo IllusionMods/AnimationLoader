@@ -1,0 +1,1523 @@
+<manifest schema-ver="1">
+	<guid>kpluganim</guid>
+	<name>KPlug Animations</name>
+	<version>1.2.3</version>
+	<author>katarsys</author>
+	<description>Load with AnimationLoader</description>
+	<website>https://github.com/IllusionMods/AnimationLoader</website>
+	<game>Koikatsu Sunshine</game>
+	<!-- Next StudioID 88 -->
+
+	<AnimationLoader>
+
+		<!-- 2.5 houshi -->
+
+		<Animation>
+			<StudioId>1</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_40.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_40.unity3d</PathMale>
+			<ControllerFemale>khh_f_60</ControllerFemale>
+			<ControllerMale>khh_m_60</ControllerMale>
+			<AnimationName>Girl Standing Footjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>2</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_41.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_41.unity3d</PathMale>
+			<ControllerFemale>khh_f_61</ControllerFemale>
+			<ControllerMale>khh_m_61</ControllerMale>
+			<AnimationName>Laying Footjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>3</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_42.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_42.unity3d</PathMale>
+			<ControllerFemale>khh_f_62</ControllerFemale>
+			<ControllerMale>khh_m_62</ControllerMale>
+			<AnimationName>Between Legs Footjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>SitChair</category>
+				<category>Stool</category>
+				<category>SofaBench</category>
+				<category>BacklessBench</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>4</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_43.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_43.unity3d</PathMale>
+			<ControllerFemale>khh_f_63</ControllerFemale>
+			<ControllerMale>khh_m_63</ControllerMale>
+			<AnimationName>Feet Masturbation</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+			<FileSiruPaste>FaceTits</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>5</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_44.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_44.unity3d</PathMale>
+			<ControllerFemale>khh_f_64</ControllerFemale>
+			<ControllerMale>khh_m_64</ControllerMale>
+			<AnimationName>Ass-Up Handjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>6</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_45.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_45.unity3d</PathMale>
+			<ControllerFemale>khh_f_65</ControllerFemale>
+			<ControllerMale>khh_m_65</ControllerMale>
+			<AnimationName>Cowgirl Buttjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<FileSiruPaste>Butt</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>7</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_46.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_46.unity3d</PathMale>
+			<ControllerFemale>khh_f_66</ControllerFemale>
+			<ControllerMale>khh_m_66</ControllerMale>
+			<AnimationName>2H Handjob 2</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>8</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_47.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_47.unity3d</PathMale>
+			<ControllerFemale>khh_f_67</ControllerFemale>
+			<ControllerMale>khh_m_67</ControllerMale>
+			<AnimationName>Girl Seated Blowjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Mouth</kindHoushi>
+			<categories>
+				<category>SitChair</category>
+				<category>Stool</category>
+				<category>SofaBench</category>
+				<category>BacklessBench</category>
+			</categories>
+			<DonorPoseId>51</DonorPoseId>
+		</Animation>
+
+		<!--Need position adjustment (is minor and female only)-->
+		<Animation>
+			<StudioId>9</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_47.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_47.unity3d</PathMale>
+			<ControllerFemale>khh_f_68</ControllerFemale>
+			<ControllerMale>khh_m_68</ControllerMale>
+			<AnimationName>Lying Mouth Fuck</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Mouth</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>51</DonorPoseId>
+			<FileSiruPaste>FaceTits</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>10</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_48.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_48.unity3d</PathMale>
+			<ControllerFemale>khh_f_69</ControllerFemale>
+			<ControllerMale>khh_m_69</ControllerMale>
+			<AnimationName>Pressed Paizuri 2</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Breasts</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>12</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>11</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_49.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_49.unity3d</PathMale>
+			<ControllerFemale>khh_f_70</ControllerFemale>
+			<ControllerMale>khh_m_70</ControllerMale>
+			<AnimationName>Thighbuttjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+			<FileSiruPaste>FaceTits</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>12</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_50.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_50.unity3d</PathMale>
+			<ControllerFemale>khh_f_71</ControllerFemale>
+			<ControllerMale>khh_m_71</ControllerMale>
+			<AnimationName>Thighjob Against Seat</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>SitChair</category>
+				<category>Stool</category>
+				<category>SofaBench</category>
+				<category>BacklessBench</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>13</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_51.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_51.unity3d</PathMale>
+			<ControllerFemale>khh_f_72</ControllerFemale>
+			<ControllerMale>khh_m_72</ControllerMale>
+			<AnimationName>Doggystyle Buttjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<FileSiruPaste>Butt</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>14</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_52.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_52.unity3d</PathMale>
+			<ControllerFemale>khh_f_73</ControllerFemale>
+			<ControllerMale>khh_m_73</ControllerMale>
+			<AnimationName>Standing Thighjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+		</Animation>
+
+		<!--Needs position adjustment-->
+		<Animation>
+			<StudioId>15</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_53.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_53.unity3d</PathMale>
+			<ControllerFemale>khh_f_74</ControllerFemale>
+			<ControllerMale>khh_m_74</ControllerMale>
+			<AnimationName>Desk Buttjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>SchoolDesk</category>
+				<category>Desk</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<FileSiruPaste>KKSButt</FileSiruPaste>
+		</Animation>
+
+		<!--Needs position adjustment-->
+		<Animation>
+			<StudioId>16</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_54.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_54.unity3d</PathMale>
+			<ControllerFemale>khh_f_75</ControllerFemale>
+			<ControllerMale>khh_m_75</ControllerMale>
+			<AnimationName>Desk Footjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>SchoolDesk</category>
+				<category>Desk</category>
+			</categories>
+			<DonorPoseId>33</DonorPoseId>
+			<FileSiruPaste>Butt</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>17</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_55.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_55.unity3d</PathMale>
+			<ControllerFemale>khh_f_76</ControllerFemale>
+			<ControllerMale>khh_m_76</ControllerMale>
+			<AnimationName>Foot Rubbing</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>SitChair</category>
+				<category>Stool</category>
+				<category>SofaBench</category>
+				<category>BacklessBench</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>18</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_56.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_56.unity3d</PathMale>
+			<ControllerFemale>khh_f_77</ControllerFemale>
+			<ControllerMale>khh_m_77</ControllerMale>
+			<AnimationName>Sit Teasing Footjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>SitChair</category>
+				<category>Stool</category>
+				<category>SofaBench</category>
+				<category>BacklessBench</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>19</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_57.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_57.unity3d</PathMale>
+			<ControllerFemale>khh_f_78</ControllerFemale>
+			<ControllerMale>khh_m_78</ControllerMale>
+			<AnimationName>Desk Deepthroat</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Mouth</kindHoushi>
+			<categories>
+				<category>SchoolDesk</category>
+				<category>Desk</category>
+			</categories>
+			<DonorPoseId>51</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>20</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_57.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_57.unity3d</PathMale>
+			<ControllerFemale>khh_f_79</ControllerFemale>
+			<ControllerMale>khh_m_79</ControllerMale>
+			<AnimationName>Lying Deepthroat</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Mouth</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>51</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>21</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_58.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_58.unity3d</PathMale>
+			<ControllerFemale>khh_f_80</ControllerFemale>
+			<ControllerMale>khh_m_80</ControllerMale>
+			<AnimationName>Against Wall Footjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>Wall</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>22</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_59.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_59.unity3d</PathMale>
+			<ControllerFemale>khh_f_81</ControllerFemale>
+			<ControllerMale>khh_m_81</ControllerMale>
+			<AnimationName>Sit Light Ballbusting</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>SitChair</category>
+				<category>Stool</category>
+				<category>SofaBench</category>
+				<category>BacklessBench</category>
+			</categories>
+			<DonorPoseId>17</DonorPoseId>
+		</Animation>
+
+
+		<!-- 2.6 houshi -->
+
+		<Animation>
+			<StudioId>23</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_60.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_60.unity3d</PathMale>
+			<ControllerFemale>khh_f_82</ControllerFemale>
+			<ControllerMale>khh_m_82</ControllerMale>
+			<AnimationName>Bending Over Footjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+			<FileSiruPaste>Butt</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>24</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_61.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_61.unity3d</PathMale>
+			<ControllerFemale>khh_f_83</ControllerFemale>
+			<ControllerMale>khh_m_83</ControllerMale>
+			<AnimationName>Hugging Footjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+		</Animation>
+
+		<!--Need position ajustment-->
+		<Animation>
+			<StudioId>25</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_62.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_62.unity3d</PathMale>
+			<ControllerFemale>khh_f_84</ControllerFemale>
+			<ControllerMale>khh_m_84</ControllerMale>
+			<AnimationName>Desk Bending Over Footjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>				
+				<!--<category>SchoolDesk</category>-->
+				<category>Desk</category>
+			</categories>
+			<DonorPoseId>33</DonorPoseId>
+			<FileSiruPaste>Butt</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>26</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_63.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_63.unity3d</PathMale>
+			<ControllerFemale>khh_f_85</ControllerFemale>
+			<ControllerMale>khh_m_85</ControllerMale>
+			<AnimationName>Thighjob on Top</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<FileSiruPaste>Pussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>27</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_64.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_64.unity3d</PathMale>
+			<ControllerFemale>khh_f_86</ControllerFemale>
+			<ControllerMale>khh_m_86</ControllerMale>
+			<AnimationName>Pitjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>28</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_65.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_65.unity3d</PathMale>
+			<ControllerFemale>khh_f_87</ControllerFemale>
+			<ControllerMale>khh_m_87</ControllerMale>
+			<AnimationName>Standing Deepthroat</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Mouth</kindHoushi>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>42</DonorPoseId>
+			<NeckDonorId>55</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>29</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_66.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_66.unity3d</PathMale>
+			<ControllerFemale>khh_f_88</ControllerFemale>
+			<ControllerMale>khh_m_88</ControllerMale>
+			<AnimationName>Ball Massage</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>33</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>30</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_67.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_67.unity3d</PathMale>
+			<ControllerFemale>khh_f_89</ControllerFemale>
+			<ControllerMale>khh_m_89</ControllerMale>
+			<AnimationName>Male on Top Paizuri</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Breasts</kindHoushi>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>32</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+			<FileSiruPaste>FaceTits</FileSiruPaste>
+		</Animation>
+
+
+		<!-- 2.7 houshi -->
+
+		<Animation>
+			<StudioId>69</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_68.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_68.unity3d</PathMale>
+			<ControllerFemale>khh_f_91</ControllerFemale>
+			<ControllerMale>khh_m_91</ControllerMale>
+			<AnimationName>Lying On Face Footjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>54</DonorPoseId>
+			<!--<NeckDonorId>12</NeckDonorId>-->
+			<!--<FileSiruPaste>FaceTits</FileSiruPaste>-->
+		</Animation>
+
+		<Animation>
+			<StudioId>70</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_69.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_69.unity3d</PathMale>
+			<ControllerFemale>khh_f_92</ControllerFemale>
+			<ControllerMale>khh_m_92</ControllerMale>
+			<AnimationName>-Girl Seated Force BJ</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Mouth</kindHoushi>
+			<categories>
+				<category>SitChair</category>
+				<category>SofaBench</category>
+			</categories>
+			<DonorPoseId>51</DonorPoseId>
+			<NeckDonorId>55</NeckDonorId>
+			<FileSiruPaste>FaceTits</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>71</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_69.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_69.unity3d</PathMale>
+			<ControllerFemale>khh_f_93</ControllerFemale>
+			<ControllerMale>khh_m_93</ControllerMale>
+			<AnimationName>-Desk Leaning BJ</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Mouth</kindHoushi>
+			<categories>
+				<category>Desk</category>
+			</categories>
+			<DonorPoseId>51</DonorPoseId>
+			<!-- TODO: Cum passes through face have look into it -->
+			<FileSiruPaste>KKSFaceTits</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<!-- Animation is broken can not ajust  -->
+			<StudioId>72</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_70.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_70.unity3d</PathMale>
+			<ControllerFemale>khh_f_94</ControllerFemale>
+			<ControllerMale>khh_m_94</ControllerMale>
+			<AnimationName>Sitting Floor Force BJ</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Mouth</kindHoushi>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>42</DonorPoseId>
+			<NeckDonorId>55</NeckDonorId>
+			<FileSiruPaste>FaceTits</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>73</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_70.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_70.unity3d</PathMale>
+			<ControllerFemale>khh_f_95</ControllerFemale>
+			<ControllerMale>khh_m_95</ControllerMale>
+			<AnimationName>-Desk Sitting BJ</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Mouth</kindHoushi>
+			<categories>
+				<category>Desk</category>
+			</categories>
+			<DonorPoseId>51</DonorPoseId>
+			<FileSiruPaste>KKSFaceTits</FileSiruPaste>
+		</Animation>
+
+
+		<!-- 2.8 houshi -->
+
+		<Animation>
+			<StudioId>74</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_71.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_71.unity3d</PathMale>
+			<ControllerFemale>khh_f_96</ControllerFemale>
+			<ControllerMale>khh_m_96</ControllerMale>
+			<AnimationName>--Kneeling, Titty-fuck</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Breasts</kindHoushi>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+				<category>Wall</category>
+			</categories>
+			<DonorPoseId>32</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+			<FileSiruPaste>KKSFaceTits</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>75</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_72.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_72.unity3d</PathMale>
+			<ControllerFemale>khh_f_97</ControllerFemale>
+			<ControllerMale>khh_m_97</ControllerMale>
+			<AnimationName>Kneeling, Ball Licking</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Mouth</kindHoushi>
+			<categories>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>32</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+			<FileSiruPaste>KKSFaceTits</FileSiruPaste>
+		</Animation>
+
+		<!-- For KKS standard animation works better Activate for Koikatu
+		<Animation>
+			<StudioId>76</StudioId>
+			<PathFemale>anim_imports/kplug/female/01_73.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/01_73.unity3d</PathMale>
+			<ControllerFemale>khh_f_98</ControllerFemale>
+			<ControllerMale>khh_m_98</ControllerMale>
+			<AnimationName>Sitting Footjob</AnimationName>
+			<Mode>houshi</Mode>
+			<kindHoushi>Hand</kindHoushi>
+			<categories>
+				<category>SitChair</category>
+				<category>SofaBench</category>
+			</categories>
+			<DonorPoseId>55</DonorPoseId>
+			<NeckDonorId>12</NeckDonorId>
+			<FileSiruPaste>FaceTits</FileSiruPaste>
+		</Animation>
+		-->
+
+
+		<!-- 2.5 sonyu -->
+
+		<Animation>
+			<StudioId>31</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_40.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_40.unity3d</PathMale>
+			<ControllerFemale>khs_f_59</ControllerFemale>
+			<ControllerMale>khs_m_59</ControllerMale>
+			<AnimationName>Wall Facing 2</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Wall</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>8</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>32</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_40.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_40.unity3d</PathMale>
+			<ControllerFemale>khs_f_60</ControllerFemale>
+			<ControllerMale>khs_m_60</ControllerMale>
+			<AnimationName>Reverse Cowgirl 2</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<!--
+			<DonorPoseId>4</DonorPoseId>
+			<NeckDonorId>8</NeckDonorId>-->
+			<DonorPoseId>4</DonorPoseId>
+			<NeckDonorId>44</NeckDonorId>
+			<FileSiruPaste>Pussy</FileSiruPaste>
+			<IsFemaleInitiative>true</IsFemaleInitiative>
+		</Animation>
+
+		<Animation>
+			<StudioId>87</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_40.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_40.unity3d</PathMale>
+			<ControllerFemale>khs_f_60</ControllerFemale>
+			<ControllerMale>khs_m_60</ControllerMale>
+			<AnimationName>Reverse Cowgirl 3</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>44</NeckDonorId>
+			<FileSiruPaste>Pussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>33</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_41.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_41.unity3d</PathMale>
+			<ControllerFemale>khs_f_61</ControllerFemale>
+			<ControllerMale>khs_m_61</ControllerMale>
+			<AnimationName>Standing Doggystyle Arm-Pulled</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>34</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_41.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_41.unity3d</PathMale>
+			<ControllerFemale>khs_f_62</ControllerFemale>
+			<ControllerMale>khs_m_62</ControllerMale>
+			<AnimationName>Missionary Lifted</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<!-- Dick is broken when cumming outside with anal donor -->
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>0</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>35</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_42.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_42.unity3d</PathMale>
+			<ControllerFemale>khs_f_63</ControllerFemale>
+			<ControllerMale>khs_m_63</ControllerMale>
+			<AnimationName>Standing Carry</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>36</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_42.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_42.unity3d</PathMale>
+			<ControllerFemale>khs_f_64</ControllerFemale>
+			<ControllerMale>khs_m_64</ControllerMale>
+			<AnimationName>Leg Held Missionary 2</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<!-- Dick is broken when cumming outside with anal donor -->
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>0</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>37</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_43.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_43.unity3d</PathMale>
+			<ControllerFemale>khs_f_65</ControllerFemale>
+			<ControllerMale>khs_m_65</ControllerMale>
+			<AnimationName>Intimate Spooning</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>38</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_43.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_43.unity3d</PathMale>
+			<ControllerFemale>khs_f_66</ControllerFemale>
+			<ControllerMale>khs_m_66</ControllerMale>
+			<AnimationName>Doggy Standing Arm-Grab</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>39</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_44.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_44.unity3d</PathMale>
+			<ControllerFemale>khs_f_67</ControllerFemale>
+			<ControllerMale>khs_m_67</ControllerMale>
+			<AnimationName>Laying Leglock</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>27</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<!-- Penetration breaks randomly -->
+		<!-- Orgasm clip is very glitchy -->
+		<Animation>
+			<StudioId>40</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_44.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_44.unity3d</PathMale>
+			<ControllerFemale>khs_f_68</ControllerFemale>
+			<ControllerMale>khs_m_68</ControllerMale>
+			<AnimationName>Cowgirl Piledriver</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<!-- Dick is broken when cumming outside with anal donor -->
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>0</NeckDonorId>
+			<FileSiruPaste>FaceTits</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>41</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_45.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_45.unity3d</PathMale>
+			<ControllerFemale>khs_f_69</ControllerFemale>
+			<ControllerMale>khs_m_69</ControllerMale>
+			<AnimationName>Standing Arm-Grab</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>27</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>42</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_45.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_45.unity3d</PathMale>
+			<ControllerFemale>khs_f_70</ControllerFemale>
+			<ControllerMale>khs_m_70</ControllerMale>
+			<AnimationName>Sitting Doggystyle</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>SitChair</category>
+				<category>Stool</category>
+				<category>SofaBench</category>
+				<category>BacklessBench</category>
+			</categories>
+			<DonorPoseId>11</DonorPoseId>
+			<NeckDonorId>27</NeckDonorId>
+			<FileSiruPaste>Butt</FileSiruPaste>
+			<!-- IsFemaleInitiative removes all voices and shortens animations -->
+			<IsFemaleInitiative>false</IsFemaleInitiative>
+		</Animation>
+
+		<Animation>
+			<StudioId>43</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_46.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_46.unity3d</PathMale>
+			<ControllerFemale>khs_f_71</ControllerFemale>
+			<ControllerMale>khs_m_71</ControllerMale>
+			<AnimationName>Reverse Cowgirl 4</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<!-- Test -->
+			<NeckDonorId>44</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>44</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_46.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_46.unity3d</PathMale>
+			<ControllerFemale>khs_f_72</ControllerFemale>
+			<ControllerMale>khs_m_72</ControllerMale>
+			<AnimationName>Cowgirl Hand Pull</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>4</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>45</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_47.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_47.unity3d</PathMale>
+			<ControllerFemale>khs_f_73</ControllerFemale>
+			<ControllerMale>khs_m_73</ControllerMale>
+			<AnimationName>Amazon</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<NeckDonorId>27</NeckDonorId>
+			<FileSiruPaste></FileSiruPaste>
+			<IsFemaleInitiative>true</IsFemaleInitiative>
+		</Animation>
+
+		<!-- Seemingly a dupe of khs_f_72
+		<Animation>
+			<StudioId>46</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_47.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_47.unity3d</PathMale>
+			<ControllerFemale>khs_f_74</ControllerFemale>
+			<ControllerMale>khs_m_74</ControllerMale>
+			<AnimationName>hand pull dupe</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>27</NeckDonorId>
+			<FileSiruPaste></FileSiruPaste>
+		</Animation>
+		-->
+
+		<Animation>
+			<StudioId>47</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_48.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_48.unity3d</PathMale>
+			<ControllerFemale>khs_f_75</ControllerFemale>
+			<ControllerMale>khs_m_75</ControllerMale>
+			<AnimationName>Desk Laying Legs Up</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>SchoolDesk</category>
+				<category>Desk</category>
+			</categories>
+			<DonorPoseId>14</DonorPoseId>
+			<NeckDonorId>8</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>48</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_48.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_48.unity3d</PathMale>
+			<ControllerFemale>khs_f_76</ControllerFemale>
+			<ControllerMale>khs_m_76</ControllerMale>
+			<AnimationName>Cowgirl Hug</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>14</DonorPoseId>
+			<NeckDonorId>8</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>49</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_49.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_49.unity3d</PathMale>
+			<ControllerFemale>khs_f_77</ControllerFemale>
+			<ControllerMale>khs_m_77</ControllerMale>
+			<AnimationName>From Behind in Seiza 2</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>50</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_49.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_49.unity3d</PathMale>
+			<ControllerFemale>khs_f_78</ControllerFemale>
+			<ControllerMale>khs_m_78</ControllerMale>
+			<AnimationName>Chair Missionary</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>SitChair</category>
+				<category>Stool</category>
+				<category>SofaBench</category>
+				<category>BacklessBench</category>
+			</categories>
+			<!-- Dick is broken when cumming outside with anal donor -->
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>0</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>51</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_50.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_50.unity3d</PathMale>
+			<ControllerFemale>khs_f_79</ControllerFemale>
+			<ControllerMale>khs_m_79</ControllerMale>
+			<AnimationName>Kneeling Doggystyle</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>52</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_50.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_50.unity3d</PathMale>
+			<ControllerFemale>khs_f_80</ControllerFemale>
+			<ControllerMale>khs_m_80</ControllerMale>
+			<AnimationName>Lotus</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>4</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>53</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_51.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_51.unity3d</PathMale>
+			<ControllerFemale>khs_f_81</ControllerFemale>
+			<ControllerMale>khs_m_81</ControllerMale>
+			<AnimationName>Cowgirl Split</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>54</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_51.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_51.unity3d</PathMale>
+			<ControllerFemale>khs_f_82</ControllerFemale>
+			<ControllerMale>khs_m_82</ControllerMale>
+			<AnimationName>Desk Lotus</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>SchoolDesk</category>
+				<category>Desk</category>
+			</categories>
+			<!-- Dick is broken when cumming outside with anal donor -->
+			<DonorPoseId>14</DonorPoseId>
+			<NeckDonorId>4</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>55</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_52.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_52.unity3d</PathMale>
+			<ControllerFemale>khs_f_83</ControllerFemale>
+			<ControllerMale>khs_m_83</ControllerMale>
+			<AnimationName>Seated Spooning 2</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>SitChair</category>
+				<category>Stool</category>
+				<category>SofaBench</category>
+				<category>BacklessBench</category>
+			</categories>
+			<DonorPoseId>11</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>56</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_52.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_52.unity3d</PathMale>
+			<ControllerFemale>khs_f_84</ControllerFemale>
+			<ControllerMale>khs_m_84</ControllerMale>
+			<AnimationName>Wall Kneeling Doggystyle</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Wall</category>
+			</categories>
+			<DonorPoseId>11</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>57</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_53.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_53.unity3d</PathMale>
+			<ControllerFemale>khs_f_85</ControllerFemale>
+			<ControllerMale>khs_m_85</ControllerMale>
+			<AnimationName>Spread Missionary</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>8</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>58</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_53.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_53.unity3d</PathMale>
+			<ControllerFemale>khs_f_86</ControllerFemale>
+			<ControllerMale>khs_m_86</ControllerMale>
+			<AnimationName>Reverse Amazon</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>0</DonorPoseId>
+			<NeckDonorId>27</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+			<IsFemaleInitiative>true</IsFemaleInitiative>
+		</Animation>
+
+		<Animation>
+			<StudioId>59</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_54.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_54.unity3d</PathMale>
+			<ControllerFemale>khs_f_87</ControllerFemale>
+			<ControllerMale>khs_m_87</ControllerMale>
+			<AnimationName>Desk Laying Legs Spread</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>SchoolDesk</category>
+				<category>Desk</category>
+			</categories>
+			<DonorPoseId>14</DonorPoseId>
+			<NeckDonorId>8</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>60</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_54.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_54.unity3d</PathMale>
+			<ControllerFemale>khs_f_88</ControllerFemale>
+			<ControllerMale>khs_m_88</ControllerMale>
+			<AnimationName>Extreme Piledriver</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>14</DonorPoseId>
+			<NeckDonorId>8</NeckDonorId>
+			<FileSiruPaste>FaceTits</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>61</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_55.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_55.unity3d</PathMale>
+			<ControllerFemale>khs_f_89</ControllerFemale>
+			<ControllerMale>khs_m_89</ControllerMale>
+			<AnimationName>Standing Split</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Wall</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>8</NeckDonorId>
+			<FileSiruPaste>Pussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>62</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_55.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_55.unity3d</PathMale>
+			<ControllerFemale>khs_f_90</ControllerFemale>
+			<ControllerMale>khs_m_90</ControllerMale>
+			<AnimationName>Standing Doggystyle</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>63</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_56.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_56.unity3d</PathMale>
+			<ControllerFemale>khs_f_91</ControllerFemale>
+			<ControllerMale>khs_m_91</ControllerMale>
+			<AnimationName>Seated Squats</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>SitChair</category>
+				<category>Stool</category>
+				<category>SofaBench</category>
+				<category>BacklessBench</category>
+			</categories>
+			<DonorPoseId>11</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>64</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_56.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_56.unity3d</PathMale>
+			<ControllerFemale>khs_f_92</ControllerFemale>
+			<ControllerMale>khs_m_92</ControllerMale>
+			<AnimationName>Cowgirl Leaning Back</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>4</DonorPoseId>
+			<IsFemaleInitiative>true</IsFemaleInitiative>
+		</Animation>
+
+
+		<!-- 2.6 sonyu -->
+
+		<Animation>
+			<StudioId>65</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_57.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_57.unity3d</PathMale>
+			<ControllerFemale>khs_f_93</ControllerFemale>
+			<ControllerMale>khs_m_93</ControllerMale>
+			<AnimationName>Hair-Pull Doggystyle</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>66</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_57.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_57.unity3d</PathMale>
+			<ControllerFemale>khs_f_94</ControllerFemale>
+			<ControllerMale>khs_m_94</ControllerMale>
+			<AnimationName>Arms Locked Doggystyle</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+		</Animation>
+
+		<Animation>
+			<StudioId>67</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_58.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_58.unity3d</PathMale>
+			<ControllerFemale>khs_f_95</ControllerFemale>
+			<ControllerMale>khs_m_95</ControllerMale>
+			<AnimationName>Spread Eagle</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>27</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>68</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_58.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_58.unity3d</PathMale>
+			<ControllerFemale>khs_f_96</ControllerFemale>
+			<ControllerMale>khs_m_96</ControllerMale>
+			<AnimationName>Straddling</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>SitChair</category>
+				<category>Stool</category>
+				<category>SofaBench</category>
+				<category>BacklessBench</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>27</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+
+		<!-- 2.7 sonyu-->
+
+		<Animation>
+			<StudioId>77</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_59.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_59.unity3d</PathMale>
+			<ControllerFemale>khs_f_97</ControllerFemale>
+			<ControllerMale>khs_m_97</ControllerMale>
+			<AnimationName>Reverse Cowgirl Nelson</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>44</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>78</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_59.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_59.unity3d</PathMale>
+			<ControllerFemale>khs_f_98</ControllerFemale>
+			<ControllerMale>khs_m_98</ControllerMale>
+			<AnimationName>Liftting Nelson</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>44</NeckDonorId>
+		</Animation>
+
+		<Animation>
+			<StudioId>79</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_60.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_60.unity3d</PathMale>
+			<ControllerFemale>khs_f_99</ControllerFemale>
+			<ControllerMale>khs_m_99</ControllerMale>
+			<AnimationName>Cowgirl Holding Hands</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>3</DonorPoseId>
+			<NeckDonorId>43</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>80</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_60.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_60.unity3d</PathMale>
+			<ControllerFemale>khs_f_100</ControllerFemale>
+			<ControllerMale>khs_m_100</ControllerMale>
+			<AnimationName>-Reverse Cowgirl Knees Bent</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>LieDown</category>
+				<category>Stand</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>44</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+		
+		
+		<!-- 2.8 sonyu -->
+
+		<Animation>
+			<StudioId>81</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_61.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_61.unity3d</PathMale>
+			<ControllerFemale>khs_f_101</ControllerFemale>
+			<ControllerMale>khs_m_101</ControllerMale>
+			<AnimationName>Wall Girl Press</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Wall</category>
+			</categories>
+			<DonorPoseId>18</DonorPoseId>
+			<NeckDonorId>27</NeckDonorId>
+			<FileSiruPaste>Butt</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>82</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_61.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_61.unity3d</PathMale>
+			<ControllerFemale>khs_f_102</ControllerFemale>
+			<ControllerMale>khs_m_102</ControllerMale>
+			<AnimationName>Laying Hold Hands Legs Lock</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>43</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<!--Needs position adjustment -->
+		<Animation>
+			<StudioId>83</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_62.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_62.unity3d</PathMale>
+			<ControllerFemale>khs_f_103</ControllerFemale>
+			<ControllerMale>khs_m_103</ControllerMale>
+			<AnimationName>Desk Doggy 2</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Desk</category>
+			</categories>
+			<DonorPoseId>14</DonorPoseId>
+			<NeckDonorId>25</NeckDonorId>
+			<!--<DonorPoseId>25</DonorPoseId>-->
+			<!--<NeckDonorId>27</NeckDonorId>-->
+			<FileSiruPaste>Butt</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>84</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_62.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_62.unity3d</PathMale>
+			<ControllerFemale>khs_f_104</ControllerFemale>
+			<ControllerMale>khs_m_104</ControllerMale>
+			<AnimationName>Bowing Doggystyle 2</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>3</DonorPoseId>
+			<NeckDonorId>42</NeckDonorId>
+			<FileSiruPaste>Butt</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>85</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_63.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_63.unity3d</PathMale>
+			<ControllerFemale>khs_f_105</ControllerFemale>
+			<ControllerMale>khs_m_105</ControllerMale>
+			<AnimationName>Facing On Bed Leg On Shoulders</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>46</NeckDonorId>
+			<FileSiruPaste>TitsPussy</FileSiruPaste>
+		</Animation>
+
+		<Animation>
+			<StudioId>86</StudioId>
+			<PathFemale>anim_imports/kplug/female/02_63.unity3d</PathFemale>
+			<PathMale>anim_imports/kplug/male/02_63.unity3d</PathMale>
+			<ControllerFemale>khs_f_106</ControllerFemale>
+			<ControllerMale>khs_m_106</ControllerMale>
+			<AnimationName>Facing Away On Bed 2</AnimationName>
+			<Mode>sonyu</Mode>
+			<categories>
+				<category>Stand</category>
+				<category>LieDown</category>
+			</categories>
+			<DonorPoseId>2</DonorPoseId>
+			<NeckDonorId>48</NeckDonorId>
+		</Animation>
+
+	</AnimationLoader>
+
+</manifest>
