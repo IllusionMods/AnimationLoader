@@ -1,0 +1,203 @@
+<manifest schema-ver="1">
+    <guid></guid>
+    <name></name>
+    <version></version>
+    <author></author>
+    <description></description>
+    <website></website>
+	<!-- Manifest.xml are game specific -->
+	<!-- Translated names in KK and KKS don't match also KKS has more possible donors and if used will break KK -->
+	<game>Koikatsu Sunshine</game>
+
+    <!-- The element containing all the animations, has to be inside the manifest element -->
+    <AnimationLoader>
+        <!-- Any number of animations can be contained in one zipmod -->
+        <Animation>
+            <!-- Required - Any positive integer, should be unique within your mod -->
+            <!-- Never change StudioId, Mode or the order of the animation clips in updates to your mod to keep compatibility with studio scenes using these animations -->
+            <StudioId>0</StudioId>
+            <!-- Required - Path inside the zipmod to the assetbundle containing the female animation controller -->
+            <PathFemale>anim_imports/kplug/female/02_40.unity3d</PathFemale>
+            <!-- Required - Path inside the zipmod to the to assetbundle containing the male animation controller -->
+            <PathMale>anim_imports/kplug/male/02_40.unity3d</PathMale>
+            <!-- Required - name of the female animation controller asset -->
+            <ControllerFemale>khh_f_60</ControllerFemale>
+            <!-- Required - name of the male animation controller asset -->
+            <ControllerMale>khh_m_60</ControllerMale>
+            <!-- Required - The name that is displayed in the animation list in game -->
+            <AnimationName>Name</AnimationName>
+            <!-- Required - The type of animation (see EMode enum below for possible values, only houshi and sonyu are supported at the moment for freeh) -->
+            <Mode>houshi</Mode>
+            <!-- Required if Mode is Houshi - The type of houshi animation (value can be Hand, Mouth or Breasts) -->
+            <kindHoushi>Hand</kindHoushi>
+            <!-- Optional - Any mixture of these categories can be applied simultaneously, if array is empty, position will be available everywhere -->
+            <categories>
+                <category>LieDown</category>
+                <category>Stand</category>
+                <category>SitChair</category>
+                <category>Stool</category>
+                <category>SofaBench</category>
+                <category>BacklessBench</category>
+                <category>SchoolDesk</category>
+                <category>Desk</category>
+                <category>Wall</category>
+                <category>StandPool</category>
+                <category>SitDesk</category>
+                <category>SquadDesk</category>
+            </categories>
+            <!-- Required - The id of the vanilla animation that is used as a base for the new animation (see below for possible values) -->
+            <DonorPoseId>0</DonorPoseId>
+            <!-- Optional - Override Donor pose FileMotionNeck value, controls how the female character looks around (see below for possible values) -->
+            <NeckDonorId>0</NeckDonorId>
+            <!-- Optional - Override Donor pose IsFemaleInitiative value, controls if the female is in control -->
+            <IsFemaleInitiative>false</IsFemaleInitiative>
+            <!-- Optional - Affects which parts of the girls body will get covered when cumming outside. -->
+            <!-- Overrides Donor pose FileSiruPaste value (see SiruPasteFiles dictionary below for possible values and what string they actually correspond to) -->
+            <FileSiruPaste>TitsPussy</FileSiruPaste>
+        </Animation>
+    </AnimationLoader>
+
+</manifest>
+
+<!-- 
+public enum EMode
+{
+    none = -1,
+    aibu = 0, // touching
+    houshi = 1, // teasing
+    sonyu = 2, // sex
+    masturbation = 3,
+    peeping = 4,
+    lesbian = 5,
+    houshi3P = 6,
+    sonyu3P = 7,
+    houshi3PMMF = 8,
+    sonyu3PMMF = 9,
+}
+-->
+
+<!-- 
+private static readonly Dictionary<string, string> SiruPasteFiles = new Dictionary<string, string>
+{
+    {"", ""},
+    {"butt", "siru_t_khs_n06"},
+    {"facetits", "siru_t_khh_32"},
+    {"facetitspussy", "siru_t_khh_32"}, // have to make this manually, for now copy FaceTits
+    {"titspussy", "siru_t_khs_n07"},
+    {"tits", "siru_t_khh_11"},
+    {"pussy", "siru_t_khs_n07"}, // have to make this manually, for now copy TitsPussy
+};
+-->
+
+<!-- This information is extracted from Koikatsu Sunshine some animation names are not the same as in Koikatsu added columns isFemaleInitiative and lstCategory -->
+
+<!--
+Entries 53 to 65 are new on Koikatsu Sunshine
+
+id, mode, nameAnimation, posture, numCtrl, kinfHoushi, houshiLoopActionS, isFemaleInitiative, lstCategory, paramFemale.fileSiruPaste
+0, houshi, Glans Rub (亀頭いじり), 0, 0, 0, 0, False," { 0, 1 }", siru_t_khh_00
+1, houshi, 1H Handjob (片手コキ), 0, 0, 0, 1, False," { 0, 1 }", 
+2, houshi, 2H Handjob (両手コキ), 0, 0, 0, 1, False," { 0, 1 }", siru_t_khh_02
+5, houshi, Tip & Shaft Licking (先舐め＋竿舐め), 0, 0, 1, -1, False," { 0, 1 }", siru_t_khh_05
+7, houshi, 1H Blowjob (片手フェラ), 0, 1, 1, 5, False," { 0, 1 }", siru_t_khh_07
+8, houshi, 2H Blowjob (両手フェラ), 0, 1, 1, 5, False," { 0, 1 }", siru_t_khh_08
+11, houshi, Titjob (パイズリ), 0, 0, 2, -1, False," { 0, 1 }", siru_t_khh_11
+12, houshi, Titjob w/ Arms (腕はさみパイズリ), 0, 0, 2, -1, False," { 0, 1 }", siru_t_khh_12
+13, houshi, Pressed Titjob (押し付けパイズリ), 0, 0, 2, -1, False," { 0, 1 }", 
+15, houshi, Titjob & Sucking (パイズリ+咥え), 0, 1, 2, -1, False," { 0, 1 }", siru_t_khh_15
+16, houshi, Sit Glans Rub (椅子亀頭いじり), 1, 0, 0, 0, False," { 2, 3, 4, 5 }", siru_t_khh_16
+17, houshi, Sit 1H Handjob (椅子片手コキ), 1, 0, 0, 1, False," { 2, 3, 4, 5 }", siru_t_khh_17
+21, houshi, Sit Licking (椅子先舐め＋竿舐め), 1, 0, 1, -1, False," { 2, 3, 4, 5 }", siru_t_khh_21
+22, houshi, Sit No-Hand Licking (椅子ノーハンド先舐め), 1, 0, 1, 4, False," { 2, 3, 4, 5 }", siru_t_khh_22
+24, houshi, Sit 2H Blowjob (椅子両手フェラ), 1, 1, 1, 5, False," { 2, 3, 4, 5 }", siru_t_khh_24
+27, houshi, Sit Titjob (椅子パイズリ), 1, 0, 2, -1, False," { 2, 3, 4, 5 }", siru_t_khh_27
+28, houshi, Sit Titjob/Arms (椅子腕はさみパイズリ), 1, 0, 2, -1, False," { 2, 3, 4, 5 }", siru_t_khh_28
+30, houshi, Sit Titjob/Lick (椅子パイズリ+舐め), 1, 0, 2, -1, False," { 2, 3, 4, 5 }", siru_t_khh_30
+31, houshi, Sit Titjob/Suck (椅子パイズリ+咥え), 1, 1, 2, -1, False," { 2, 3, 4, 5 }", siru_t_khh_31
+32, houshi, Stand Glans Rub (立ち亀頭いじり), 2, 0, 0, 0, False," { 0, 1, 6, 7, 8 }", siru_t_khh_32
+33, houshi, Stand 1H HJ (立ち片手コキ), 2, 0, 0, 1, False," { 0, 1, 6, 7, 8 }", siru_t_khh_33
+35, houshi, Stand HJ/Ball Lick (立ち玉舐め手コキ), 2, 0, 1, 2, False," { 0, 1, 6, 7, 8 }", siru_t_khh_35
+36, houshi, Stand HJ/Ball Rub (立ち手コキ玉いじり), 2, 0, 0, 3, False," { 0, 1, 6, 7, 8 }", siru_t_khh_36
+39, houshi, Stand 1H Blowjob (立ち片手フェラ), 2, 1, 1, 5, False," { 0, 1, 6, 7, 8 }", siru_t_khh_39
+40, houshi, Stand 2H Blowjob (立ち両手フェラ), 2, 1, 1, 5, False," { 0, 1, 6, 7, 8 }", siru_t_khh_40
+42, houshi, Stand No Hands BJ (立ちノーハンドフェラ), 2, 1, 1, 5, False," { 0, 1, 6, 7, 8 }", siru_t_khh_42
+43, houshi, Stand Titjob (立ちパイズリ), 2, 0, 2, -1, False," { 0, 1, 6, 7, 8 }", siru_t_khh_43
+44, houshi, Stand Titjob/Arms (立ち腕はさみパイズリ), 2, 0, 2, -1, False," { 0, 1, 6, 7, 8 }", siru_t_khh_44
+47, houshi, Stand Titjob/Suck (立ちパイズリ+咥え), 2, 1, 2, -1, False," { 0, 1, 6, 7, 8 }", siru_t_khh_47
+48, houshi, Pool Titjob (プールパイズリ), 2, 0, 2, -1, False," { 1004 }", siru_t_khh_48
+49, houshi, Stand Onahole (立ちオナホ手コキ), 2, 0, 0, 1, False," { 0, 1, 6, 7, 8 }", 
+50, houshi, Straddle Bench Blowjob (椅子またがりフェラ), 1, 1, 1, 5, False," { 1200 }", siru_t_khh_50
+51, houshi, Bench Blowjob (ベンチフェラ), 1, 1, 1, 5, False," { 12 }", 
+52, houshi, Crowded Handjob (密着手コキ), 2, 0, 0, 1, False," { 1304 }", 
+53, houshi, Nipple-Sucking Handjob (乳首舐め手コキ), 0, 0, 0, -1, False," { 0, 1 }", 
+54, houshi, Laying Footjob (床足コキ), 0, 0, 0, 6, False," { 0, 1 }", 
+55, houshi, Sitting Footjob (椅子足コキ), 1, 0, 0, 6, False," { 2, 3, 4, 5 }", siru_t_khh_55
+56, houshi, Volley Net Blowjob (ネットフェラ), 2, 1, 1, 5, False," { 1300 }", 
+57, houshi, Tennis Table Handjob (卓球台手コキ), 0, 0, 0, 1, False," { 1301 }", siru_t_khh_57
+58, houshi, Tennis Table Blowjob (卓球台フェラ), 0, 1, 1, 5, False," { 1301 }", siru_t_khh_58
+59, houshi, Standing Footjob (立ち足コキ), 0, 0, 0, 6, False," { 0, 1 }", 
+60, houshi, Piledriver Blowjob (ちんぐり返しフェラ), 0, 1, 1, 5, False," { 0, 1 }", siru_t_khh_60
+61, houshi, Sitting Nipple-Sucking Handjob (椅子乳首舐め手コキ), 1, 0, 0, -1, False," { 2, 3 }", siru_t_khh_61
+62, houshi, Standing Nipple-Teasing Handjob (立ち乳首いじり手コキ), 2, 0, 0, 1, False," { 0, 1, 6, 7, 8 }", siru_t_khh_62
+63, houshi, Standing Nipple-Licking Handjob (立ち乳首舐め手コキ), 2, 0, 0, -1, False," { 0, 1, 6, 7, 8 }", siru_t_khh_63
+64, houshi, Sitting Nipple-Licking Titjob (椅子乳首舐めパイズリ), 1, 0, 2, -1, False," { 2, 3, 4, 5 }", siru_t_khh_64
+65, houshi, Standing Tip & Shaft-Kissing Handjob (立ち先キス+竿キス手コキ), 2, 0, 0, 7, False," { 0, 1, 6, 7, 8 }", siru_t_khh_65
+-->
+
+<!--
+Entries 29 to 52 new for Koikatsu Sunshine
+
+id, mode, nameAnimation, posture, numCtrl, kinfHoushi, houshiLoopActionS, isFemaleInitiative, lstCategory, paramFemale.fileSiruPaste
+0, sonyu, Missionary (正常位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_00
+1, sonyu, Leg Held Missionary (開脚正常位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n00
+2, sonyu, Doggy (後背位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_02
+3, sonyu, Arm-Grab Doggy (腕引っ張り後背位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n02
+4, sonyu, Cowgirl (騎乗位), 0, 0, 0, -1, True," { 0, 1 }", siru_t_khs_n04
+6, sonyu, Spooning (側位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n06
+7, sonyu, Standing (立位), 0, 0, 0, -1, False," { 0, 1, 9 }", siru_t_khs_n07
+8, sonyu, Lifting (駅弁), 0, 0, 0, -1, False," { 0, 1, 9 }", siru_t_khs_n08
+9, sonyu, Seated Facing (椅子対面), 0, 0, 0, -1, False," { 2, 3 }", siru_t_khs_n09
+10, sonyu, Seated Behind (椅子背面), 0, 0, 0, -1, False," { 2, 3, 4, 5 }", siru_t_khs_n10
+11, sonyu, Chair Doggy (椅子バック), 0, 0, 0, -1, False," { 2, 3, 4, 5 }", siru_t_khs_11
+12, sonyu, Chair Arm-Grab Doggy (腕引っ張り椅子バック), 0, 0, 0, -1, False," { 2, 3, 4, 5 }", siru_t_khs_n11
+13, sonyu, On Desk (机寝位), 0, 0, 0, -1, False," { 6, 7 }", siru_t_khs_n13
+14, sonyu, Desk Doggy (机バック), 0, 0, 0, -1, False," { 6, 7 }", siru_t_khs_14
+15, sonyu, Desk Arm-Grab Doggy (腕引っ張り机バック), 0, 0, 0, -1, False," { 6, 7 }", siru_t_khs_n14
+16, sonyu, Desk Spooning (机側位), 0, 0, 0, -1, False," { 6, 7 }", siru_t_khs_n16
+17, sonyu, Wall Facing (壁対面片足上げ), 0, 0, 0, -1, False," { 8 }", siru_t_khs_n17
+18, sonyu, Wall Doggy (壁バック), 0, 0, 0, -1, False," { 8 }", siru_t_khs_18
+19, sonyu, Leg Up Wall Doggy (片足上げ壁バック), 0, 0, 0, -1, False," { 8 }", siru_t_khs_n18
+20, sonyu, Pool Doggy (プールバック), 0, 0, 0, -1, False," { 1004 }", siru_t_khs_n20
+21, sonyu, Fence Doggy (フェンス後背位), 0, 0, 0, -1, False," { 1006 }", siru_t_khs_n21
+22, sonyu, Fence Lifting (フェンス掴まり駅弁), 0, 0, 0, -1, False," { 1006 }", siru_t_khs_n22
+23, sonyu, Mating Press (種付けプレス), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n23
+24, sonyu, Piledriver Missionary (マングリ正常位), 0, 0, 0, -1, False," { 1008 }", siru_t_khs_n24
+25, sonyu, Box Doggy (箱バック), 0, 0, 0, -1, False," { 1009 }", siru_t_khs_n25
+26, sonyu, Lying Doggystyle (寝バック), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n26
+27, sonyu, Sofa Cowgirl (ソファ騎乗位), 0, 0, 0, -1, True," { 1201 }", siru_t_khs_n27
+28, sonyu, Pressed From Behind (押し付けバック), 0, 0, 0, -1, False," { 1304 }", siru_t_khs_n28
+29, sonyu, Piledriving Piston (杭打ちピストン), 0, 0, 0, -1, True," { 0, 1 }", siru_t_khs_n29
+30, sonyu, Reverse Piledriver Piston (背面杭打ちピストン), 0, 0, 0, -1, True," { 0, 1 }", siru_t_khs_n30
+31, sonyu, Reverse Cowgirl Against Wall (壁手つき背面騎乗位), 0, 0, 0, -1, True," { 1302 }", siru_t_khs_n31
+32, sonyu, Banana Boat Cowgirl (バナナボート騎乗位), 0, 0, 0, -1, True," { 1303 }", siru_t_khs_n32
+33, sonyu, Banana Boat Doggystyle (バナナボート後背位), 0, 0, 0, -1, False," { 1303 }", siru_t_khs_n33
+34, sonyu, Volleyball Net Doggystyle (ネット後背位), 0, 0, 0, -1, False," { 1300 }", siru_t_khs_n34
+35, sonyu, Table Tennis Missionary (卓球台正常位), 0, 0, 0, -1, False," { 1301 }", siru_t_khs_n35
+36, sonyu, Table Tennis Doggystyle (卓球台バック), 0, 0, 0, -1, False," { 1301 }", siru_t_khs_n36
+37, sonyu, Table Tennis Standing (卓球台立位), 0, 0, 0, -1, False," { 1301 }", siru_t_khs_n37
+38, sonyu, Bed-Grabbing Doggystyle (床手付きバック), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n38
+39, sonyu, Knee-Holding Missionary (膝抱え正常位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n39
+40, sonyu, Legs Spread Missionary (大股開き正常位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n40
+41, sonyu, Hip-Holding Missionary (腰抱え正常位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n41
+42, sonyu, Bowing Doggystyle (伏せ後背位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n42
+43, sonyu, Hand-Holding Cowgirl (手つなぎ騎乗位), 0, 0, 0, -1, True," { 0, 1 }", siru_t_khs_n43
+44, sonyu, Reverse Cowgirl (背面騎乗位), 0, 0, 0, -1, True," { 0, 1 }", siru_t_khs_n44
+45, sonyu, Reverse Spooning (背面側位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n45
+46, sonyu, Facing On Bed (床対面座位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n46
+47, sonyu, Sitting Facing (足掛け対面座位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n47
+48, sonyu, Facing Away On Bed (床背面座位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n48
+49, sonyu, From Behind in Seiza (正座背面座位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n49
+50, sonyu, Kneeling Back Sitting (膝立て背面座位), 0, 0, 0, -1, True," { 0, 1 }", siru_t_khs_n50
+51, sonyu, Bridging Missionary (ブリッジ正常位), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n51
+52, sonyu, Standing From Behind (立ちバック), 0, 0, 0, -1, False," { 0, 1 }", siru_t_khs_n52
+-->

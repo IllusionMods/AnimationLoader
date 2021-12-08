@@ -5,6 +5,9 @@
 	<author></author>
 	<description></description>
 	<website></website>
+	<!-- Manifest.xml are game specific -->
+	<!-- Translated names in KK and KKS don't match also KKS has more possible donors and if used will break KK -->
+	<game>Koikatsu</game>
 
 	<!-- The element containing all the animations, has to be inside the manifest element -->
 	<AnimationLoader>

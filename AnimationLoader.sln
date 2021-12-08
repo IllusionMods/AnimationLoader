@@ -12,6 +12,30 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AnimationLoader.Core", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.KoikatsuSunshine", "src\AnimationLoader.KoikatsuSunshine\AnimationLoader.KoikatsuSunshine.csproj", "{538C1A8E-E673-45F6-A2F6-5C662DB09C6B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{80DB0383-DB90-4E0B-BFC4-005A9093A6DD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		src\BuildSettings.Common.props = src\BuildSettings.Common.props
+		LICENSE = LICENSE
+		nuget.config = nuget.config
+		README.md = README.md
+		src\SkipAllRefs.targets = src\SkipAllRefs.targets
+		template.KKS.xml = template.KKS.xml
+		template.xml = template.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "manifest", "manifest", "{DAF776AF-8F53-4005-8DC3-CA5BB4B9B239}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KK", "KK", "{EA7255EE-DDCC-47A2-AE30-DCB0990E98B0}"
+	ProjectSection(SolutionItems) = preProject
+		manifest\KK\manifest.xml = manifest\KK\manifest.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KKS", "KKS", "{3D128711-AFBB-4E23-B14F-F113FAC385D6}"
+	ProjectSection(SolutionItems) = preProject
+		manifest\KKS\manifest.xml = manifest\KKS\manifest.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{00801bd1-c46b-47fd-947b-f27acc392cb2}*SharedItemsImports = 13
@@ -34,6 +58,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DAF776AF-8F53-4005-8DC3-CA5BB4B9B239} = {80DB0383-DB90-4E0B-BFC4-005A9093A6DD}
+		{EA7255EE-DDCC-47A2-AE30-DCB0990E98B0} = {DAF776AF-8F53-4005-8DC3-CA5BB4B9B239}
+		{3D128711-AFBB-4E23-B14F-F113FAC385D6} = {DAF776AF-8F53-4005-8DC3-CA5BB4B9B239}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {05A3DF07-DCBA-4F87-B786-585322339064}
