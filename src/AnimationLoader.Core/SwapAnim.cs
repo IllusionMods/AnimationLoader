@@ -21,13 +21,11 @@ using UnityEngine.UI;
 using static HFlag;
 using Manager;
 
-[assembly: System.Reflection.AssemblyFileVersion(AnimationLoader.Koikatu.SwapAnim.Version)]
+[assembly: System.Reflection.AssemblyFileVersion(AnimationLoader.SwapAnim.Version)]
 
-namespace AnimationLoader.Koikatu
+namespace AnimationLoader
 {
-    [BepInPlugin(GUID, "Animation Loader", Version)]
-    [BepInDependency(Sideloader.Sideloader.GUID, Sideloader.Sideloader.Version)]
-    public class SwapAnim : BaseUnityPlugin
+    public partial class SwapAnim
     {
         public const string GUID = "essuhauled.animationloader";
         public const string Version = "1.0.8";
