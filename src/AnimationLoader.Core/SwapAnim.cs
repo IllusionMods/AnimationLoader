@@ -83,7 +83,11 @@ namespace AnimationLoader
                 " config/AnimationLoader folder"));
             // Standard game code manages the display of animators buttons no grid UI
 #if KK
-            UseGrid = Config.Bind(GeneralSection, nameof(UseGrid), false, new ConfigDescription("If you don't want to use the scrollable list for some reason"));
+            UseGrid = Config.Bind(
+                GeneralSection,
+                nameof(UseGrid),
+                false,
+                new ConfigDescription("If you don't want to use the scrollable list for some reason"));
 #endif
             Hooks.Init();
         }
@@ -113,7 +117,8 @@ namespace AnimationLoader
                 }
             }
             
-            Logger.LogMessage("Make a manifest format .xml in the config/AnimationLoader folder to test animations");
+            Logger.LogMessage("Make a manifest format .xml in the config/AnimationLoader folder to" +
+                " test animations");
         }
 
         private static void LoadXmls(IEnumerable<XDocument> manifests)
