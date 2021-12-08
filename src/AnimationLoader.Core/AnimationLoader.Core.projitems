@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hooks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SwapAnim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SwapAnimationInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TextScroll.cs" />
