@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <Import Project="..\AnimationLoader.Core\AnimationLoader.Core.projitems" Label="Shared" />
+
     <Import Project="..\BuildSettings.Common.props" />
 
     <PropertyGroup>

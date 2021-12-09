@@ -20,6 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.KoikatsuSun
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{269d192e-9499-429f-a07f-c8b7e13dc861}*SharedItemsImports = 5
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{3ef70928-3925-4f6c-96e9-0ef3b9228e0d}*SharedItemsImports = 5
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{e48d1a5f-a706-4293-88bb-d82bd68cdfed}*SharedItemsImports = 13
 	EndGlobalSection
