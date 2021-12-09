@@ -21,16 +21,15 @@ using UnityEngine.UI;
 using static HFlag;
 using Manager;
 
-[assembly: System.Reflection.AssemblyFileVersion(AnimationLoader.Koikatu.SwapAnim.Version)]
+[assembly: System.Reflection.AssemblyFileVersion(AnimationLoader.SwapAnim.Version)]
 
-namespace AnimationLoader.Koikatu
+namespace AnimationLoader
 {
-    [BepInPlugin(GUID, "Animation Loader", Version)]
-    [BepInDependency(Sideloader.Sideloader.GUID, Sideloader.Sideloader.Version)]
-    public class SwapAnim : BaseUnityPlugin
+    public partial class SwapAnim
     {
         public const string GUID = "essuhauled.animationloader";
-        public const string Version = "1.0.8";
+        public const string DisplayName = "Animation Loader";
+        public const string Version = "1.1.0";
 
         private static ConfigEntry<bool> SortPositions { get; set; }
         private static ConfigEntry<bool> UseGrid { get; set; }
@@ -39,17 +38,16 @@ namespace AnimationLoader.Koikatu
 
         private const string ManifestRootElement = "AnimationLoader";
         private const string ManifestArrayItem = "Animation";
-        private static readonly XmlSerializer xmlSerializer = new XmlSerializer(typeof(SwapAnimationInfo));
+        private static readonly XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
 
-        private new static ManualLogSource Logger;
+        private static new ManualLogSource Logger;
         
         private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
         private static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo> swapAnimationMapping;
         private static readonly Type vrType = Type.GetType("VRHScene, Assembly-CSharp");
-        private static readonly Color buttonColor = new Color(0.96f, 1f, 0.9f);
+        private static readonly Color buttonColor = new(0.96f, 1f, 0.9f);
 
-        private static readonly Dictionary<string, string> SiruPasteFiles = new Dictionary<string, string>
-        {
+        private static readonly Dictionary<string, string> SiruPasteFiles = new() {
             {"", ""},
             {"butt", "siru_t_khs_n06"},
             {"facetits", "siru_t_khh_32"},
@@ -59,8 +57,7 @@ namespace AnimationLoader.Koikatu
             {"pussy", "siru_t_khs_n07"}, // have to make this manually, for now copy TitsPussy
         };
 
-        private static readonly Dictionary<string, int> EModeGroups = new Dictionary<string, int>
-        {
+        private static readonly Dictionary<string, int> EModeGroups = new() {
             { "aibu1", 998 },
             { "houshi0", 999 },
             { "houshi1", 1000 },
@@ -143,7 +140,12 @@ namespace AnimationLoader.Koikatu
         [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateAllAnimationList))]
         private static void ExtendList(object __instance) {
             // add new animations to the complete list
+#if KK
             var hlist = Singleton<Game>.Instance.glSaveData.playHList;
+#elif KKS
+            // glSaveDate -> globalData and is static
+            var hlist = Game.globalData.playHList;
+#endif
             var lstAnimInfo = Traverse.Create(__instance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
             swapAnimationMapping = new Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>();
             foreach (var anim in animationDict.SelectMany(
@@ -175,8 +177,9 @@ namespace AnimationLoader.Koikatu
 
                 donorInfo.lstCategory = anim.categories.Select(c =>
                     {
-                        var cat = new HSceneProc.Category();
-                        cat.category = (int)c;
+                        var cat = new HSceneProc.Category {
+                            category = (int)c
+                        };
                         return cat;
                     }
                 ).ToList();

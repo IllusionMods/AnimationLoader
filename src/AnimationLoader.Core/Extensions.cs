@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace AnimationLoader.Koikatu
+namespace AnimationLoader
 {
     public static class Extensions
     {

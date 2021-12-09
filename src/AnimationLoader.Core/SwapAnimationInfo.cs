@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace AnimationLoader.Koikatu
+namespace AnimationLoader
 {
     [XmlRoot("Animation")]
     [Serializable]

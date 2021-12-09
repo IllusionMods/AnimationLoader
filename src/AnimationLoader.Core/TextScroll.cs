@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace AnimationLoader.Koikatu
+namespace AnimationLoader
 {
     public class TextScroll : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
