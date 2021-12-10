@@ -1,26 +1,12 @@
 using System;
-using System.Collections;
-using BepInEx;
-using HarmonyLib;
-using IllusionUtility.GetUtility;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Xml.Linq;
-using System.Xml.Serialization;
+
 using BepInEx.Configuration;
 using BepInEx.Logging;
-using Illusion.Extensions;
-using Sideloader.AutoResolver;
-using Studio;
-using TMPro;
+
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using static HFlag;
-using Manager;
-using KKAPI;
 
 [assembly: System.Reflection.AssemblyFileVersion(AnimationLoader.SwapAnim.Version)]
 
@@ -30,18 +16,14 @@ namespace AnimationLoader
     {
         public const string GUID = "essuhauled.animationloader";
         public const string DisplayName = "Animation Loader";
-        public const string Version = "1.1.0";
+        public const string Version = "1.0.9.6";
 
         private static ConfigEntry<bool> SortPositions { get; set; }
+#if KK
         private static ConfigEntry<bool> UseGrid { get; set; }
+#endif
         private static ConfigEntry<KeyboardShortcut> ReloadManifests { get; set; }
         private const string GeneralSection = "General";
-
-        private const string ManifestRootElement = "AnimationLoader";
-        private const string ManifestArrayItem = "Animation";
-        private static readonly XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
-        private static XElement animRoot;
-        private static XElement animRootGS;
 
         private static new ManualLogSource Logger;
         
@@ -89,21 +71,15 @@ namespace AnimationLoader
                 new KeyboardShortcut(KeyCode.None),
                 new ConfigDescription("Load positions from all manifest format xml files inside " +
                 "config/AnimationLoader folder"));
-            // For KKS the app code handles the display of animators buttons no grid UI.
+            // For KKS the application code handles the display of animators buttons no grid UI.
 #if KK
             UseGrid = Config.Bind(
                 GeneralSection,
                 nameof(UseGrid),
                 false,
                 new ConfigDescription("If you don't want to use the scrollable list for some reason"));
-#endif      
+#endif
             Hooks.Init();
-            //var harmony = Harmony.CreateAndPatchAll(typeof(SwapAnim), nameof(SwapAnim));
-            //if(vrType != null)
-            //{
-            //    harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.ChangeAnimator)), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(SwapAnimation)));
-            //    harmony.Patch(AccessTools.Method(vrType, nameof(HSceneProc.CreateAllAnimationList)), postfix: new HarmonyMethod(typeof(SwapAnim), nameof(ExtendList)));
-            //}
         }
 
         private void Start()
@@ -116,59 +92,6 @@ namespace AnimationLoader
             if(ReloadManifests.Value.IsDown())
             {
                 LoadTestXml();
-            }
-        }
-
-        private static void LoadTestXml()
-        {
-            var path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
-            if(Directory.Exists(path))
-            {
-                var docs = Directory.GetFiles(path, "*.xml").Select(XDocument.Load).ToList();
-                if(docs.Count > 0)
-                {
-                    Logger.LogMessage("Loading test animations");
-                    LoadXmls(docs);
-                    return;
-                }
-            }
-            
-            Logger.LogMessage("Make a manifest format .xml in the config/AnimationLoader folder " +
-                "to test animations");
-        }
-
-        private static void LoadXmls(IEnumerable<XDocument> manifests)
-        {
-            animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
-            foreach(var manifest in manifests.Select(x => x.Root))
-            {
-                var guid = manifest.Element("guid").Value;
-                // TODO: Read both game specific and old format
-                // Try game specific format
-                animRoot = manifest.Element(ManifestRootElement)?.Element(KoikatuAPI.GameProcessName);
-
-                if(animRoot == null)
-                {
-                    // Fall back to old format
-                    animRoot = manifest?.Element(ManifestRootElement);
-                }
-
-                if(animRoot == null)
-                {
-                    continue;
-                }
-
-                foreach(var animElem in animRoot.Elements(ManifestArrayItem))
-                {
-                    var reader = animElem.CreateReader();
-                    var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
-                    data.Guid = guid;
-                    reader.Close();
-
-                    if(!animationDict.TryGetValue(data.Mode, out var list))
-                        animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
-                    list.Add(data);
-                }
             }
         }
 

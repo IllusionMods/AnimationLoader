@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Xml.Linq;
 using System.Xml.Serialization;
+using static HFlag;
+
 
 namespace AnimationLoader
 {
@@ -55,13 +58,125 @@ namespace AnimationLoader
 
         [XmlElement]
         public int MotionIKDonor = -1;
+
+        [XmlElement]
+        public XElement GameSpecificOverrides;
+    }
+
+    [XmlRoot("KoikatsuSunshine")]
+    [Serializable]
+    public class KKSOverrideInfo
+    {
+        [XmlIgnore]
+        public string Guid;
+
+        [XmlElement]
+        public int StudioId = -1;
+
+        [XmlElement]
+        public string PathFemale;
+
+        [XmlElement]
+        public string ControllerFemale;
+
+        [XmlElement]
+        public string PathMale;
+
+        [XmlElement]
+        public string ControllerMale;
+
+        [XmlElement]
+        public string AnimationName;
+
+        [XmlElement]
+        public EMode Mode = EMode.none;
+
+        [XmlElement]
+        public KindHoushi kindHoushi = KindHoushi.none;
+
+        [XmlArray]
+        [XmlArrayItem("category", Type = typeof(PositionCategory))]
+        public PositionCategory[] categories = new PositionCategory[0];
+
+        [XmlElement]
+        public int DonorPoseId;
+
+        [XmlElement]
+        public int NeckDonorId = -1;
+
+        [XmlElement]
+        public string FileMotionNeck;
+
+        [XmlElement]
+        public bool? IsFemaleInitiative;
+
+        [XmlElement]
+        public string FileSiruPaste;
+
+        [XmlElement]
+        public int MotionIKDonor = -1;
+    }
+
+    [XmlRoot("Koikatu")]
+    [Serializable]
+    public class KKOverrideInfo
+    {
+        [XmlIgnore]
+        public string Guid;
+
+        [XmlElement]
+        public int StudioId = -1;
+
+        [XmlElement]
+        public string PathFemale;
+
+        [XmlElement]
+        public string ControllerFemale;
+
+        [XmlElement]
+        public string PathMale;
+
+        [XmlElement]
+        public string ControllerMale;
+
+        [XmlElement]
+        public string AnimationName;
+
+        [XmlElement]
+        public EMode Mode = EMode.none;
+
+        [XmlElement]
+        public KindHoushi kindHoushi = KindHoushi.none;
+
+        [XmlArray]
+        [XmlArrayItem("category", Type = typeof(PositionCategory))]
+        public PositionCategory[] categories = new PositionCategory[0];
+
+        [XmlElement]
+        public int DonorPoseId;
+
+        [XmlElement]
+        public int NeckDonorId = -1;
+
+        [XmlElement]
+        public string FileMotionNeck;
+
+        [XmlElement]
+        public bool? IsFemaleInitiative;
+
+        [XmlElement]
+        public string FileSiruPaste;
+
+        [XmlElement]
+        public int MotionIKDonor = -1;
     }
 
     public enum KindHoushi
     {
         Hand = 0,
         Mouth = 1,
-        Breasts = 2
+        Breasts = 2,
+        none = -1,
     }
 
     public enum PositionCategory
@@ -79,5 +194,6 @@ namespace AnimationLoader
         SitDesk = 10,
         SquadDesk = 11,
         Ground3P = 1100,
+        none = -1,
     }
 }
