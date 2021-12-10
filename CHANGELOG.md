@@ -1,0 +1,1 @@
+# Changelog### (Unreleased)This is the first release with Koikatsu Sunshine support.  In KKS the animations are available depending on the Heroine experience.a##### Added- Koikatsu Sunshine Support- Extensions to the manifest.xml format##### Changed- Solution use shared code now##### Fixed###### Known Issues- KKS: animations are not loading- 
