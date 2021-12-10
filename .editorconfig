@@ -1,4 +1,4 @@
-# Rules in this file were initially inferred by Visual Studio IntelliCode from the D:\Projects\C#\Koikatu\IDontHaveIdea\IllusionGames\AnimationLoader codebase based on best match to current usage at 12/9/2021
+# Rules in this file were initially inferred by Visual Studio IntelliCode from the D:\Projects\C#\Koikatu\IDontHaveIdea\PullRequest\AnimationLoader codebase based on best match to current usage at 11/19/2021
 # You can modify the rules from these initially generated values to suit your own policies
 # You can learn more about editorconfig here: https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
 [*.cs]
@@ -15,8 +15,6 @@ indent_style = space
 csharp_new_line_before_else = true
 #require members of object initializers to be on the same line
 csharp_new_line_before_members_in_object_initializers = false
-#require braces to be on a new line for methods, control_blocks, and types (also known as "Allman" style)
-csharp_new_line_before_open_brace = methods, control_blocks, types
 
 #Formatting - organize using options
 
@@ -27,22 +25,14 @@ dotnet_sort_system_directives_first = true
 
 #require NO space between a cast and the value
 csharp_space_after_cast = false
-#require a space before the colon for bases or interfaces in a type declaration
-csharp_space_after_colon_in_inheritance_clause = true
 #require NO space after a keyword in a control flow statement such as a for loop
-csharp_space_after_keywords_in_control_flow_statements = false
-#require a space before the colon for bases or interfaces in a type declaration
-csharp_space_before_colon_in_inheritance_clause = true
-#remove space within empty argument list parentheses
-csharp_space_between_method_call_empty_parameter_list_parentheses = false
+csharp_space_after_keywords_in_control_flow_statements =true
 #remove space between method call name and opening parenthesis
 csharp_space_between_method_call_name_and_opening_parenthesis = false
 #do not place space characters after the opening parenthesis and before the closing parenthesis of a method call
-csharp_space_between_method_call_parameter_list_parentheses = false
-#remove space within empty parameter list parentheses for a method declaration
-csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+csharp_space_between_method_call_parameter_list_parentheses =false
 #place a space character after the opening parenthesis and before the closing parenthesis of a method declaration parameter list.
-csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_method_declaration_parameter_list_parentheses =false
 
 #Style - Code block preferences
 
@@ -85,7 +75,9 @@ csharp_preferred_modifier_order = public,private,static:suggestion
 dotnet_style_qualification_for_field = false:suggestion
 #prefer methods not to be prefaced with this. or Me. in Visual Basic
 dotnet_style_qualification_for_method = false:suggestion
+insert_final_newline=true
+csharp_preserve_single_line_blocks=false
+csharp_preserve_single_line_statements=false
 
-#line ending lf
-[*.{cs,vb,xml,csproj}]
+[*.{cs,vb}]
 end_of_line=lf
