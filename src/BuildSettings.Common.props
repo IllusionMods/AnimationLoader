@@ -1,12 +1,13 @@
 <Project>
 
   <PropertyGroup>
-      <DebugType>embedded</DebugType>
-      <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-      <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
-      <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-      <LangVersion>latest</LangVersion>
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>embedded</DebugType>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<AnalysisLevel>latest</AnalysisLevel>
+	<LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
