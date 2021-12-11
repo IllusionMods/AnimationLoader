@@ -44,6 +44,7 @@ namespace AnimationLoader
 
                 foreach (var button in buttons)
                 {
+                    // button.gameObject.SetActive(false);
                     var label = button.GetComponentInChildren<TextMeshProUGUI>();
 
                     try
