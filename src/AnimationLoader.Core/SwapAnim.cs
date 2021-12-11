@@ -8,16 +8,11 @@ using BepInEx.Logging;
 using UnityEngine;
 using static HFlag;
 
-[assembly: System.Reflection.AssemblyFileVersion(AnimationLoader.SwapAnim.Version)]
 
 namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        public const string GUID = "essuhauled.animationloader";
-        public const string DisplayName = "Animation Loader";
-        public const string Version = "1.0.9.6";
-
         private static ConfigEntry<bool> SortPositions { get; set; }
 #if KK
         private static ConfigEntry<bool> UseGrid { get; set; }
