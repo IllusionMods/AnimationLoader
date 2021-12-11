@@ -22,7 +22,6 @@ namespace AnimationLoader
                 if (_lstAnimInfo == null || _lstAnimInfo.Count == 0)
                     return;
 
-
                 var buttonParent = _objParent.transform;
                 Transform scrollT = null;
                 if (vrType != null || UseGrid.Value)
