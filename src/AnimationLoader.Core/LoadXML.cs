@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -43,6 +44,7 @@ namespace AnimationLoader
         private static void LoadXmls(IEnumerable<XDocument> manifests)
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
+            int count = 0;
             foreach(var manifest in manifests.Select(x => x.Root))
             {
                 var guid = manifest.Element("guid").Value;
@@ -50,6 +52,11 @@ namespace AnimationLoader
                 // Try game specific format
                 animRootGS = manifest.Element(ManifestRootElement)?.Element(KoikatuAPI.GameProcessName);
                 animRoot = manifest?.Element(ManifestRootElement);
+
+                if ((animRoot == null) && (animRootGS == null))
+                {
+                    continue;
+                }
 
                 XElement[] roots = { animRootGS, animRoot };
 
@@ -61,53 +68,65 @@ namespace AnimationLoader
                     }
                     foreach (var animElem in root.Elements(ManifestArrayItem))
                     {
+                        if (animElem == null)
+                        {
+                            continue;
+                        }
                         var reader = animElem.CreateReader();
                         var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
                         data.Guid = guid;
                         reader.Close();
                         if (data.GameSpecificOverrides != null)
                         {
+                            Logger.LogWarning($"Label to override = {data.AnimationName}");
                             var overrideReader = data.GameSpecificOverrides.CreateReader();
+#if KKS
                             var overrideData = (KKSOverrideInfo)xmlKKSSerializer.Deserialize(overrideReader);
-                            DoOverrides(data, overrideData);
+#elif KK
+                            var overrideData = (KKOverrideInfo)xmlKKSerializer.Deserialize(overrideReader);
+#endif
+                            DoOverrides(ref data, overrideData);
+                            data.GameSpecificOverrides = null;
+                            Logger.LogWarning($"Label after attempt = {data.AnimationName}");
                         }
                         if (!animationDict.TryGetValue(data.Mode, out var list))
                             animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
                         list.Add(data);
+                        count++;
                     }
                 }
             }
+            Logger.LogWarning($"Added {count} animations.");
         }
 
-        private static void DoOverrides(SwapAnimationInfo data, object dataOverride)
+        private static void DoOverrides(ref SwapAnimationInfo data, object dataOverride)
         {
+#if KKS
             KKSOverrideInfo overrides = (KKSOverrideInfo)dataOverride;
+#elif KK
+            KKOverrideInfo overrides = (KKOverrideInfo)dataOverride;
+#endif
+            // TODO: Ugly hack for now check alternatives
 
-            // Ugly hack for now
-
-            if (overrides.StudioId >= 0)
-            {
-                data.StudioId = overrides.StudioId;
-            }
             if (overrides.PathFemale != null)
             {
-                data.PathFemale = overrides.PathFemale;
+                data.PathFemale = string.Copy(overrides.PathFemale);
             }
             if (overrides.ControllerFemale != null)
             {
-                data.ControllerFemale = overrides.ControllerFemale;
+                data.ControllerFemale = string.Copy(overrides.ControllerFemale);
             }
             if (overrides.PathMale != null)
             {
-                data.PathMale = overrides.PathMale;
+                data.PathMale = string.Copy(overrides.PathMale);
             }
             if (overrides.ControllerMale != null)
             {
-                data.ControllerMale = overrides.ControllerMale;
+                data.ControllerMale = string.Copy(overrides.ControllerMale);
             }
             if (overrides.AnimationName != null)
             {
-                data.AnimationName = overrides.AnimationName;
+                data.AnimationName = string.Copy(overrides.AnimationName);
             }
             if (overrides.Mode >= 0)
             {
@@ -119,7 +138,7 @@ namespace AnimationLoader
             }
             if (overrides.categories != null)
             {
-                data.categories = overrides.categories;
+                overrides.categories.CopyTo(data.categories, 0);
             }
             if (overrides.DonorPoseId >= 0)
             {
@@ -131,7 +150,7 @@ namespace AnimationLoader
             }
             if (overrides.FileMotionNeck != null)
             {
-                data.FileMotionNeck = overrides.FileMotionNeck;
+                data.FileMotionNeck = string.Copy(overrides.FileMotionNeck);
             }
             if (overrides.IsFemaleInitiative != null)
             {
@@ -139,7 +158,7 @@ namespace AnimationLoader
             }
             if (overrides.FileSiruPaste != null)
             {
-                data.FileSiruPaste = overrides.FileSiruPaste;
+                data.FileSiruPaste = string.Copy(overrides.FileSiruPaste);
             }
             if (overrides.MotionIKDonor >= 0)
             {
