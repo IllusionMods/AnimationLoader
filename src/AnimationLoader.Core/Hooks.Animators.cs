@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 using HarmonyLib;
 
@@ -24,14 +25,10 @@ namespace AnimationLoader
 
                 try
                 {
-#if DEBUG                    
-                    swapAnimationMapping.TryGetValue(_nextAinmInfo, out var anim);
-                    if (anim != null)
-                    {
-                        Logger.LogWarning($"Animator {anim.StudioId}");
-                    }                    
-                    Logger.LogWarning($"Animator mode {_nextAinmInfo.mode} ID: " +
-                        $"{_nextAinmInfo.id} name {Utilities.Translate(_nextAinmInfo.nameAnimation)} - " +
+#if DEBUG
+                    Logger.LogWarning($"Key {AnimationKey(_nextAinmInfo)} Animator mode" +
+                        $" {_nextAinmInfo.mode} ID: {_nextAinmInfo.id} name" +
+                        $" {Utilities.Translate(_nextAinmInfo.nameAnimation)} - " +
                         $"Asset {_nextAinmInfo.pathFemaleBase.assetpath} restriction " +
                         $"{_nextAinmInfo.stateRestriction}");
 #endif
@@ -42,6 +39,21 @@ namespace AnimationLoader
                 }
             }
 
+            private static string AnimationKey(HSceneProc.AnimationListInfo animation)
+            {
+                string key;
+
+                swapAnimationMapping.TryGetValue(animation, out var anim);
+                if (anim != null)
+                {
+                    key = $"{anim.Guid} {animation.mode} {anim.StudioId}";
+                }
+                else
+                {
+                    key = $"gameAnimation {animation.mode} {animation.id}";
+                }
+                return key;
+            }
         }
     }
 }
