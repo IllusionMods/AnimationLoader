@@ -25,14 +25,23 @@ namespace AnimationLoader
                 }
 
                 int total = 0;
-                var lstAnimInfo = Traverse.Create(_hprocInstance).Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
+                var lstAnimInfo = Traverse
+                    .Create(_hprocInstance)
+                    .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
 
-                // id, mode, nameAnimation (Japanese name), posture, numCtrl, kindHoshi, hoshiLoopActionS, isFemaleInitiative, {category list}, fileSiruPaste
+                // id, mode,
+                // nameAnimation (Japanese name), posture,
+                // numCtrl, kindHoshi,
+                // hoshiLoopActionS, isFemaleInitiative,
+                // {category list},
+                // fileSiruPaste
                 for (var i = 0; i < lstAnimInfo.Length; i++)
                 {
                     var lines = lstAnimInfo[i].Select(x => $"{x.id}, {x.mode}," +
-                         $" {Translate(x.nameAnimation)} ({x.nameAnimation}), {x.posture}, {x.numCtrl}, {x.kindHoushi}," +
-                         $" {x.houshiLoopActionS}, {x.isFemaleInitiative},{CategoryList(x.lstCategory)}," +
+                         $" {Translate(x.nameAnimation)} ({x.nameAnimation}), {x.posture}," +
+                         $" {x.numCtrl}, {x.kindHoushi}," +
+                         $" {x.houshiLoopActionS}, {x.isFemaleInitiative}," +
+                         $" {CategoryList(x.lstCategory)}," +
                          $" {x.paramFemale.fileSiruPaste}");
 
                     File.WriteAllLines($"lst{i}.csv", (string[])lines);
@@ -53,7 +62,8 @@ namespace AnimationLoader
                 return tmp;
             }
 
-            // TODO: Tried a few ways to make it work with/without casting did not work check why later
+            // TODO: Tried a few ways to make it work with/without casting
+            // did not work check why later
             static internal string CategoryList(List<HSceneProc.Category> categories)
             {
                 string tmp = "";
@@ -85,9 +95,10 @@ namespace AnimationLoader
                 return count;
             }
 
-            static internal void MoveForward(float factor)
+            static internal void DisplayData(object data)
             {
-
+                var ddata = (SwapAnimationInfo)data;
+                Logger.LogWarning($"\n{ddata.AnimationName}");
             }
         }
     }
