@@ -61,6 +61,9 @@ namespace AnimationLoader
                             swapAnimationMapping.TryGetValue(anim, out var swap);
                             if (swap != null)
                             {
+                                //
+                                // swap.Guid, swap.StudioId key for loaded animation
+                                //
                                 button.transform
                                     .FindLoop("Background")
                                     .GetComponent<Image>().color = buttonColor;
