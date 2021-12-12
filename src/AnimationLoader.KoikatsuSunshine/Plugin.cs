@@ -1,5 +1,5 @@
 ﻿//
-// Entry for KKS
+// Entry point for AnimationLoader.KoikatsuSunshine
 //
 using BepInEx;
 using KKAPI;
