@@ -17,8 +17,8 @@ namespace AnimationLoader
         private const string ManifestRootElement = "AnimationLoader";
         private const string ManifestArrayItem = "Animation";
         private static readonly XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
-        public static readonly XmlSerializer xmlKKSSerializer = new(typeof(KKSOverrideInfo));
-        public static readonly XmlSerializer xmlKKSerializer = new(typeof(KKOverrideInfo));
+        private static readonly XmlSerializer xmlKKSSerializer = new(typeof(KKSOverrideInfo));
+        private static readonly XmlSerializer xmlKKSerializer = new(typeof(KKOverrideInfo));
 
         private static XElement animRoot;
         private static XElement animRootGS;
@@ -48,7 +48,7 @@ namespace AnimationLoader
             foreach(var manifest in manifests.Select(x => x.Root))
             {
                 var guid = manifest.Element("guid").Value;
-                // TODO: Read both game specific and old format
+
                 // Try game specific format
                 animRootGS = manifest.Element(ManifestRootElement)?.Element(KoikatuAPI.GameProcessName);
                 animRoot = manifest?.Element(ManifestRootElement);
@@ -79,10 +79,13 @@ namespace AnimationLoader
                         if (data.GameSpecificOverrides != null)
                         {
                             Logger.LogWarning($"Label to override = {data.AnimationName}");
-                            var overrideReader = data.GameSpecificOverrides.CreateReader();
 #if KKS
+                            var overrideReader = data.GameSpecificOverrides.CreateReader();
                             var overrideData = (KKSOverrideInfo)xmlKKSSerializer.Deserialize(overrideReader);
 #elif KK
+                            // Work around for KK GameSpecificOverrides is parsed as a string not XElement
+                            var overrideElement = XElement.Parse(data.GameSpecificOverrides);
+                            var overrideReader = overrideElement.CreateReader();
                             var overrideData = (KKOverrideInfo)xmlKKSerializer.Deserialize(overrideReader);
 #endif
                             DoOverrides(ref data, overrideData);

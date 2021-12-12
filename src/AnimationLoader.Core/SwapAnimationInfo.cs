@@ -60,8 +60,14 @@ namespace AnimationLoader
         [XmlElement]
         public int MotionIKDonor = -1;
 
+#if KKS
         [XmlElement]
         public XElement GameSpecificOverrides;
+#elif KK
+        // TODO: More research to avoid code stripping work around for KK
+        [XmlElement]
+        public string GameSpecificOverrides;
+#endif
     }
 
     [XmlRoot("KoikatsuSunshine")]
@@ -195,6 +201,5 @@ namespace AnimationLoader
         SitDesk = 10,
         SquadDesk = 11,
         Ground3P = 1100,
-        none = -1,
     }
 }

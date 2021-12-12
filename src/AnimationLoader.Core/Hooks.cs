@@ -124,7 +124,7 @@ namespace AnimationLoader
 #if DEBUG && KKS
                 Logger.LogError($"Added {countAL + countKKS} animations: KKS - {countKKS} AnimationLoader - {countAL} ");
                 // Saves information used in the templates
-                // Utilities.SaveAnimInfo();
+                Utilities.SaveAnimInfo();
 #endif
             }
 
@@ -146,7 +146,8 @@ namespace AnimationLoader
                     .InstructionEnumeration();
             }
 
-            [HarmonyPostfix, HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.ChangeAnimator))]
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.ChangeAnimator))]
             private static void SwapAnimation(object __instance, HSceneProc.AnimationListInfo _nextAinmInfo)
             {
                 if (!swapAnimationMapping.TryGetValue(_nextAinmInfo, out var swapAnimationInfo))
