@@ -23,7 +23,8 @@ namespace AnimationLoader
         private static new ManualLogSource Logger;
         
         private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
-        private static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo> swapAnimationMapping;
+        private static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>
+            swapAnimationMapping;
         private static readonly Type vrType = Type.GetType("VRHScene, Assembly-CSharp");
         private static readonly Color buttonColor = new(0.96f, 1f, 0.9f);
 
@@ -72,7 +73,8 @@ namespace AnimationLoader
                 GeneralSection,
                 nameof(UseGrid),
                 false,
-                new ConfigDescription("If you don't want to use the scrollable list for some reason"));
+                new ConfigDescription("If you don't want to use the scrollable" +
+                    " list for some reason"));
 #endif
             Hooks.Init();
         }
@@ -80,6 +82,12 @@ namespace AnimationLoader
         private void Start()
         {
             LoadXmls(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
+#if DEBUG
+            if (animationDict.Count < 1)
+            {
+                LoadTestXml();
+            }
+#endif
         }
 
         private void Update()
@@ -90,7 +98,9 @@ namespace AnimationLoader
             }
         }
 
-        private static AnimatorOverrideController SetupAnimatorOverrideController(RuntimeAnimatorController src, RuntimeAnimatorController over)
+        private static AnimatorOverrideController SetupAnimatorOverrideController(
+            RuntimeAnimatorController src,
+            RuntimeAnimatorController over)
         {
             if(src == null || over == null)
                 return null;
