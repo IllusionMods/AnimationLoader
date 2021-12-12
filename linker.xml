@@ -1,0 +1,7 @@
+<linker>
+    <assembly fullname="System.Xml.Linq">
+        <type fullname="System.Xml.Linq.XElement">
+            <method name=".ctor" />
+        </type>
+    </assembly>
+</linker>
