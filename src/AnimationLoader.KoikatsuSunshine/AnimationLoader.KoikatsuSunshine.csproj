@@ -30,7 +30,15 @@
       <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.UI" Version="2019.4.9" />
       <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.UIModule" Version="2019.4.9" />
       <PackageReference Include="IllusionModdingAPI.KKSAPI" Version="1.28.2" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="Sideloader.KoikatsuSunshine" Version="16.9.1" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Update="Microsoft.Unity.Analyzers" Version="1.11.2">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
     
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
