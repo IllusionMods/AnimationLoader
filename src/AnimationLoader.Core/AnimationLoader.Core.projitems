@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Fixes\Move.Characters.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.Animators.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LoadXML.cs" />
@@ -18,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)SwapAnim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SwapAnimationInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)TextScroll.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Fixes\Move.AnimationInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Utilities.cs" />
   </ItemGroup>
 </Project>
