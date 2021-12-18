@@ -32,10 +32,14 @@ namespace AnimationLoader
             {
                 if (textMesh.preferredWidth - Math.Abs(textMesh.margin.x)
                     < transBase.sizeDelta.x * 0.5f)
+                {
                     MarginSet(transBase.sizeDelta.x * 0.5f);
+                }
                 else
+                {
                     MarginAdd(-speed * Time.deltaTime);
-                
+                }
+
                 yield return null;
             }
         }
