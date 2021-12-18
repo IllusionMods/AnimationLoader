@@ -24,8 +24,7 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        static internal Harmony _hookInstance;
-        static internal HSceneProc _hprocInstance;
+        internal static Harmony _hookInstance;
         //internal static HFlag.EMode _mode;
 
         internal partial class Hooks
@@ -33,7 +32,7 @@ namespace AnimationLoader
             /// <summary>
             /// Initialize the Hooks patch instance
             /// </summary>
-            static internal void Init()
+            internal static void Init()
             {
                 _hookInstance = Harmony.CreateAndPatchAll(typeof(Hooks), nameof(Hooks));
 
@@ -64,20 +63,15 @@ namespace AnimationLoader
 #elif KKS
                 var hlist = Game.globalData.playHList;
 #endif
-                if (_hprocInstance == null)
-                {
-                    _hprocInstance = (HSceneProc)__instance;
-                }
-
                 var lstAnimInfo = Traverse
                     .Create(__instance)
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
                 swapAnimationMapping = 
                     new Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>();
-#if DEBUG && KKS
-                int countKKS = 0;
-                int countAL = 0;
-                countKKS = Utilities.CountAnimations(lstAnimInfo);
+#if DEBUG
+                var countGameA = 0;
+                var countAL = 0;
+                countGameA = Utilities.CountAnimations(lstAnimInfo);
 #endif
                 foreach (var anim in animationDict.SelectMany(
                     e => e.Value,
@@ -93,9 +87,10 @@ namespace AnimationLoader
 
                     var donorInfo = animListInfo
                         .FirstOrDefault(x => x.id == anim.DonorPoseId)?.DeepCopy();
+
                     if (donorInfo == null)
                     {
-                        Logger.LogWarning($"No donor: {anim.Mode} {anim.DonorPoseId}");
+                        Logger.LogWarning($"0001: No donor: {anim.Mode} {anim.DonorPoseId}");
                         continue;
                     }
 
@@ -113,11 +108,28 @@ namespace AnimationLoader
                     {
                         donorInfo.isFemaleInitiative = anim.IsFemaleInitiative.Value;
                     }
+                    
+                    /*
                     if (anim.FileSiruPaste != null && SiruPasteFiles
                         .TryGetValue(anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
                     {
 
                         donorInfo.paramFemale.fileSiruPaste = fileSiruPaste;
+                    }
+                    */
+
+                    if (!string.IsNullOrEmpty(anim.FileSiruPaste))
+                    {
+                        // Check if FileSuruPaset is on dictionary first
+                        if (SiruPasteFiles.TryGetValue(
+                            anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
+                        {
+                            donorInfo.paramFemale.fileSiruPaste = fileSiruPaste;
+                        }
+                        else
+                        {
+                            donorInfo.paramFemale.fileSiruPaste = anim.FileSiruPaste.ToLower();
+                        }
                     }
 
                     donorInfo.lstCategory = anim.categories.Select(c =>
@@ -129,25 +141,27 @@ namespace AnimationLoader
                             return cat;
                         }).ToList();
 
-                    Logger.LogDebug("Adding anim " + anim.AnimationName + " to EMode " + anim.Mode);
+                    Logger.LogDebug($"0002: Adding anim { anim.AnimationName} to EMode " +
+                        $"{ anim.Mode} Key {AnimationInfo.GetKey(donorInfo)}");
 #if KKS
                     // Update name so it shows on button text label
                     donorInfo.nameAnimation = anim.AnimationName;
+#endif
 #if DEBUG
                     countAL++;
-#endif
 #endif
                     animListInfo.Add(donorInfo);
                     swapAnimationMapping[donorInfo] = anim;
                 }
-#if DEBUG && KKS
-                Logger.LogWarning($"Added {countAL + countKKS} animations: KKS - {countKKS} " +
+#if DEBUG
+                Logger.LogWarning($"0003: Added {countAL + countGameA} animations: Game " +
+                    $"standard - {countGameA} " +
                     $"AnimationLoader - {countAL}");
-                //Logger.LogError($"Added {countAL + countKKS} animations: KKS - {countKKS} " +
+                //Logger.LogError($"0004: Added {countAL + countKKS} animations: KKS - {countKKS} " +
                 //$"AnimationLoader - {countAL}\n\n{JsonConvert.SerializeObject(lstAnimInfo)}\n\n"
                 //$"{JsonConvert.SerializeObject(swapAnimationMapping)}");
                 // Saves information used in the templates
-                //Utilities.SaveAnimInfo();
+                Utilities.SaveAnimInfo();
 #endif
             }
 
@@ -258,7 +272,9 @@ namespace AnimationLoader
 
                             var grpKey = $"{keyVal.Key}{sex}";
                             if (!EModeGroups.TryGetValue(grpKey, out var grpId))
+                            {
                                 return;
+                            }
 
                             foreach (var swapAnimInfo in keyVal.Value.Where(x => x.StudioId >= 0))
                             {
@@ -280,7 +296,9 @@ namespace AnimationLoader
                                     typeof(RuntimeAnimatorController))
                                         .GetAsset<RuntimeAnimatorController>();
                                 if (controller == null)
+                                {
                                     continue;
+                                }
 
                                 var animName = string.IsNullOrEmpty(swapAnimInfo.AnimationName) ?
                                     ctrl : swapAnimInfo.AnimationName;
@@ -289,7 +307,7 @@ namespace AnimationLoader
                                 animGrp.Add(swapAnimInfo.StudioId, animCat);
 
                                 var clips = controller.animationClips;
-                                for (int i = 0; i < clips.Length; i++)
+                                for (var i = 0; i < clips.Length; i++)
                                 {
                                     var newSlot = UniversalAutoResolver.GetUniqueSlotID();
 
