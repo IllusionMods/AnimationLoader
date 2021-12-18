@@ -5,6 +5,8 @@ using System.Linq;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 
+using KKAPI;
+
 using UnityEngine;
 using static HFlag;
 
@@ -14,6 +16,9 @@ namespace AnimationLoader
     public partial class SwapAnim
     {
         private static ConfigEntry<bool> SortPositions { get; set; }
+#if KKS
+        private static ConfigEntry<bool> LoadInCharStudio { get; set; }
+#endif
 #if KK
         private static ConfigEntry<bool> UseGrid { get; set; }
 #endif
@@ -66,8 +71,24 @@ namespace AnimationLoader
                 nameof(ReloadManifests),
                 new KeyboardShortcut(KeyCode.None),
                 new ConfigDescription("Load positions from all manifest format xml files inside " +
-                "config/AnimationLoader folder"));
+                    "config/AnimationLoader folder"));
             // For KKS the application code handles the display of animators buttons no grid UI.
+#if KKS
+            LoadInCharStudio = Config.Bind(
+                GeneralSection,
+                "Load in Character Studio",
+                false,
+                new ConfigDescription("Sort positions alphabetically"));
+            if (KoikatuAPI.GetCurrentGameMode() == GameMode.Studio)
+            {
+                if (!LoadInCharStudio.Value)
+                {
+                    Logger.LogMessage("0013: MOD disabled in configuration.");
+                    enabled = false;
+                    return;
+                }
+            }
+#endif
 #if KK
             UseGrid = Config.Bind(
                 GeneralSection,
@@ -103,36 +124,24 @@ namespace AnimationLoader
             RuntimeAnimatorController over)
         {
             if(src == null || over == null)
+            {
                 return null;
-            
+            }
+
             var aoc = new AnimatorOverrideController(src);
             var target = new AnimatorOverrideController(over);
             foreach(var ac in src.animationClips.Where(x => x != null)) //thanks omega/katarsys
+            {
                 aoc[ac.name] = ac;
-            foreach(var ac in target.animationClips.Where(x => x != null)) //thanks omega/katarsys
+            }
+
+            foreach (var ac in target.animationClips.Where(x => x != null)) //thanks omega/katarsys
+            {
                 aoc[ac.name] = ac;
+            }
+
             aoc.name = over.name;
             return aoc;
-        }
-        
-        private static T CopyComponent<T>(T original, GameObject destination) where T : Component
-        {
-            var type = original.GetType();
-            var dst = destination.GetComponent(type) as T;
-            if (!dst) dst = destination.AddComponent(type) as T;
-            var fields = type.GetFields();
-            foreach (var field in fields)
-            {
-                if (field.IsStatic) continue;
-                field.SetValue(dst, field.GetValue(original));
-            }
-            var props = type.GetProperties();
-            foreach (var prop in props)
-            {
-                if (!prop.CanWrite || !prop.CanWrite || prop.Name == "name") continue;
-                prop.SetValue(dst, prop.GetValue(original, null), null);
-            }
-            return dst;
         }
     }
 }
