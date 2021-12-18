@@ -33,7 +33,9 @@ namespace AnimationLoader
             private static void LoadMotionList(HSprite __instance, List<HSceneProc.AnimationListInfo> _lstAnimInfo, GameObject _objParent)
             {
                 if (_lstAnimInfo == null || _lstAnimInfo.Count == 0)
+                {
                     return;
+                }
 
                 var buttonParent = _objParent.transform;
                 Transform scrollT = null;
@@ -111,7 +113,9 @@ namespace AnimationLoader
 
                     btn.SetActive(true);
                     if (__instance.flags.nowAnimationInfo == anim)
+                    {
                         btn.GetComponent<Toggle>().isOn = true;
+                    }
 
                     swapAnimationMapping.TryGetValue(anim, out var swap);
                     if (swap != null)
@@ -128,10 +132,14 @@ namespace AnimationLoader
                     // disable New text
                     var newT = t.FindLoop("New");
                     if (newT)
+                    {
                         newT.gameObject.SetActive(false);
+                    }
 
                     if (SortPositions.Value)
+                    {
                         t.SetAsLastSibling();
+                    }
 
                     var textMeshGo = t.FindLoop("TextMeshPro Text").gameObject;
                     var textMesh = textMeshGo.GetComponent<TextMeshProUGUI>();
@@ -151,8 +159,42 @@ namespace AnimationLoader
                 }
 
                 if (scrollT != null && allButtons.Count > 8)
+                {
                     scrollT.SetRect(0f, 0f, 1f, 1f, -5f, -100f, -5f, 100f);
+                }
             }
+        }
+
+        private static T CopyComponent<T>(T original, GameObject destination) where T : Component
+        {
+            var type = original.GetType();
+            var dst = destination.GetComponent(type) as T;
+            if (!dst)
+            {
+                dst = destination.AddComponent(type) as T;
+            }
+
+            var fields = type.GetFields();
+            foreach (var field in fields)
+            {
+                if (field.IsStatic)
+                {
+                    continue;
+                }
+
+                field.SetValue(dst, field.GetValue(original));
+            }
+            var props = type.GetProperties();
+            foreach (var prop in props)
+            {
+                if (!prop.CanWrite || !prop.CanWrite || prop.Name == "name")
+                {
+                    continue;
+                }
+
+                prop.SetValue(dst, prop.GetValue(original, null), null);
+            }
+            return dst;
         }
     }
 }
