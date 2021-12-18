@@ -14,17 +14,17 @@ namespace AnimationLoader
     {
         internal class Utilities
         {
-            static internal void SaveAnimInfo()
+            internal static void SaveAnimInfo()
             {
                 if (_hprocInstance == null)
                 {
 #if DEBUG
-                    Logger.LogWarning($"[ShowAnimInfo] Instance? {_hprocInstance != null}");
+                    Logger.LogWarning($"0016: [ShowAnimInfo] Instance? {_hprocInstance is not null}");
 #endif
                     return;
                 }
 
-                int total = 0;
+                var total = 0;
                 var lstAnimInfo = Traverse
                     .Create(_hprocInstance)
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
@@ -44,17 +44,17 @@ namespace AnimationLoader
                          $" {CategoryList(x.lstCategory)}," +
                          $" {x.paramFemale.fileSiruPaste}");
 
-                    File.WriteAllLines($"lst{i}.csv", (string[])lines);
+                    File.WriteAllLines($"lst{i}.csv", lines.ToArray());
                     total += lines.ToArray().Length;
                 }
 #if DEBUG
-                Logger.LogWarning($"Total animations {total}");
+                Logger.LogWarning($"0017: Total animations {total}");
 #endif
             }
 
-            static internal string Translate(string name)
+            internal static string Translate(string name)
             {
-                if (!TranslationHelper.TryTranslate(name, out string tmp))
+                if (!TranslationHelper.TryTranslate(name, out var tmp))
                 {
                     return name;
                 }
@@ -64,10 +64,10 @@ namespace AnimationLoader
 
             // TODO: Tried a few ways to make it work with/without casting
             // did not work check why later
-            static internal string CategoryList(List<HSceneProc.Category> categories)
+            internal static string CategoryList(List<HSceneProc.Category> categories)
             {
-                string tmp = "";
-                bool first = true;
+                var tmp = "";
+                var first = true;
 
                 foreach (var c in categories)
                 {
@@ -84,9 +84,9 @@ namespace AnimationLoader
                 return "\" { " + tmp + " }\"";
             }
 
-            static internal int CountAnimations(List<HSceneProc.AnimationListInfo>[] lstAnimInfo)
+            internal static int CountAnimations(List<HSceneProc.AnimationListInfo>[] lstAnimInfo)
             {
-                int count = 0;
+                var count = 0;
 
                 foreach (var c in lstAnimInfo)
                 {
@@ -95,10 +95,10 @@ namespace AnimationLoader
                 return count;
             }
 
-            static internal void DisplayData(object data)
+            internal static void DisplayData(object data)
             {
                 var ddata = (SwapAnimationInfo)data;
-                Logger.LogWarning($"\n{ddata.AnimationName}");
+                Logger.LogWarning($"0018: {ddata.AnimationName}");
             }
         }
     }
