@@ -58,9 +58,10 @@ to have control on how AnimationLoader will load the animations.
 </manifest>
 ```
 
-This is a example of the current format both KK and KKS will try to load the two animations. There is 
-a problem though KK does not have NeckDonorId 55. To account for this there are two options.  From 
-here on I will just use the minimum number of fields in the examples.
+This is a example of the current format both Koikatu (**KK**) and Koikatsu Sunshine (**KKS**) will
+try to load the two animations. There is a problem beecause KK does not have NeckDonorId 55. To
+account for this there are two options.  From here on I will just use the minimum number of fields in
+the examples.
 
 1- The animation **Animation 1** only works for KKS. In this case inside the node AnimationLoader you
 can add a section ```<KoikatsuSunshine></KoikatsuSunshine>``` and move **Animation 1** there.
@@ -84,7 +85,8 @@ can add a section ```<KoikatsuSunshine></KoikatsuSunshine>``` and move **Animati
   </AnimationLoader>
 ```
 This way only KKS will try to load **Animation 1**. KK will ignore the **KoikatsuSunshine** node. 
-All exclusive animations have to be in this section.
+~~All exclusive animations have to be in this section.~~ Exclusive animations can be all in one
+section or marked individually.
 
 2- **Animation 1** works for both games but for KKS works better with NeckDonorId 55.
 ```xml
@@ -131,4 +133,41 @@ Animation that works in both games but with slight differences:
       <GameSpecificOverrides>
     </Animation>
 ```
+
+The position of the characters can be adjusted.
+
+```xml
+  <PositionHeroine>
+    <x>0</x>
+    <y>0</y>
+    <z>1</z>
+  </PositionHeroine>
+  <PositionPlayer>
+    <x>0</x>
+    <y>0</y>
+    <z>1</z>
+  </PositionPlayer>
+```
+PositionHeroine and Position Player are vectors:
+- x axis if left and right movement (red axis)
+- y axis up and down (green axis)
+- z axis forward and backwards (blue axis)
+
+The values represent a factor or fraction of one unit movement. For example:
+- to move one unit use 1 
+- to move one and half 1.5.
+- to move one fifth of a unit use 0.2
+
+The characters are move individually only one position adjustment can be made no need to have a move
+configuration for both characters.
+
+```xml
+  <PositionHeroine>
+    <x>0</x>
+    <y>0</y>
+    <z>-0.04</z>
+  </PositionHeroine>
+```
+
+Here it shows move the Heroine 0.04 fractions of a unit backwards.
 
