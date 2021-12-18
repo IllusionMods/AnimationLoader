@@ -5,6 +5,8 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
+using UnityEngine;
+
 using BepInEx;
 using KKAPI;
 using static HFlag;
@@ -19,12 +21,9 @@ namespace AnimationLoader
     {
         private const string ManifestRootElement = "AnimationLoader";
         private const string ManifestArrayItem = "Animation";
+        private const string ManifestGSArrayItem = KoikatuAPI.GameProcessName;
+
         private static readonly XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
-#if KKS
-        private static readonly XmlSerializer xmlKKSSerializer = new(typeof(KKSOverrideInfo));
-#elif KK
-        private static readonly XmlSerializer xmlKKSerializer = new(typeof(KKOverrideInfo));
-#endif
         private static readonly XmlSerializer xmlOverrideSerializer = new(typeof(OverrideInfo));
 
         private static XElement animRoot;
@@ -38,92 +37,100 @@ namespace AnimationLoader
                 var docs = Directory.GetFiles(path, "*.xml").Select(XDocument.Load).ToList();
                 if(docs.Count > 0)
                 {
-                    Logger.LogMessage("Loading test animations");
+                    Logger.LogMessage("0012: Loading test animations");
                     LoadXmls(docs);
                     return;
                 }
             }
-
-            Logger.LogMessage("Make a manifest format .xml in the config/AnimationLoader folder " +
+            Logger.LogMessage("0013: Make a manifest format .xml in the config/AnimationLoader folder " +
                 "to test animations");
         }
 
         private static void LoadXmls(IEnumerable<XDocument> manifests)
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
-            int count = 0;
+            var count = 0;
             foreach(var manifest in manifests.Select(x => x.Root))
             {
                 var guid = manifest.Element("guid").Value;
 
-                // Try game specific format
+                // Look for game specific configuration
                 animRootGS = manifest
                     .Element(ManifestRootElement)?
                     .Element(KoikatuAPI.GameProcessName);
                 animRoot = manifest?.Element(ManifestRootElement);
 
-                if ((animRoot == null) && (animRootGS == null))
+                if ((animRoot is null) && (animRootGS is null))
                 {
                     continue;
                 }
 
-                XElement[] roots = { animRootGS, animRoot };
+                // Process elements valid for any game
+                count += ProcessArray(animRoot, guid);
 
-                foreach (var root in roots)
+                // Process game specific animations
+                if (animRootGS is null)
                 {
-                    if (root == null)
+                    continue;
+                }
+                foreach (var gameSpecificElement in animRoot.Elements(ManifestGSArrayItem))
+                {
+                    if (gameSpecificElement is null)
                     {
                         continue;
                     }
-                    foreach (var animElem in root.Elements(ManifestArrayItem))
-                    {
-                        if (animElem == null)
-                        {
-                            continue;
-                        }
-                        var reader = animElem.CreateReader();
-                        var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
-                        data.Guid = guid;
-                        reader.Close();
-                        if (data.GameSpecificOverrides is not null)
-                        {
-                            // TODO: Search for a way to permit reading XElement when
-                            // De-serializing for KK. Problem is Unity managed code striping and
-                            // XElement the has no constructor with zero arguments. Eventually
-                            // may do only the KK way
-#if KKS
-                            var overrideReader = data.GameSpecificOverrides.CreateReader();
-#elif KK
-                            // Work around for KK GameSpecificOverrides is parsed as a string
-                            // not XElement like in KKS
-                            var overrideElement = XElement.Parse(data.GameSpecificOverrides);
-                            var overrideReader = overrideElement.CreateReader();
-#endif
-                            var overrideData = (OverrideInfo)xmlOverrideSerializer
-                                .Deserialize(overrideReader);
-                            overrideReader.Close();
-                            DoOverrides(ref data, overrideData);
-                            data.GameSpecificOverrides = null;
-                        }
-                        if (!animationDict.TryGetValue(data.Mode, out var list))
-                            animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
-                        list.Add(data);
-                        count++;
-                    }
+                    count += ProcessArray(gameSpecificElement, guid);
                 }
+
             }
-            //var dictio = JsonConvert.SerializeObject(animationDict);
-            Logger.LogWarning($"Added {count} animations.");
+            //var dictionary = JsonConvert.SerializeObject(animationDict);
+            Logger.LogWarning($"0014: Added {count} animations.");
+        }
+
+        private static int ProcessArray(XElement root, string guid)
+        {
+            var count = 0;
+
+            foreach (var animElem in root.Elements(ManifestArrayItem))
+            {
+                if (animElem == null)
+                {
+                    continue;
+                }
+                var reader = animElem.CreateReader();
+                var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
+                data.Guid = guid;
+                reader.Close();
+                if (data.GameSpecificOverrides is not null)
+                {
+#if KKS
+                    var overrideReader = data.GameSpecificOverrides.CreateReader();
+#elif KK
+                    // Work around for KK GameSpecificOverrides is parsed as a string
+                    // not XElement like in KKS
+                    var overrideElement = XElement.Parse(data.GameSpecificOverrides);
+                    var overrideReader = overrideElement.CreateReader();
+#endif
+                    var overrideData = (OverrideInfo)xmlOverrideSerializer
+                        .Deserialize(overrideReader);
+                    overrideReader.Close();
+                    DoOverrides(ref data, overrideData);
+                    //data.GameSpecificOverrides = null;
+                }
+                if (!animationDict.TryGetValue(data.Mode, out var list))
+                {
+                    animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
+                }
+
+                list.Add(data);
+                count++;
+            }
+            return count;
         }
 
         private static void DoOverrides(ref SwapAnimationInfo data, OverrideInfo overrides)
         {
-#if KKS
-            //KKSOverrideInfo overrides = (KKSOverrideInfo)dataOverride;
-#elif KK
-            //KKOverrideInfo overrides = (KKOverrideInfo)dataOverride;
-#endif
-            // TODO: Ugly hack for now check alternatives
+            // TODO: This is an Ugly hack check alternatives
 
             if (overrides.PathFemale != null)
             {
@@ -180,6 +187,14 @@ namespace AnimationLoader
             if (overrides.MotionIKDonor >= 0)
             {
                 data.MotionIKDonor = overrides.MotionIKDonor;
+            }
+            if (overrides.PositionHeroine != Vector3.zero)
+            {
+                data.PositionHeroine = overrides.PositionHeroine;
+            }
+            if (overrides.PositionPlayer != Vector3.zero)
+            {
+                data.PositionPlayer = overrides.PositionPlayer;
             }
         }
     }
