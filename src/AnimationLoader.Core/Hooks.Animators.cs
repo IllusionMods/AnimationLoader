@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+
+using UnityEngine;
 
 using HarmonyLib;
 
@@ -8,6 +12,12 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
+        internal static HSceneProc _hprocInstance;
+        internal static ChaControl _heroine;
+        internal static ChaControl _heroine3P;
+        internal static List<ChaControl> _lstHeroines;
+        internal static ChaControl _player;
+
         internal partial class Hooks
         {
             /// <summary>
@@ -26,33 +36,55 @@ namespace AnimationLoader
                 try
                 {
 #if DEBUG
-                    Logger.LogWarning($"Key {AnimationKey(_nextAinmInfo)} Animator mode" +
-                        $" {_nextAinmInfo.mode} ID: {_nextAinmInfo.id} name" +
-                        $" {Utilities.Translate(_nextAinmInfo.nameAnimation)} - " +
-                        $"Asset {_nextAinmInfo.pathFemaleBase.assetpath} restriction " +
-                        $"{_nextAinmInfo.stateRestriction}");
+                    Logger.LogWarning($"0006: Animator changing - {_nextAinmInfo.nameAnimation}.");
+                    var swapAnim = new AnimationInfo(_nextAinmInfo);
+                    if (swapAnim != null)
+                    {
+                        Logger.LogWarning($"0007: Key {swapAnim.Key}");
+                        if (swapAnim.SwapAnim != null)
+                        {
+                            if (swapAnim.SwapAnim.PositionHeroine != Vector3.zero)
+                            {
+                                MoveCharacter.Move(_heroine, swapAnim.SwapAnim.PositionHeroine);
+                            }
+                            if (swapAnim.SwapAnim.PositionPlayer != Vector3.zero)
+                            {
+                                MoveCharacter.Move(_player, swapAnim.SwapAnim.PositionPlayer);
+                            }
+                        }
+                    }
 #endif
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError($"Error - {e}");
+                    Logger.LogError($"0008: Error - {e}");
                 }
             }
 
-            private static string AnimationKey(HSceneProc.AnimationListInfo animation)
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.SetShortcutKey))]
+            private static void SetShortcutKeyPrefix(
+                object __instance,
+                List<ChaControl> ___lstFemale,
+                ChaControl ___male)
             {
-                string key;
-
-                swapAnimationMapping.TryGetValue(animation, out var anim);
-                if (anim != null)
+                _hprocInstance = (HSceneProc)__instance;
+                if (_hprocInstance == null)
                 {
-                    key = $"{anim.Guid} {animation.mode} {anim.StudioId}";
+                    Logger.LogWarning($"0009: Failed to save _hprocInstance");
                 }
                 else
                 {
-                    key = $"gameAnimation {animation.mode} {animation.id}";
+                    Logger.LogWarning($"0010: _hprocInstance saved.");
                 }
-                return key;
+                _lstHeroines = ___lstFemale;
+                _heroine = _lstHeroines[0];
+                if (___lstFemale.Count > 1)
+                {
+                    _heroine3P = _lstHeroines[1];
+                }
+
+                _player = ___male;
             }
         }
     }

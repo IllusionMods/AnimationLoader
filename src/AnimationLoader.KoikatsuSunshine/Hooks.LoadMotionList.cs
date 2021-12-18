@@ -35,12 +35,14 @@ namespace AnimationLoader
                 GameObject _objParent)
             {
                 if (_lstAnimInfo == null || _lstAnimInfo.Count == 0)
+                {
                     return;
+                }
 
-                int countKKS = 0;
-                int countAL = 0;
+                var countGA = 0;
+                var countAL = 0;
                 var buttonParent = _objParent.transform;
-                List<Transform> buttons = _objParent.transform.Cast<Transform>().ToList();
+                var buttons = _objParent.transform.Cast<Transform>().ToList();
 
                 foreach (var button in buttons)
                 {
@@ -55,8 +57,8 @@ namespace AnimationLoader
                         if (anim != null)
                         {
 #if DEBUG
-                            Logger.LogWarning($"Loaded button =" +
-                                $" {Utilities.Translate(anim.nameAnimation)}");
+                            //Logger.LogWarning($"0019: Loaded button =" +
+                            //    $" {Utilities.Translate(anim.nameAnimation)}");
 #endif
                             swapAnimationMapping.TryGetValue(anim, out var swap);
                             if (swap != null)
@@ -72,19 +74,19 @@ namespace AnimationLoader
                             }
                             else
                             {
-                                countKKS++;
+                                countGA++;
                             }
                         }
                     }
                     catch (Exception ex)
                     {
 #if DEBUG
-                        Logger.LogInfo(ex);
+                        Logger.LogInfo($"0020: {ex}");
 #endif
                     }
                 }
 #if DEBUG
-                Logger.LogWarning($"System animations {countKKS} Animation Loader {countAL}");
+                Logger.LogWarning($"0021: System animations {countGA} Animation Loader {countAL}");
 #endif
                 // sort all buttons by name
                 if (SortPositions.Value)
