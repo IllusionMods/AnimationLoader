@@ -64,7 +64,6 @@ namespace AnimationLoader
                 }
             }
 
-            // TODO: add support for SwapAnimationInfo
             public static string GetKey(HSceneProc.AnimationListInfo animation)
             {
                 string Guid;
@@ -85,6 +84,12 @@ namespace AnimationLoader
                 }
                 return $"{Guid}-{mode}-{id:D3}";
             }
+
+            public static string GetKey(SwapAnimationInfo animation)
+            {
+                return $"{animation.Guid}-{animation.Mode}-{animation.StudioId:D3}";
+            }
+
         }
     }
 }
