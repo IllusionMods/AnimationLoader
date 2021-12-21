@@ -58,6 +58,7 @@ namespace AnimationLoader
             private static void ExtendList(object __instance)
             {
                 // add new animations to the complete list
+                Utilities.SaveHProcInstance(__instance);
 #if KK
                 var hlist = Singleton<Game>.Instance.glSaveData.playHList;
 #elif KKS
@@ -140,9 +141,8 @@ namespace AnimationLoader
                             };
                             return cat;
                         }).ToList();
-
-                    Logger.LogDebug($"0002: Adding anim { anim.AnimationName} to EMode " +
-                        $"{ anim.Mode} Key {AnimationInfo.GetKey(donorInfo)}");
+                    Logger.LogDebug($"0002: Adding animation {anim.AnimationName} to EMode " +
+                        $"{ anim.Mode} Key {anim}");
 #if KKS
                     // Update name so it shows on button text label
                     donorInfo.nameAnimation = anim.AnimationName;

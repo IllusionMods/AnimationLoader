@@ -37,7 +37,7 @@ namespace AnimationLoader
                 var docs = Directory.GetFiles(path, "*.xml").Select(XDocument.Load).ToList();
                 if(docs.Count > 0)
                 {
-                    Logger.LogMessage("0012: Loading test animations");
+                    Logger.LogMessage($"0012: [{PInfo.PluginName}] Loading test animations");
                     LoadXmls(docs);
                     return;
                 }

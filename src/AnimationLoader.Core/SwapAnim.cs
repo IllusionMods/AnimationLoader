@@ -6,6 +6,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 
 using KKAPI;
+using KKAPI.Utilities;
 
 using UnityEngine;
 using static HFlag;
@@ -62,23 +63,29 @@ namespace AnimationLoader
             Logger = base.Logger;
 
             SortPositions = Config.Bind(
-                GeneralSection,
-                nameof(SortPositions),
-                true,
-                new ConfigDescription("Sort positions alphabetically"));
+                section: GeneralSection,
+                key: nameof(SortPositions),
+                defaultValue: true,
+                configDescription: new ConfigDescription(
+                    description: "Sort positions alphabetically",
+                    tags: new ConfigurationManagerAttributes {Order = 3}));
             ReloadManifests = Config.Bind(
-                GeneralSection,
-                nameof(ReloadManifests),
-                new KeyboardShortcut(KeyCode.None),
-                new ConfigDescription("Load positions from all manifest format xml files inside " +
-                    "config/AnimationLoader folder"));
+                section: GeneralSection,
+                key: nameof(ReloadManifests),
+                defaultValue: new KeyboardShortcut(KeyCode.None),
+                configDescription: new ConfigDescription(
+                    description: "Load positions from all manifest format xml files inside " +
+                        "config/AnimationLoader folder",
+                    tags: new ConfigurationManagerAttributes { Order = 4 }));
             // For KKS the application code handles the display of animators buttons no grid UI.
 #if KKS
             LoadInCharStudio = Config.Bind(
-                GeneralSection,
-                "Load in Character Studio",
-                false,
-                new ConfigDescription("Sort positions alphabetically"));
+                section: GeneralSection,
+                key: "Character Studio",
+                defaultValue: false,
+                configDescription: new ConfigDescription(
+                    description: "Sort positions alphabetically",
+                    tags: new ConfigurationManagerAttributes { Order = 1 }));
             if (KoikatuAPI.GetCurrentGameMode() == GameMode.Studio)
             {
                 if (!LoadInCharStudio.Value)
@@ -91,11 +98,13 @@ namespace AnimationLoader
 #endif
 #if KK
             UseGrid = Config.Bind(
-                GeneralSection,
-                nameof(UseGrid),
-                false,
-                new ConfigDescription("If you don't want to use the scrollable" +
-                    " list for some reason"));
+                section: GeneralSection,
+                key: nameof(UseGrid),
+                defaultValue: false,
+                configDescription: new ConfigDescription(
+                    description: "If you don't want to use the scrollable" +
+                        " list for some reason",
+                    tags: new ConfigurationManagerAttributes { Order = 2 }));
 #endif
             Hooks.Init();
         }
