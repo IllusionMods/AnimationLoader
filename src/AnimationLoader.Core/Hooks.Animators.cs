@@ -36,11 +36,14 @@ namespace AnimationLoader
                 try
                 {
 #if DEBUG
-                    Logger.LogWarning($"0006: Animator changing - {_nextAinmInfo.nameAnimation}.");
+                    Logger.LogWarning($"0006: Animator changing - " +
+                        $"{Utilities.TranslateName(_nextAinmInfo.nameAnimation)} " +
+                        $"Key {AnimationInfo.GetKey(_nextAinmInfo)} " +
+                        $"SiruPaste {_nextAinmInfo.paramFemale.fileSiruPaste}.");
+#endif
                     var swapAnim = new AnimationInfo(_nextAinmInfo);
                     if (swapAnim != null)
                     {
-                        Logger.LogWarning($"0007: Key {swapAnim.Key}");
                         if (swapAnim.SwapAnim != null)
                         {
                             if (swapAnim.SwapAnim.PositionHeroine != Vector3.zero)
@@ -53,7 +56,6 @@ namespace AnimationLoader
                             }
                         }
                     }
-#endif
                 }
                 catch (Exception e)
                 {
@@ -68,15 +70,7 @@ namespace AnimationLoader
                 List<ChaControl> ___lstFemale,
                 ChaControl ___male)
             {
-                _hprocInstance = (HSceneProc)__instance;
-                if (_hprocInstance == null)
-                {
-                    Logger.LogWarning($"0009: Failed to save _hprocInstance");
-                }
-                else
-                {
-                    Logger.LogWarning($"0010: _hprocInstance saved.");
-                }
+                Utilities.SaveHProcInstance(__instance);
                 _lstHeroines = ___lstFemale;
                 _heroine = _lstHeroines[0];
                 if (___lstFemale.Count > 1)
