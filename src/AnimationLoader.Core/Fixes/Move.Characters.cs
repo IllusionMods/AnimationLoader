@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 using UnityEngine;
-
-using HarmonyLib;
-using Illusion.Extensions;
-
-using KKAPI.Utilities;
-
-using static HFlag;
-using static Illusion.Component.UI.MouseButtonCheck;
 
 namespace AnimationLoader
 {
