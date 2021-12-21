@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -38,10 +39,10 @@ namespace AnimationLoader
                 for (var i = 0; i < lstAnimInfo.Length; i++)
                 {
                     var lines = lstAnimInfo[i].Select(x => $"{x.id}, {x.mode}," +
-                         $" {Translate(x.nameAnimation)} ({x.nameAnimation}), {x.posture}," +
+                         $" {TranslateName(x.nameAnimation)}, {x.posture}," +
                          $" {x.numCtrl}, {x.kindHoushi}," +
                          $" {x.houshiLoopActionS}, {x.isFemaleInitiative}," +
-                         $" {CategoryList(x.lstCategory)}," +
+                         $"{CategoryList(x.lstCategory)}," +
                          $" {x.paramFemale.fileSiruPaste}");
 
                     File.WriteAllLines($"lst{i}.csv", lines.ToArray());
@@ -60,6 +61,16 @@ namespace AnimationLoader
                 }
 
                 return tmp;
+            }
+
+            internal static string TranslateName(string animationName, bool original = false)
+            {
+                var tmp = Translate(animationName);
+                if ((tmp == animationName) || !original)
+                {
+                    return tmp;
+                }
+                return $"{tmp} ({animationName})";
             }
 
             // TODO: Tried a few ways to make it work with/without casting
@@ -95,10 +106,20 @@ namespace AnimationLoader
                 return count;
             }
 
-            internal static void DisplayData(object data)
+            internal static void SaveHProcInstance(object instance)
             {
-                var ddata = (SwapAnimationInfo)data;
-                Logger.LogWarning($"0018: {ddata.AnimationName}");
+                if (_hprocInstance == null)
+                {
+                    _hprocInstance = (HSceneProc)instance;
+                    if (_hprocInstance == null)
+                    {
+                        Logger.LogDebug($"0009: Failed to save _hprocInstance");
+                    }
+                    else
+                    {
+                        Logger.LogDebug($"0010: _hprocInstance saved.");
+                    }
+                }
             }
         }
     }
