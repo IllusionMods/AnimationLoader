@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using UnityEngine;
+
 using HarmonyLib;
 using Illusion.Extensions;
 
@@ -121,6 +123,68 @@ namespace AnimationLoader
                     }
                 }
             }
+
+            internal static bool HasMovement(AnimationInfo anim)
+            {
+                if (anim.SwapAnim != null)
+                {
+                    if (anim.SwapAnim.PositionHeroine != Vector3.zero)
+                    {
+                        return true;
+                    }
+                    if (anim.SwapAnim.PositionPlayer != Vector3.zero)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// Set new original position for characters if there is a move 
+            /// from original position saved
+            /// </summary>
+            /// <param name="message"></param>
+            internal static void SetOriginalPositionAll(string message = null)
+            {
+                if (_hprocInstance == null)
+                {
+                    return;
+                }
+
+                var heroines = _hprocInstance.flags.lstHeroine;
+                for (var i = 0; i < heroines.Count; i++)
+                {
+                    if (IsNewPosition(heroines[i].chaCtrl))
+                    {
+                        GetMoveController(heroines[i].chaCtrl).SetOriginalPosition();
+                    }
+                }
+                if (IsNewPosition(_hprocInstance.flags.player.chaCtrl))
+                {
+                    GetMoveController(_hprocInstance.flags.player.chaCtrl).SetOriginalPosition();
+                }
+            }
+
+
+            /// <summary>
+            /// Determine if there is a change in original position
+            /// </summary>
+            /// <param name="chaControl"></param>
+            /// <returns></returns>
+            internal static bool IsNewPosition(ChaControl chaControl)
+            {
+                var controller = GetMoveController(chaControl);
+                var newPosition = chaControl.transform.position;
+                var originalPosition = controller._originalPosition;
+                var lastMovePosition = controller._lastMovePosition;
+                if (newPosition != originalPosition && newPosition != lastMovePosition)
+                {
+                    return true;
+                }
+                return false;
+            }
+
         }
     }
 }
