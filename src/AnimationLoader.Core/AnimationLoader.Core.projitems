@@ -10,7 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Fixes\Move.Characters.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Fixes\Move.Controller.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.Animators.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LoadXML.cs" />
