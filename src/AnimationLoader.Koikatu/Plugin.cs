@@ -6,7 +6,7 @@ using KKAPI;
 
 namespace AnimationLoader
 {
-
+    [UnityEngine.Scripting.Preserve]
     [BepInDependency(KoikatuAPI.GUID, KoikatuAPI.VersionConst)]
     [BepInDependency(Sideloader.Sideloader.GUID, Sideloader.Sideloader.Version)]
     [BepInPlugin(PInfo.GUID, PInfo.PluginDisplayName, PInfo.Version)]

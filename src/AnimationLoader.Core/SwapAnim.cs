@@ -6,6 +6,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 
 using KKAPI;
+using KKAPI.Chara;
 using KKAPI.Utilities;
 
 using UnityEngine;
@@ -107,6 +108,7 @@ namespace AnimationLoader
                     tags: new ConfigurationManagerAttributes { Order = 2 }));
 #endif
             Hooks.Init();
+            CharacterApi.RegisterExtraBehaviour<MoveController>(PInfo.GUID);
         }
 
         private void Start()
@@ -152,5 +154,14 @@ namespace AnimationLoader
             aoc.name = over.name;
             return aoc;
         }
+
+        /// <summary>
+        /// Get controller for characters
+        /// </summary>
+        /// <param name="chaControl"></param>
+        /// <returns></returns>
+        public static MoveController GetMoveController(ChaControl chaControl) =>
+            (chaControl == null) || (chaControl.gameObject == null)
+            ? null : chaControl.GetComponent<MoveController>();
     }
 }

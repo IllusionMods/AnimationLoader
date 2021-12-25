@@ -1,8 +1,92 @@
 # Manifest.xml for animations
 
-The current manifest.xml will continue to work. The extensions described here are optional and made
-to have control on how AnimationLoader will load the animations.
+The current manifest.xml will continue to work. Both Koikatu (**KK**) and Koikatsu Sunshine
+(**KKS**) will try to load the two animations.  The extensions described here are optional and made
+to have more control on how AnimationLoader will load the animations.
 
+```xml
+<manifest schema-ver="1">
+<guid></guid>
+<name></name>
+<version></version>
+<author></author>
+<description></description>
+<website></website>
+
+  <AnimationLoader>
+
+    <Animation>
+      <StudioId></StudioId>
+      <PathFemale></PathFemale>
+      <PathMale></PathMale>
+      <ControllerFemale></ControllerFemale>
+      <ControllerMale></ControllerMale>
+      <AnimationName></AnimationName>
+      <Mode></Mode>
+      <kindHoushi></kindHoushi>
+      <categories>
+      </categories>
+      <DonorPoseId></DonorPoseId>
+      <NeckDonorId></NeckDonorId>
+      <IsFemaleInitiative></IsFemaleInitiative>
+      <FileSiruPaste></FileSiruPaste>
+      <PositionHeroine>
+        <x></x>
+        <y></y>
+        <z></z>
+      </PositionHeroine>
+      <PositionPlayer>
+        <x></x>
+        <y></y>
+        <z></z>
+      </PositionPlayer>
+      <GameSpecificOverrides>
+        <KoikatsuSunshine>
+        </KoikatsuSunshine>
+      </GameSpecificOverrides>
+    </Animation>
+
+    <Koikatu>
+      <Animation>
+      </Animation>
+    </Koikatu>
+
+    <KoikatsuSunshine>
+      <Animation>
+      </Animation>
+    </KoikatsuSunshine>
+
+  </AnimationLoader>
+
+</manifest>
+
+```
+
+## Extensions:
+
+1- **PositionHeroine** and **PositionPlayer** - vectors that represent:
+- x axis if left and right movement (red axis)
+- y axis up and down (green axis)
+- z axis forward and backwards (blue axis)
+
+The values represent a factor or fraction of one unit of movement. For example:
+- to move one unit use 1 
+- to move one and half units 1.5.
+- to move one fifth of a unit use 0.2
+
+The scale may be around a meter.
+
+2- **GameSpecificOverrides** - Since the manifest.xml is the same for KK and KKS taking as a base that
+the definitions are for KK to make any adjustment for KKS a node can be added for KKS 
+<KoikatsuSunshine\> with value overrides for the animations that KKS will read.
+
+3- **Nodes <Koikatu\> and <KoikatsuSunshine\>** - any animation inside these will be read by the
+corresponding game. I there are more than one animation that is exclusive or a game all can be inside
+the same node. The can also be mark individually if desired.
+
+## Examples
+
+### Example 1
 
 ```xml
 <manifest schema-ver="1">
@@ -58,8 +142,7 @@ to have control on how AnimationLoader will load the animations.
 </manifest>
 ```
 
-This is a example of the current format both Koikatu (**KK**) and Koikatsu Sunshine (**KKS**) will
-try to load the two animations. There is a problem beecause KK does not have NeckDonorId 55. To
+This is a example of the current format. There is a problem beecause KK does not have NeckDonorId 55. To
 account for this there are two options.  From here on I will just use the minimum number of fields in
 the examples.
 
@@ -85,8 +168,7 @@ can add a section ```<KoikatsuSunshine></KoikatsuSunshine>``` and move **Animati
   </AnimationLoader>
 ```
 This way only KKS will try to load **Animation 1**. KK will ignore the **KoikatsuSunshine** node. 
-~~All exclusive animations have to be in this section.~~ Exclusive animations can be all in one
-section or marked individually.
+Exclusive animations can be all in one section or marked individually.
 
 2- **Animation 1** works for both games but for KKS works better with NeckDonorId 55.
 ```xml
@@ -110,29 +192,12 @@ section or marked individually.
   
   </AnimationLoader>
 ```
-Here both animations will load in KK and KKS.  **Animation 1** will load in KK with NeeckDonorId 0
-and in KKS with NeckDonorId 55.
+GameSpecificOverrides only work for KKS do to Unity manage code stripping having an element with xml
+will trigger errors. But since the current definitions are for KK anyway this should not be a
+limitation. Animations targeting KK and KKS should always start with the definition for KK then do
+any fine tune for KKS with the overrides.
 
-Resuming:
-
-Animation exclusive or a game:
-```xml
-    <Koikatu> <!--Koikatu exclusive-->
-      <Animation>
-      </Animation>
-    </Koikatu>
-```
-
-Animation that works in both games but with slight differences: 
-
-```xml
-    <Animation>
-      <GameSpecificOverrides>
-        <Koikatu> <!--Koikatu overrides-->
-        </Koikatu>
-      <GameSpecificOverrides>
-    </Animation>
-```
+### Example 2
 
 The position of the characters can be adjusted.
 
@@ -148,15 +213,8 @@ The position of the characters can be adjusted.
     <z>1</z>
   </PositionPlayer>
 ```
-PositionHeroine and Position Player are vectors:
-- x axis if left and right movement (red axis)
-- y axis up and down (green axis)
-- z axis forward and backwards (blue axis)
 
-The values represent a factor or fraction of one unit movement. For example:
-- to move one unit use 1 
-- to move one and half 1.5.
-- to move one fifth of a unit use 0.2
+Move the character forward 1 unit.
 
 The characters are move individually only one position adjustment can be made no need to have a move
 configuration for both characters.
@@ -169,5 +227,5 @@ configuration for both characters.
   </PositionHeroine>
 ```
 
-Here it shows move the Heroine 0.04 fractions of a unit backwards.
+Here it shows move the Heroine 0.04 fraction of a unit backwards.
 

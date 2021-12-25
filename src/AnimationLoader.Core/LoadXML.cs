@@ -5,8 +5,6 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-using UnityEngine;
-
 using BepInEx;
 using KKAPI;
 using static HFlag;
@@ -81,7 +79,6 @@ namespace AnimationLoader
                     }
                     count += ProcessArray(gameSpecificElement, guid);
                 }
-
             }
             //var dictionary = JsonConvert.SerializeObject(animationDict);
             Logger.LogWarning($"0014: Added {count} animations.");
@@ -101,23 +98,20 @@ namespace AnimationLoader
                 var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
                 data.Guid = guid;
                 reader.Close();
+#if KKS
+                // TODO: Look how to define XmlElement by-passing Unity managed code stripping
+                // Json works (if really needed like adding support for another game) maybe
+                // change to a Json configuration instead of XML
                 if (data.GameSpecificOverrides is not null)
                 {
-#if KKS
                     var overrideReader = data.GameSpecificOverrides.CreateReader();
-#elif KK
-                    // Work around for KK GameSpecificOverrides is parsed as a string
-                    // not XElement like in KKS
-                    var overrideElement = XElement.Parse(data.GameSpecificOverrides);
-                    var overrideReader = overrideElement.CreateReader();
-#endif
                     var overrideData = (OverrideInfo)xmlOverrideSerializer
                         .Deserialize(overrideReader);
                     overrideReader.Close();
                     DoOverrides(ref data, overrideData);
-                    //data.GameSpecificOverrides = null;
                 }
-                if (!animationDict.TryGetValue(data.Mode, out var list))
+#endif
+            if (!animationDict.TryGetValue(data.Mode, out var list))
                 {
                     animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
                 }
@@ -188,11 +182,11 @@ namespace AnimationLoader
             {
                 data.MotionIKDonor = overrides.MotionIKDonor;
             }
-            if (overrides.PositionHeroine != Vector3.zero)
+            if (overrides.PositionHeroine != UnityEngine.Vector3.zero)
             {
                 data.PositionHeroine = overrides.PositionHeroine;
             }
-            if (overrides.PositionPlayer != Vector3.zero)
+            if (overrides.PositionPlayer != UnityEngine.Vector3.zero)
             {
                 data.PositionPlayer = overrides.PositionPlayer;
             }

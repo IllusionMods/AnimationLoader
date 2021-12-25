@@ -78,11 +78,8 @@ namespace AnimationLoader
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch
                     {
-#if DEBUG
-                        Logger.LogInfo($"0020: {ex}");
-#endif
                     }
                 }
 #if DEBUG

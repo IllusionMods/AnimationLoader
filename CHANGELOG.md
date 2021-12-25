@@ -1,7 +1,7 @@
 
 # Changelog
 
-### (Unreleased)
+### v1.1.0.0 - 2021-12-24
 
 
 ##### Added
@@ -13,7 +13,7 @@
 - For developers if there no zipmod with a manifest for the animations it will load any test 
 manifests found in the directory config\AnimationLoader
 - Animations can be mark individually as game specific no need to group them all in one section
-- Mod is disabled for Studio by default
+- Mod can be disabled for Studio
 
 ##### Changed
 

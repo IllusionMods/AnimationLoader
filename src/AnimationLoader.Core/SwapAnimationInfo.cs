@@ -11,6 +11,7 @@ using static HFlag;
 
 namespace AnimationLoader
 {
+    [UnityEngine.Scripting.Preserve]
     [XmlRoot("Animation")]
     [Serializable]
     public class SwapAnimationInfo
@@ -64,14 +65,20 @@ namespace AnimationLoader
         [XmlElement]
         public int MotionIKDonor = -1;
 
+        // TODO: More research to avoid unity code stripping work around for KK is not working
+        // hard time trying to at list ignore this node even treating as string when running
+        // in game does not work.  GameSpecificOverrides only will work for KKS which is kind
+        // of the natural way
+        //
+        //[XmlElement]
+        //public string GameSpecificOverrides;
+        //
+        // Not defining the node works
 #if KKS
         [XmlElement]
         public XElement GameSpecificOverrides;
-#elif KK
-        // TODO: More research to avoid unity code stripping work around for KK
-        [XmlElement]
-        public string GameSpecificOverrides;
 #endif
+
         [XmlElement]
         public Vector3 PositionHeroine = Vector3.zero;
 
@@ -79,6 +86,7 @@ namespace AnimationLoader
         public Vector3 PositionPlayer = Vector3.zero;
     }
 
+    [UnityEngine.Scripting.Preserve]
     [XmlRoot(KoikatuAPI.GameProcessName)]
     [Serializable]
     public class OverrideInfo
