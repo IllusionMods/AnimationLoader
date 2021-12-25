@@ -15,36 +15,38 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        internal class AnimationInfo
+        public class AnimationInfo
         {
             internal string _Guid;
             internal EMode _mode;
             internal int _id;
             internal SwapAnimationInfo _anim;
-            public string Guid
-            {
+            public string Guid {
                 get { return _Guid; }
             }
-            public EMode Mode
-            {
+            public EMode Mode {
                 get { return _mode; }
             }
-            public int Id
-            {
+            public int Id {
                 get { return _id; }
             }
 
-            public string Key
-            {
+            public string Key {
                 get { return $"{_Guid}-{_mode}-{_id:D3}"; }
             }
 
-            public SwapAnimationInfo SwapAnim
+            public AnimationInfo()
             {
+                _Guid = string.Empty;
+                _mode = EMode.none;
+                _id = -1;
+            }
+
+            public SwapAnimationInfo SwapAnim {
                 get { return _anim; }
             }
 
-            public AnimationInfo(HSceneProc.AnimationListInfo animation)
+            internal void AnimationInfoHelper(HSceneProc.AnimationListInfo animation)
             {
                 _mode = animation.mode;
                 swapAnimationMapping.TryGetValue(animation, out var anim);
@@ -62,6 +64,10 @@ namespace AnimationLoader
                     _Guid = PInfo.GUID + ".move";
                     _id = animation.id;
                 }
+            }
+            public AnimationInfo(HSceneProc.AnimationListInfo animation)
+            {
+                AnimationInfoHelper(animation);
             }
 
             public static string GetKey(HSceneProc.AnimationListInfo animation)
@@ -90,6 +96,10 @@ namespace AnimationLoader
                 return $"{animation.Guid}-{animation.Mode}-{animation.StudioId:D3}";
             }
 
+            public void SetAnimation(object animation)
+            {
+                AnimationInfoHelper((HSceneProc.AnimationListInfo)animation);
+            }
         }
     }
 }
