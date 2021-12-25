@@ -12,12 +12,14 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
+        // TODO: Change to a CharaCustomFunctionController when logic works
         internal static HSceneProc _hprocInstance;
         internal static ChaControl _heroine;
         internal static ChaControl _heroine3P;
         internal static List<ChaControl> _lstHeroines;
         internal static ChaControl _player;
-
+        internal static string _animationKey;
+        
         internal partial class Hooks
         {
             /// <summary>
@@ -41,18 +43,43 @@ namespace AnimationLoader
                         $"Key {AnimationInfo.GetKey(_nextAinmInfo)} " +
                         $"SiruPaste {_nextAinmInfo.paramFemale.fileSiruPaste}.");
 #endif
-                    var swapAnim = new AnimationInfo(_nextAinmInfo);
-                    if (swapAnim != null)
+                    Utilities.SetOriginalPositionAll();
+                    // TODO: Look to fix this in the animation files.
+                    // undo movement if still in save position
+                    var nowAnimationInfo = _hprocInstance.flags.nowAnimationInfo;
+                    var nowAnim = new AnimationInfo(nowAnimationInfo);
+                    if (nowAnim != null)
                     {
-                        if (swapAnim.SwapAnim != null)
+                        if (Utilities.HasMovement(nowAnim))
                         {
-                            if (swapAnim.SwapAnim.PositionHeroine != Vector3.zero)
+                            if (nowAnim.SwapAnim.PositionHeroine != Vector3.zero)
                             {
-                                MoveCharacter.Move(_heroine, swapAnim.SwapAnim.PositionHeroine);
+                                if (!Utilities.IsNewPosition(_heroine))
+                                {
+                                    GetMoveController(_heroine).ResetPosition();
+                                }
                             }
-                            if (swapAnim.SwapAnim.PositionPlayer != Vector3.zero)
+                            if (nowAnim.SwapAnim.PositionPlayer != Vector3.zero)
                             {
-                                MoveCharacter.Move(_player, swapAnim.SwapAnim.PositionPlayer);
+                                if (!Utilities.IsNewPosition(_player))
+                                {
+                                    GetMoveController(_player).ResetPosition();
+                                }
+                            }
+                        }
+                    }
+                    var nextAnim = new AnimationInfo(_nextAinmInfo);
+                    if (nextAnim != null)
+                    {
+                        if (Utilities.HasMovement(nextAnim))
+                        {
+                            if (nextAnim.SwapAnim.PositionHeroine != Vector3.zero)
+                            {
+                                GetMoveController(_heroine).Move(nextAnim.SwapAnim.PositionHeroine); 
+                            }
+                            if (nextAnim.SwapAnim.PositionPlayer != Vector3.zero)
+                            {
+                                GetMoveController(_player).Move(nextAnim.SwapAnim.PositionPlayer);
                             }
                         }
                     }
@@ -73,6 +100,8 @@ namespace AnimationLoader
                 Utilities.SaveHProcInstance(__instance);
                 _lstHeroines = ___lstFemale;
                 _heroine = _lstHeroines[0];
+                GetMoveController(_heroine).Init();
+
                 if (___lstFemale.Count > 1)
                 {
                     _heroine3P = _lstHeroines[1];

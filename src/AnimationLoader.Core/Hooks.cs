@@ -141,13 +141,23 @@ namespace AnimationLoader
                             };
                             return cat;
                         }).ToList();
+
+                    // The mode and <kindHoushi>Hand</kindHoushi> is not honored
+                    if (anim.Mode == HFlag.EMode.houshi)
+                    {
+                        donorInfo.kindHoushi = (int)anim.kindHoushi;
+                    }
+#if !DEBUG
                     Logger.LogDebug($"0002: Adding animation {anim.AnimationName} to EMode " +
                         $"{ anim.Mode} Key {anim}");
+#endif
 #if KKS
                     // Update name so it shows on button text label
                     donorInfo.nameAnimation = anim.AnimationName;
 #endif
 #if DEBUG
+                    Logger.LogInfo($"0002: Adding animation {anim.AnimationName} to EMode " +
+                        $"{ anim.Mode} Key {anim}");
                     countAL++;
 #endif
                     animListInfo.Add(donorInfo);
@@ -254,6 +264,11 @@ namespace AnimationLoader
 
             [HarmonyPostfix]
             [HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]
+            private static void LoadStudioAnimations(Studio.Info __instance, ref IEnumerator __result)
+            {
+                LoadStudioAnims(__instance, ref __result);
+            }
+
             private static void LoadStudioAnims(Studio.Info __instance, ref IEnumerator __result)
             {
                 __result = __result.AppendCo(() =>
