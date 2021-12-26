@@ -9,3 +9,65 @@ Also more information in the [wiki](https://github.com/IllusionMods/AnimationLoa
 2. Download the latest release from [the releases page](../../releases)
 3. Drop the dll to `bepinex/plugins`
 4. Add animation packages to the mods folder. (These can usually be downloaded with KKManager)
+
+##
+The manifest.xml was extended from version **1.0.8**.
+
+1. **PositionHeroine** and **PositionPlayer** vectors (x, y, z) that represent:
+```xml
+<PositionHeroine>
+  <x>0</x>
+  <y>0</y>
+  <z>0</z>
+</PositionHeroine>
+<PositionPlayer>
+  <x>0</x>
+  <y>0</y>
+  <z>0</z>
+</PositionPlayer>
+```
+    x is left and right movement (red axis)
+    y is up and down (green axis)
+    z is forward and backwards (blue axis)
+The values represent a factor by which a normalized vector in the direction of the axes is 
+multiplied and the result added to the axis. The magnitude of normalized vector is one. The scale
+a good guess could be a meter. If there is a need to move half a unit the factor for that axis 
+would be 0.5 for example.
+
+2. **GameSpecificOverrides** - the manifest.xml is one for both KK and KKS by using this section
+it can be fine tuned for both games.
+```xml
+<Animation>
+  <StudioId>1</StudioId>
+  <AnimationName>Animation 1</AnimationName>
+  <NeckDonorId>0</NeckDonorId>
+  <GameSpecificOverrides>
+    <KoikatsuSunshine>
+      <NeckDonorId>55</NeckDonorId>
+    </KoikatsuSunshine>
+  <GameSpecificOverrides>
+</Animation>
+```
+Here the NeckDonorId when KK reads the configuration will be 0 but when KKS reads the configuration
+will be 55.
+
+3. **Game specific animations**
+```xml
+<Koikatu>
+  <Animation>
+    <StudioId>1</StudioId>
+    <AnimationName>Animation 1</AnimationName>
+    <NeckDonorId>0</NeckDonorId>
+  </Animation>
+</Koikatu>
+<Animation>
+  <StudioId>2</StudioId>
+  <AnimationName>Animation 1</AnimationName>
+  <NeckDonorId>0</NeckDonorId>
+</Animation>
+
+```
+When KKS reads this manifest the animation with StudioId 1 will be ignored. Koikatu will read both
+StudioId 1 and 2.
+
+
