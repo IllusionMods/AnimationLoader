@@ -4,7 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace AnimationLoader.Koikatu
+
+namespace AnimationLoader
 {
     public class TextScroll : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
@@ -29,11 +30,16 @@ namespace AnimationLoader.Koikatu
         {
             while(move)
             {
-                if(textMesh.preferredWidth - Math.Abs(textMesh.margin.x) < transBase.sizeDelta.x * 0.5f)
+                if (textMesh.preferredWidth - Math.Abs(textMesh.margin.x)
+                    < transBase.sizeDelta.x * 0.5f)
+                {
                     MarginSet(transBase.sizeDelta.x * 0.5f);
+                }
                 else
+                {
                     MarginAdd(-speed * Time.deltaTime);
-                
+                }
+
                 yield return null;
             }
         }

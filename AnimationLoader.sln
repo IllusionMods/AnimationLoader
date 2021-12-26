@@ -1,8 +1,47 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationLoader.Koikatu", "src\AnimationLoader.Koikatu\AnimationLoader.Koikatu.csproj", "{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.Koikatu", "src\AnimationLoader.Koikatu\AnimationLoader.Koikatu.csproj", "{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6B1C4EAA-7ADD-47A9-AC1E-004D83C9BC6C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		CHANGELOG.md = CHANGELOG.md
+		Manifest.md = Manifest.md
+		nuget.config = nuget.config
+		README.md = README.md
+		template.xml = template.xml
+	EndProjectSection
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AnimationLoader.Core", "src\AnimationLoader.Core\AnimationLoader.Core.shproj", "{E48D1A5F-A706-4293-88BB-D82BD68CDFED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.KoikatsuSunshine", "src\AnimationLoader.KoikatsuSunshine\AnimationLoader.KoikatsuSunshine.csproj", "{269D192E-9499-429F-A07F-C8B7E13DC861}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Archive", "Archive", "{48B4290A-7B2E-429F-81AA-96B1776489BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F58B38FF-9297-4735-B9B7-AF959BB9A24C}"
+	ProjectSection(SolutionItems) = preProject
+		src\Archive\src\Extensions.cs = src\Archive\src\Extensions.cs
+		src\Archive\src\Program.cs = src\Archive\src\Program.cs
+		src\Archive\src\SwapAnim.cs = src\Archive\src\SwapAnim.cs
+		src\Archive\src\SwapAnimationInfo.cs = src\Archive\src\SwapAnimationInfo.cs
+		src\Archive\src\TextScroll.cs = src\Archive\src\TextScroll.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template", "template", "{1020489C-650B-447E-9FFA-D3B5E4670D74}"
+	ProjectSection(SolutionItems) = preProject
+		src\Archive\template\template.xml = src\Archive\template\template.xml
+	EndProjectSection
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{269d192e-9499-429f-a07f-c8b7e13dc861}*SharedItemsImports = 5
+		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{3ef70928-3925-4f6c-96e9-0ef3b9228e0d}*SharedItemsImports = 5
+		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{e48d1a5f-a706-4293-88bb-d82bd68cdfed}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -12,5 +51,20 @@ Global
 		{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{269D192E-9499-429F-A07F-C8B7E13DC861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{269D192E-9499-429F-A07F-C8B7E13DC861}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{269D192E-9499-429F-A07F-C8B7E13DC861}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{269D192E-9499-429F-A07F-C8B7E13DC861}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{48B4290A-7B2E-429F-81AA-96B1776489BF} = {6B1C4EAA-7ADD-47A9-AC1E-004D83C9BC6C}
+		{F58B38FF-9297-4735-B9B7-AF959BB9A24C} = {48B4290A-7B2E-429F-81AA-96B1776489BF}
+		{1020489C-650B-447E-9FFA-D3B5E4670D74} = {48B4290A-7B2E-429F-81AA-96B1776489BF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F34D347D-7842-4922-A372-47ECD316CD6E}
 	EndGlobalSection
 EndGlobal

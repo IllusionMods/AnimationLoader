@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="..\AnimationLoader.Core\AnimationLoader.Core.projitems" Label="Shared" />
+
+    <Import Project="..\BuildSettings.Common.props" />
+
+    <PropertyGroup>
+        <TargetFramework>net46</TargetFramework>
+        <RootNamespace>AnimationLoader</RootNamespace>
+        <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <DefineConstants>TRACE;DEBUG;KKS</DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <DefineConstants>TRACE;KKS</DefineConstants>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="ExtensibleSaveFormat.KoikatsuSunshine" Version="16.9.1" />
+      <PackageReference Include="IllusionLibs.BepInEx" Version="5.4.15" />
+      <PackageReference Include="IllusionLibs.KoikatsuSunshine.Assembly-CSharp" Version="2021.9.17" />
+      <PackageReference Include="IllusionLibs.KoikatsuSunshine.Assembly-CSharp-firstpass" Version="2021.9.17" />
+      <PackageReference Include="IllusionLibs.KoikatsuSunshine.Unity.TextMeshPro" Version="2019.4.9" />
+      <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.AnimationModule" Version="2019.4.9" />
+      <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.CoreModule" Version="2019.4.9" />
+      <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.TextRenderingModule" Version="2019.4.9" />
+      <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.UI" Version="2019.4.9" />
+      <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.UIModule" Version="2019.4.9" />
+      <PackageReference Include="IllusionModdingAPI.KKSAPI" Version="1.28.2" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="Sideloader.KoikatsuSunshine" Version="16.9.1" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Update="Microsoft.Unity.Analyzers" Version="1.11.2">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+    
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+      <Exec Command="IF EXIST $(SolutionDir)PostBuild.bat CALL &quot;$(SolutionDir)PostBuild.bat&quot; KKS $(TargetPath)" />
+    </Target>
+	
+</Project>
