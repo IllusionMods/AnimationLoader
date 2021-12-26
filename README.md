@@ -2,7 +2,6 @@
 A plugin for loading animations from Sideloader zipmods.  
 Thank you Essu for the [main bulk of the code](https://github.com/IllusionMods/AnimationLoader/commit/402c02af3bbb5a6e1b3015bd0caa3f0a7db618fc)  
 See the [template](template.xml) for how to configure animations in your own mod.
-Also more information in the [wiki](https://github.com/IllusionMods/AnimationLoader/wiki/manifest.xml).
 
 ## How to install
 1. Install the latest build of [BepInEx](https://github.com/BepInEx/BepInEx/releases)
@@ -69,3 +68,7 @@ will be 55.
 ```
 When KKS reads this manifest the animation with StudioId 1 will be ignored. Koikatu will read both
 StudioId 1 and 2.
+
+
+More detailed information in the
+[wiki](https://github.com/IllusionMods/AnimationLoader/wiki/manifest.xml).
