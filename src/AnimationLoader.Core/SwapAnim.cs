@@ -83,9 +83,9 @@ namespace AnimationLoader
             LoadInCharStudio = Config.Bind(
                 section: GeneralSection,
                 key: "Character Studio",
-                defaultValue: false,
+                defaultValue: true,
                 configDescription: new ConfigDescription(
-                    description: "Sort positions alphabetically",
+                    description: "Disabled module for Studio",
                     tags: new ConfigurationManagerAttributes { Order = 1 }));
             if (KoikatuAPI.GetCurrentGameMode() == GameMode.Studio)
             {
@@ -108,6 +108,7 @@ namespace AnimationLoader
                     tags: new ConfigurationManagerAttributes { Order = 2 }));
 #endif
             Hooks.Init();
+            // Register move characters controller
             CharacterApi.RegisterExtraBehaviour<MoveController>(PInfo.GUID);
         }
 
@@ -156,7 +157,7 @@ namespace AnimationLoader
         }
 
         /// <summary>
-        /// Get controller for characters
+        /// Get move controller for characters
         /// </summary>
         /// <param name="chaControl"></param>
         /// <returns></returns>

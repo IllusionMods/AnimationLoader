@@ -22,7 +22,8 @@ namespace AnimationLoader
                 if (_hprocInstance == null)
                 {
 #if DEBUG
-                    Logger.LogWarning($"0016: [ShowAnimInfo] Instance? {_hprocInstance is not null}");
+                    Logger.LogWarning($"0016: [ShowAnimInfo] Instance? " +
+                        $"{_hprocInstance is not null}");
 #endif
                     return;
                 }
@@ -110,6 +111,7 @@ namespace AnimationLoader
 
             internal static void SaveHProcInstance(object instance)
             {
+                // TODO: This makes it VR incompatible
                 if (_hprocInstance == null)
                 {
                     _hprocInstance = (HSceneProc)instance;
@@ -145,7 +147,7 @@ namespace AnimationLoader
             /// from original position saved
             /// </summary>
             /// <param name="message"></param>
-            internal static void SetOriginalPositionAll(string message = null)
+            internal static void SetOriginalPositionAll()
             {
                 if (_hprocInstance == null)
                 {

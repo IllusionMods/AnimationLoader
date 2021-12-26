@@ -75,7 +75,7 @@ namespace AnimationLoader
                         {
                             if (nextAnim.SwapAnim.PositionHeroine != Vector3.zero)
                             {
-                                GetMoveController(_heroine).Move(nextAnim.SwapAnim.PositionHeroine); 
+                                GetMoveController(_heroine).Move(nextAnim.SwapAnim.PositionHeroine);
                             }
                             if (nextAnim.SwapAnim.PositionPlayer != Vector3.zero)
                             {

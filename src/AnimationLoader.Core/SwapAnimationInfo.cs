@@ -11,7 +11,6 @@ using static HFlag;
 
 namespace AnimationLoader
 {
-    [UnityEngine.Scripting.Preserve]
     [XmlRoot("Animation")]
     [Serializable]
     public class SwapAnimationInfo
@@ -75,10 +74,12 @@ namespace AnimationLoader
         //
         // Not defining the node works
 #if KKS
-        [XmlElement]
-        public XElement GameSpecificOverrides;
+        // This works if reading the xml files from config\AnimationLoader but not when receiving
+        // the manifests for Sideloader read from a zipmod
+        // they receive the same values
+        //[XmlElement]
+        //public XElement GameSpecificOverrides = new XElement();
 #endif
-
         [XmlElement]
         public Vector3 PositionHeroine = Vector3.zero;
 
@@ -86,7 +87,6 @@ namespace AnimationLoader
         public Vector3 PositionPlayer = Vector3.zero;
     }
 
-    [UnityEngine.Scripting.Preserve]
     [XmlRoot(KoikatuAPI.GameProcessName)]
     [Serializable]
     public class OverrideInfo

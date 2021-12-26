@@ -30,7 +30,10 @@ namespace AnimationLoader
         {
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSprite), nameof(HSprite.LoadMotionList))]
-            private static void LoadMotionList(HSprite __instance, List<HSceneProc.AnimationListInfo> _lstAnimInfo, GameObject _objParent)
+            private static void LoadMotionList(
+                HSprite __instance,
+                List<HSceneProc.AnimationListInfo> _lstAnimInfo,
+                GameObject _objParent)
             {
                 if (_lstAnimInfo == null || _lstAnimInfo.Count == 0)
                 {
@@ -68,15 +71,21 @@ namespace AnimationLoader
                     DestroyImmediate(scroll.verticalScrollbar.gameObject);
                     DestroyImmediate(scroll.GetComponent<Image>());
 
-                    var copyTarget = GameObject.Find("Canvas").transform.Find("clothesFileWindow/Window/WinRect/ListArea/Scroll View/Scrollbar Vertical").gameObject;
+                    var copyTarget = GameObject
+                        .Find("Canvas").transform
+                        .Find("clothesFileWindow/Window/WinRect/ListArea/Scroll " +
+                            "View/Scrollbar Vertical").gameObject;
                     var newScrollbar = Instantiate(copyTarget, go.transform);
                     scroll.verticalScrollbar = newScrollbar.GetComponent<Scrollbar>();
                     newScrollbar.transform.SetRect(1f, 0f, 1f, 1f, 0f, 0f, 18f);
 
                     var triggerEvent = new EventTrigger.TriggerEvent();
-                    triggerEvent.AddListener(x => GlobalMethod.SetCameraMoveFlag(__instance.flags.ctrlCamera, false));
+                    triggerEvent.AddListener(x => GlobalMethod.SetCameraMoveFlag(
+                        __instance.flags.ctrlCamera,
+                        false));
                     var eventTrigger = newScrollbar.AddComponent<EventTrigger>();
-                    eventTrigger.triggers.Add(new EventTrigger.Entry { eventID = EventTriggerType.PointerDown, callback = triggerEvent });
+                    eventTrigger.triggers.Add(new EventTrigger.Entry { 
+                        eventID = EventTriggerType.PointerDown, callback = triggerEvent });
 
                     var vlg = _objParent.GetComponent<VerticalLayoutGroup>();
                     var csf = _objParent.GetComponent<ContentSizeFitter>();
@@ -120,13 +129,15 @@ namespace AnimationLoader
                     swapAnimationMapping.TryGetValue(anim, out var swap);
                     if (swap != null)
                     {
-                        btn.transform.FindLoop("Background").GetComponent<Image>().color = buttonColor;
+                        btn.transform
+                            .FindLoop("Background").GetComponent<Image>().color = buttonColor;
                         label.text = swap.AnimationName;
                     }
                 }
 
                 // order all buttons by name
-                var allButtons = buttonParent.Cast<Transform>().OrderBy(x => x.GetComponentInChildren<TextMeshProUGUI>().text).ToList();
+                var allButtons = buttonParent.Cast<Transform>()
+                    .OrderBy(x => x.GetComponentInChildren<TextMeshProUGUI>().text).ToList();
                 foreach (var t in allButtons)
                 {
                     // disable New text

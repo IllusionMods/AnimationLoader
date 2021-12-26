@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -7,11 +6,11 @@ using System.Xml.Serialization;
 
 using BepInEx;
 using KKAPI;
+
+using UnityEngine;
+
 using static HFlag;
 
-#if DEBUG
-using Newtonsoft.Json;
-#endif
 
 namespace AnimationLoader
 {
@@ -20,6 +19,7 @@ namespace AnimationLoader
         private const string ManifestRootElement = "AnimationLoader";
         private const string ManifestArrayItem = "Animation";
         private const string ManifestGSArrayItem = KoikatuAPI.GameProcessName;
+        private const string ManifestOverride = "GameSpecificOverrides";
 
         private static readonly XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
         private static readonly XmlSerializer xmlOverrideSerializer = new(typeof(OverrideInfo));
@@ -40,8 +40,8 @@ namespace AnimationLoader
                     return;
                 }
             }
-            Logger.LogMessage("0013: Make a manifest format .xml in the config/AnimationLoader folder " +
-                "to test animations");
+            Logger.LogMessage("0013: Make a manifest format .xml in the config/AnimationLoader " +
+                "folder to test animations");
         }
 
         private static void LoadXmls(IEnumerable<XDocument> manifests)
@@ -62,10 +62,8 @@ namespace AnimationLoader
                 {
                     continue;
                 }
-
                 // Process elements valid for any game
                 count += ProcessArray(animRoot, guid);
-
                 // Process game specific animations
                 if (animRootGS is null)
                 {
@@ -99,19 +97,21 @@ namespace AnimationLoader
                 data.Guid = guid;
                 reader.Close();
 #if KKS
-                // TODO: Look how to define XmlElement by-passing Unity managed code stripping
-                // Json works (if really needed like adding support for another game) maybe
-                // change to a Json configuration instead of XML
-                if (data.GameSpecificOverrides is not null)
+                //var overrideRoot = animElem?.Element(ManifestOverride)?.Element("KoikatsuSunshine");
+                var overrideRoot = animElem?
+                    .Element(ManifestOverride)?
+                    .Element(KoikatuAPI.GameProcessName);
+                if (overrideRoot != null)
                 {
-                    var overrideReader = data.GameSpecificOverrides.CreateReader();
+                    // TODO: Test for KK
+                    var overrideReader = overrideRoot.CreateReader();
                     var overrideData = (OverrideInfo)xmlOverrideSerializer
                         .Deserialize(overrideReader);
                     overrideReader.Close();
                     DoOverrides(ref data, overrideData);
                 }
 #endif
-            if (!animationDict.TryGetValue(data.Mode, out var list))
+                if (!animationDict.TryGetValue(data.Mode, out var list))
                 {
                     animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
                 }
@@ -182,11 +182,11 @@ namespace AnimationLoader
             {
                 data.MotionIKDonor = overrides.MotionIKDonor;
             }
-            if (overrides.PositionHeroine != UnityEngine.Vector3.zero)
+            if (overrides.PositionHeroine != Vector3.zero)
             {
                 data.PositionHeroine = overrides.PositionHeroine;
             }
-            if (overrides.PositionPlayer != UnityEngine.Vector3.zero)
+            if (overrides.PositionPlayer != Vector3.zero)
             {
                 data.PositionPlayer = overrides.PositionPlayer;
             }

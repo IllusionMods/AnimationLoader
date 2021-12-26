@@ -15,10 +15,6 @@ using Studio;
 
 using UnityEngine;
 
-#if DEBUG
-using Newtonsoft.Json;
-#endif
-
 
 namespace AnimationLoader
 {
@@ -109,7 +105,7 @@ namespace AnimationLoader
                     {
                         donorInfo.isFemaleInitiative = anim.IsFemaleInitiative.Value;
                     }
-                    
+
                     /*
                     if (anim.FileSiruPaste != null && SiruPasteFiles
                         .TryGetValue(anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
@@ -149,7 +145,7 @@ namespace AnimationLoader
                     }
 #if !DEBUG
                     Logger.LogDebug($"0002: Adding animation {anim.AnimationName} to EMode " +
-                        $"{ anim.Mode} Key {anim}");
+                        $"{anim.Mode} Key {AnimationInfo.GetKey(anim)}");
 #endif
 #if KKS
                     // Update name so it shows on button text label
@@ -167,7 +163,8 @@ namespace AnimationLoader
                 Logger.LogWarning($"0003: Added {countAL + countGameA} animations: Game " +
                     $"standard - {countGameA} " +
                     $"AnimationLoader - {countAL}");
-                //Logger.LogError($"0004: Added {countAL + countKKS} animations: KKS - {countKKS} " +
+                //Logger.LogError($"0004: Added {countAL + countKKS} animations: KKS - " +
+                //"{countKKS} " +
                 //$"AnimationLoader - {countAL}\n\n{JsonConvert.SerializeObject(lstAnimInfo)}\n\n"
                 //$"{JsonConvert.SerializeObject(swapAnimationMapping)}");
                 // Saves information used in the templates
@@ -262,13 +259,18 @@ namespace AnimationLoader
                 });
             }
 
+            /*
             [HarmonyPostfix]
             [HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]
-            private static void LoadStudioAnimations(Studio.Info __instance, ref IEnumerator __result)
+            private static void LoadStudioAnimations(
+                Studio.Info __instance,
+                ref IEnumerator __result)
             {
                 LoadStudioAnims(__instance, ref __result);
-            }
+            }*/
 
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]
             private static void LoadStudioAnims(Studio.Info __instance, ref IEnumerator __result)
             {
                 __result = __result.AppendCo(() =>

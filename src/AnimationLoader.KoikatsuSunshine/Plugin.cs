@@ -16,9 +16,7 @@ namespace AnimationLoader
     [BepInDependency(Sideloader.Sideloader.GUID, Sideloader.Sideloader.Version)]
     [BepInDependency(KoikatuAPI.GUID, KoikatuAPI.VersionConst)]
     [BepInProcess(KoikatuAPI.GameProcessName)]
-#if DEBUG
     [BepInProcess(KoikatuAPI.StudioProcessName)]
-#endif
     public partial class SwapAnim : BaseUnityPlugin
     {
     }
