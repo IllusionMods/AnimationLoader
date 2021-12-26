@@ -69,5 +69,3 @@ will be 55.
 ```
 When KKS reads this manifest the animation with StudioId 1 will be ignored. Koikatu will read both
 StudioId 1 and 2.
-
-

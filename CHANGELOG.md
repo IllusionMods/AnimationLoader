@@ -1,5 +1,12 @@
-
 # Changelog
+
+#### <u>(Unreleased)</u>
+
+##### Added
+
+##### Changed
+
+##### Fixed
 
 ### <u>v1.1.0.0 - 2021-12-25</u>
 
@@ -44,6 +51,3 @@ depending on the Heroine experience.a
 
 
 ###### Known Issues
-
-- KKS: animations are not loading in Studio
-
