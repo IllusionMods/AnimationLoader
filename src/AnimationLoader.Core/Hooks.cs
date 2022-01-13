@@ -92,10 +92,10 @@ namespace AnimationLoader
                     }
 
                     if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
-                    {
-                        donorInfo.paramFemale.fileMotionNeck = 
-                            animListInfo
-                                .First(x => x.id == anim.NeckDonorId).paramFemale.fileMotionNeck;
+                    {                                               
+                        donorInfo.paramFemale.fileMotionNeck = animListInfo
+                                .FirstOrDefault(x => x.id == anim.NeckDonorId)?.paramFemale?.fileMotionNeck
+                                ?? donorInfo.paramFemale.fileMotionNeck;
                     }
                     if (anim.FileMotionNeck != null)
                     {
