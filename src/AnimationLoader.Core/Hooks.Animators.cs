@@ -13,12 +13,12 @@ namespace AnimationLoader
     public partial class SwapAnim
     {
         // TODO: Change to a CharaCustomFunctionController when logic works
-        internal static HSceneProc _hprocInstance;
+        internal static object _hprocObjInstance;
         internal static ChaControl _heroine;
         internal static ChaControl _heroine3P;
         internal static List<ChaControl> _lstHeroines;
         internal static ChaControl _player;
-        internal static string _animationKey;
+        internal static HFlag _flags;
         
         internal partial class Hooks
         {
@@ -28,7 +28,7 @@ namespace AnimationLoader
             /// <param name="_nextAinmInfo"></param>
             [HarmonyPrefix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.ChangeAnimator))]
-            private static void ChangeAnimatorPrefix(HSceneProc.AnimationListInfo _nextAinmInfo)
+            private static void ChangeAnimatorPrefix(object __instance, HSceneProc.AnimationListInfo _nextAinmInfo)
             {
                 if (_nextAinmInfo == null)
                 {
@@ -38,58 +38,72 @@ namespace AnimationLoader
                 try
                 {
 #if DEBUG
-                    Logger.LogWarning($"0006: Animator changing - " +
+                    Log.Warning($"0007: Animator changing - " +
                         $"{Utilities.TranslateName(_nextAinmInfo.nameAnimation)} " +
                         $"Key {AnimationInfo.GetKey(_nextAinmInfo)} " +
-                        $"SiruPaste {_nextAinmInfo.paramFemale.fileSiruPaste}.");
+                        $"SiruPaste {SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}.");
 #endif
-                    Utilities.SetOriginalPositionAll();
-                    // TODO: Look to fix this in the animation files.
-                    // undo movement if still in save position
-                    var nowAnimationInfo = _hprocInstance.flags.nowAnimationInfo;
-                    var nowAnim = new AnimationInfo(nowAnimationInfo);
-                    if (nowAnim != null)
-                    {
-                        if (Utilities.HasMovement(nowAnim))
+                    // Reposition characters before animation starts
+                    if (Reposition.Value)
+                    {                        
+                        var flags = Traverse
+                            .Create(__instance)
+                            .Field<HFlag>("flags").Value;
+                        Utilities.SetOriginalPositionAll();
+                        var nowAnimationInfo = flags.nowAnimationInfo;
+                        var nowAnim = new AnimationInfo(nowAnimationInfo);
+                        if (nowAnim != null)
                         {
-                            if (nowAnim.SwapAnim.PositionHeroine != Vector3.zero)
+                            if (Utilities.HasMovement(nowAnim))
                             {
-                                if (!Utilities.IsNewPosition(_heroine))
+                                if (nowAnim.SwapAnim.PositionHeroine != Vector3.zero)
                                 {
-                                    GetMoveController(_heroine).ResetPosition();
+                                    if (!Utilities.IsNewPosition(_heroine))
+                                    {
+                                        GetMoveController(_heroine).ResetPosition();
+                                    }
                                 }
-                            }
-                            if (nowAnim.SwapAnim.PositionPlayer != Vector3.zero)
-                            {
-                                if (!Utilities.IsNewPosition(_player))
+                                if (nowAnim.SwapAnim.PositionPlayer != Vector3.zero)
                                 {
-                                    GetMoveController(_player).ResetPosition();
+                                    if (!Utilities.IsNewPosition(_player))
+                                    {
+                                        GetMoveController(_player).ResetPosition();
+                                    }
                                 }
                             }
                         }
-                    }
-                    var nextAnim = new AnimationInfo(_nextAinmInfo);
-                    if (nextAnim != null)
-                    {
-                        if (Utilities.HasMovement(nextAnim))
+                        var nextAnim = new AnimationInfo(_nextAinmInfo);
+                        if (nextAnim != null)
                         {
-                            if (nextAnim.SwapAnim.PositionHeroine != Vector3.zero)
+                            if (Utilities.HasMovement(nextAnim))
                             {
-                                GetMoveController(_heroine).Move(nextAnim.SwapAnim.PositionHeroine);
-                            }
-                            if (nextAnim.SwapAnim.PositionPlayer != Vector3.zero)
-                            {
-                                GetMoveController(_player).Move(nextAnim.SwapAnim.PositionPlayer);
+                                if (nextAnim.SwapAnim.PositionHeroine != Vector3.zero)
+                                {
+                                    GetMoveController(_heroine).Move(nextAnim.SwapAnim.PositionHeroine);
+                                }
+                                if (nextAnim.SwapAnim.PositionPlayer != Vector3.zero)
+                                {
+                                    GetMoveController(_player).Move(nextAnim.SwapAnim.PositionPlayer);
+                                }
                             }
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError($"0008: Error - {e}");
+                    Log.Error($"0008: Error - {e}");
                 }
             }
 
+            internal static Func<string, string> SiruPaste = x => x == string.Empty ?
+                $"None" : $"{x}";
+
+            /// <summary>
+            /// Initialize MoveController for characters
+            /// </summary>
+            /// <param name="__instance"></param>
+            /// <param name="___lstFemale"></param>
+            /// <param name="___male"></param>
             [HarmonyPrefix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.SetShortcutKey))]
             private static void SetShortcutKeyPrefix(
@@ -97,7 +111,7 @@ namespace AnimationLoader
                 List<ChaControl> ___lstFemale,
                 ChaControl ___male)
             {
-                Utilities.SaveHProcInstance(__instance);
+                _hprocObjInstance = __instance;
                 _lstHeroines = ___lstFemale;
                 _heroine = _lstHeroines[0];
                 GetMoveController(_heroine).Init();
@@ -105,9 +119,15 @@ namespace AnimationLoader
                 if (___lstFemale.Count > 1)
                 {
                     _heroine3P = _lstHeroines[1];
+                    GetMoveController(_heroine3P).Init();
                 }
 
                 _player = ___male;
+                GetMoveController(_player).Init();
+
+                _flags = Traverse
+                    .Create(__instance)
+                    .Field<HFlag>("flags").Value;
             }
         }
     }
