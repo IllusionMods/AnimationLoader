@@ -41,8 +41,9 @@ namespace AnimationLoader
                 }
 
                 var buttonParent = _objParent.transform;
+                var buttons = _objParent.transform.Cast<Transform>().ToList();
                 Transform scrollT = null;
-                if (vrType != null || UseGrid.Value)
+                if (VRHSceneType != null || UseGrid.Value)
                 {
                     DestroyImmediate(_objParent.GetComponent<VerticalLayoutGroup>());
                     DestroyImmediate(_objParent.GetComponent<GridLayoutGroup>());
@@ -57,8 +58,6 @@ namespace AnimationLoader
                 }
                 else
                 {
-                    var buttons = _objParent.transform.Cast<Transform>().ToList();
-
                     var go = DefaultControls.CreateScrollView(new DefaultControls.Resources());
                     go.transform.SetParent(_objParent.transform, false);
                     var scroll = go.GetComponent<ScrollRect>();
@@ -94,12 +93,12 @@ namespace AnimationLoader
                     CopyComponent(vlg, scroll.content.gameObject).enabled = true;
                     CopyComponent(csf, scroll.content.gameObject).enabled = true;
 
-                    // remove the buttons as we're going to rebuild the entire list
-                    buttons.ForEach(x => Destroy(x.gameObject));
-
                     buttonParent = scroll.content;
                     scrollT = scroll.gameObject.transform;
                 }
+
+                // remove the buttons as we're going to rebuild the entire list
+                buttons.ForEach(x => Destroy(x.gameObject));
 
                 foreach (var anim in _lstAnimInfo)
                 {

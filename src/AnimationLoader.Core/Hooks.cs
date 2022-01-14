@@ -3,25 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 
-using HarmonyLib;
-
 using Illusion.Extensions;
-
 using Manager;
-
-using Sideloader.AutoResolver;
-
 using Studio;
-
 using UnityEngine;
 
+using Sideloader.AutoResolver;
+using HarmonyLib;
+using BepInEx.Logging;
+using System.Text;
 
 namespace AnimationLoader
 {
     public partial class SwapAnim
     {
         internal static Harmony _hookInstance;
-        //internal static HFlag.EMode _mode;
 
         internal partial class Hooks
         {
@@ -32,44 +28,47 @@ namespace AnimationLoader
             {
                 _hookInstance = Harmony.CreateAndPatchAll(typeof(Hooks), nameof(Hooks));
 
-                if (vrType != null)
+                if (VRHSceneType != null)
                 {
                     _hookInstance.Patch(
                         AccessTools.Method(
-                            vrType,
+                            VRHSceneType,
                             nameof(HSceneProc.ChangeAnimator)),
                             postfix: new HarmonyMethod(typeof(Hooks),
                             nameof(SwapAnimation)));
                     _hookInstance.Patch(
                         AccessTools.Method(
-                            vrType,
+                            VRHSceneType,
                             nameof(HSceneProc.CreateAllAnimationList)),
                             postfix: new HarmonyMethod(typeof(Hooks),
                             nameof(ExtendList)));
                 }
             }
 
+            /// <summary>
+            /// Add new animations
+            /// </summary>
+            /// <param name="__instance"></param>
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateAllAnimationList))]
             private static void ExtendList(object __instance)
             {
-                // add new animations to the complete list
-                Utilities.SaveHProcInstance(__instance);
+                var procObj = Traverse.Create(__instance);
+                var addedAnimations = new StringBuilder();
 #if KK
                 var hlist = Singleton<Game>.Instance.glSaveData.playHList;
 #elif KKS
                 var hlist = Game.globalData.playHList;
+                var flags = procObj.Field<HFlag>("flags").Value;
+                var hExp = flags.lstHeroine[0].hExp;
 #endif
-                var lstAnimInfo = Traverse
-                    .Create(__instance)
+                var lstAnimInfo = procObj
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
                 swapAnimationMapping = 
                     new Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>();
-#if DEBUG
                 var countGameA = 0;
                 var countAL = 0;
                 countGameA = Utilities.CountAnimations(lstAnimInfo);
-#endif
                 foreach (var anim in animationDict.SelectMany(
                     e => e.Value,
                     (e, a) => a
@@ -87,24 +86,33 @@ namespace AnimationLoader
 
                     if (donorInfo == null)
                     {
-                        Logger.LogWarning($"0001: No donor: mode={anim.Mode} DonorPoseId={anim.DonorPoseId}");
+                        Log.Level(LogLevel.Warning, $"0001: No donor: mode={anim.Mode} " +
+                            $"DonorPoseId={anim.DonorPoseId}");
                         continue;
                     }
 
                     if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
                     {                                               
-                        var newNeckDonor = animListInfo.FirstOrDefault(x => x.id == anim.NeckDonorId);
+                        var newNeckDonor = animListInfo
+                            .FirstOrDefault(x => x.id == anim.NeckDonorId);
                         if (newNeckDonor == null)
                         {
-                            Logger.LogWarning($"0001: Invalid or missing NeckDonorId: mode={anim.Mode} NeckDonorId={anim.NeckDonorId}");
+                            Log.Level(LogLevel.Warning, $"0029: Invalid or missing " +
+                                $"NeckDonorId: mode={anim.Mode} NeckDonorId={anim.NeckDonorId}");
                         }
                         else
                         {
                             var newMotionNeck = newNeckDonor?.paramFemale?.fileMotionNeck;
                             if (newMotionNeck == null)
-                                Logger.LogWarning($"0001: NeckDonorId didn't point to a usable fileMotionNeck: mode={anim.Mode} NeckDonorId={anim.NeckDonorId}");
+                            {
+                                Log.Level(LogLevel.Warning, $"0030: NeckDonorId didn't point to" +
+                                    $" a usable fileMotionNeck: " +
+                                    $"mode={anim.Mode} NeckDonorId={anim.NeckDonorId}");
+                            }
                             else
+                            {
                                 donorInfo.paramFemale.fileMotionNeck = newMotionNeck;
+                            }
                         }
                     }
                     if (anim.FileMotionNeck != null)
@@ -116,15 +124,6 @@ namespace AnimationLoader
                         donorInfo.isFemaleInitiative = anim.IsFemaleInitiative.Value;
                     }
 
-                    /*
-                    if (anim.FileSiruPaste != null && SiruPasteFiles
-                        .TryGetValue(anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
-                    {
-
-                        donorInfo.paramFemale.fileSiruPaste = fileSiruPaste;
-                    }
-                    */
-
                     if (!string.IsNullOrEmpty(anim.FileSiruPaste))
                     {
                         // Check if FileSuruPaset is on dictionary first
@@ -135,6 +134,7 @@ namespace AnimationLoader
                         }
                         else
                         {
+                            // TODO: Check that it is a valid name
                             donorInfo.paramFemale.fileSiruPaste = anim.FileSiruPaste.ToLower();
                         }
                     }
@@ -153,32 +153,24 @@ namespace AnimationLoader
                     {
                         donorInfo.kindHoushi = (int)anim.kindHoushi;
                     }
-#if !DEBUG
-                    Logger.LogDebug($"0002: Adding animation {anim.AnimationName} to EMode " +
-                        $"{anim.Mode} Key {AnimationInfo.GetKey(anim)}");
-#endif
 #if KKS
                     // Update name so it shows on button text label
                     donorInfo.nameAnimation = anim.AnimationName;
 #endif
-#if DEBUG
-                    Logger.LogInfo($"0002: Adding animation {anim.AnimationName} to EMode " +
-                        $"{ anim.Mode} Key {anim}");
-                    countAL++;
-#endif
                     animListInfo.Add(donorInfo);
                     swapAnimationMapping[donorInfo] = anim;
+                    addedAnimations.Append($"EMode {anim.Mode,6} Name {anim.AnimationName} " +
+                        $"[Key {AnimationInfo.GetKey(anim)}]\n");
+                    countAL++;
                 }
-#if DEBUG
-                Logger.LogWarning($"0003: Added {countAL + countGameA} animations: Game " +
+                addedAnimations.Append($"\n{countAL + countGameA} animations available: Game " +
                     $"standard - {countGameA} " +
-                    $"AnimationLoader - {countAL}");
-                //Logger.LogError($"0004: Added {countAL + countKKS} animations: KKS - " +
-                //"{countKKS} " +
-                //$"AnimationLoader - {countAL}\n\n{JsonConvert.SerializeObject(lstAnimInfo)}\n\n"
-                //$"{JsonConvert.SerializeObject(swapAnimationMapping)}");
-                // Saves information used in the templates
+                    $"AnimationLoader - {countAL}\n");
+#if DEBUG
+                Log.Warning($"0012: Added animations:\n\n{addedAnimations}");
                 Utilities.SaveAnimInfo();
+#else
+                Log.Level(LogLevel.Debug, $"0012: Added animations:\n\n{addedAnimations}");
 #endif
             }
 
@@ -268,16 +260,6 @@ namespace AnimationLoader
                     mik.Reset();
                 });
             }
-
-            /*
-            [HarmonyPostfix]
-            [HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]
-            private static void LoadStudioAnimations(
-                Studio.Info __instance,
-                ref IEnumerator __result)
-            {
-                LoadStudioAnims(__instance, ref __result);
-            }*/
 
             [HarmonyPostfix]
             [HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]

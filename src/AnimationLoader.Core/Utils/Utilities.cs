@@ -19,18 +19,18 @@ namespace AnimationLoader
         {
             internal static void SaveAnimInfo()
             {
-                if (_hprocInstance == null)
+                if (_hprocObjInstance == null)
                 {
 #if DEBUG
-                    Logger.LogWarning($"0016: [ShowAnimInfo] Instance? " +
-                        $"{_hprocInstance is not null}");
+                    Log.Warning($"0016: [ShowAnimInfo] Instance? " +
+                        $"{_hprocObjInstance is not null}");
 #endif
                     return;
                 }
 
                 var total = 0;
                 var lstAnimInfo = Traverse
-                    .Create(_hprocInstance)
+                    .Create(_hprocObjInstance)
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
 
                 // id, mode,
@@ -52,7 +52,7 @@ namespace AnimationLoader
                     total += lines.ToArray().Length;
                 }
 #if DEBUG
-                Logger.LogWarning($"0017: Total animations {total}");
+                Log.Warning($"0017: Total animations {total}");
 #endif
             }
 
@@ -109,23 +109,6 @@ namespace AnimationLoader
                 return count;
             }
 
-            internal static void SaveHProcInstance(object instance)
-            {
-                // TODO: This makes it VR incompatible
-                if (_hprocInstance == null)
-                {
-                    _hprocInstance = (HSceneProc)instance;
-                    if (_hprocInstance == null)
-                    {
-                        Logger.LogDebug($"0009: Failed to save _hprocInstance");
-                    }
-                    else
-                    {
-                        Logger.LogDebug($"0010: _hprocInstance saved.");
-                    }
-                }
-            }
-
             internal static bool HasMovement(AnimationInfo anim)
             {
                 if (anim.SwapAnim != null)
@@ -149,12 +132,12 @@ namespace AnimationLoader
             /// <param name="message"></param>
             internal static void SetOriginalPositionAll()
             {
-                if (_hprocInstance == null)
+                if (_hprocObjInstance == null)
                 {
                     return;
                 }
 
-                var heroines = _hprocInstance.flags.lstHeroine;
+                var heroines = _flags.lstHeroine;
                 for (var i = 0; i < heroines.Count; i++)
                 {
                     if (IsNewPosition(heroines[i].chaCtrl))
@@ -162,9 +145,9 @@ namespace AnimationLoader
                         GetMoveController(heroines[i].chaCtrl).SetOriginalPosition();
                     }
                 }
-                if (IsNewPosition(_hprocInstance.flags.player.chaCtrl))
+                if (IsNewPosition(_flags.player.chaCtrl))
                 {
-                    GetMoveController(_hprocInstance.flags.player.chaCtrl).SetOriginalPosition();
+                    GetMoveController(_flags.player.chaCtrl).SetOriginalPosition();
                 }
             }
 

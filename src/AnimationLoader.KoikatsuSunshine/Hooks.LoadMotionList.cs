@@ -83,7 +83,7 @@ namespace AnimationLoader
                     }
                 }
 #if DEBUG
-                Logger.LogWarning($"0021: System animations {countGA} Animation Loader {countAL}");
+                Log.Warning($"0021: System animations {countGA} Animation Loader {countAL}");
 #endif
                 // sort all buttons by name
                 if (SortPositions.Value)

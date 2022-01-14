@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
 using BepInEx;
+using BepInEx.Logging;
 using KKAPI;
 
 using UnityEngine;
-
 using static HFlag;
 
 
@@ -19,10 +21,13 @@ namespace AnimationLoader
         private const string ManifestRootElement = "AnimationLoader";
         private const string ManifestArrayItem = "Animation";
         private const string ManifestGSArrayItem = KoikatuAPI.GameProcessName;
-        private const string ManifestOverride = "GameSpecificOverrides";
 
         private static readonly XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
+
+#if KKS
+        private const string ManifestOverride = "GameSpecificOverrides";
         private static readonly XmlSerializer xmlOverrideSerializer = new(typeof(OverrideInfo));
+#endif
 
         private static XElement animRoot;
         private static XElement animRootGS;
@@ -35,35 +40,40 @@ namespace AnimationLoader
                 var docs = Directory.GetFiles(path, "*.xml").Select(XDocument.Load).ToList();
                 if(docs.Count > 0)
                 {
-                    Logger.LogMessage($"0012: [{PInfo.PluginName}] Loading test animations");
+                    Log.Level(LogLevel.Message, $"0014: [{PInfo.PluginName}] Loading test " +
+                        $"animations");
                     LoadXmls(docs);
                     return;
                 }
             }
-            Logger.LogMessage("0013: Make a manifest format .xml in the config/AnimationLoader " +
-                "folder to test animations");
+            Log.Level(LogLevel.Message, "0015: Make a manifest format .xml in the " +
+                "config/AnimationLoader folder to test animations");
         }
 
         private static void LoadXmls(IEnumerable<XDocument> manifests)
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
             var count = 0;
-            foreach(var manifest in manifests.Select(x => x.Root))
-            {
-                var guid = manifest.Element("guid").Value;
+            var logLines = new StringBuilder();
 
+            // Select the only manifests that AnimationLoader will process
+            foreach (var manifest in manifests
+                .Select(x => x.Root)
+                .Where(x => x?.Element(ManifestRootElement) != null))
+            {
+                animRoot = manifest?.Element(ManifestRootElement);
                 // Look for game specific configuration
                 animRootGS = manifest
                     .Element(ManifestRootElement)?
                     .Element(KoikatuAPI.GameProcessName);
-                animRoot = manifest?.Element(ManifestRootElement);
 
                 if ((animRoot is null) && (animRootGS is null))
                 {
                     continue;
                 }
+                var guid = manifest.Element("guid").Value;
                 // Process elements valid for any game
-                count += ProcessArray(animRoot, guid);
+                count += ProcessArray(animRoot, guid, ref logLines);
                 // Process game specific animations
                 if (animRootGS is null)
                 {
@@ -75,16 +85,26 @@ namespace AnimationLoader
                     {
                         continue;
                     }
-                    count += ProcessArray(gameSpecificElement, guid);
+                    count += ProcessArray(gameSpecificElement, guid, ref logLines);
                 }
             }
-            //var dictionary = JsonConvert.SerializeObject(animationDict);
-            Logger.LogWarning($"0014: Added {count} animations.");
+#if DEBUG
+            if (count > 0)
+            {
+                logLines.Append($"\n{count} animations processed from manifests.\n");
+                Log.Debug($"0016: Animations:\n\n{logLines}");
+            }
+#else
+            Log.Warning($"0017: Added {count} animations.");
+#endif
         }
 
-        private static int ProcessArray(XElement root, string guid)
+        private static int ProcessArray(XElement root, string guid, ref StringBuilder logLines)
         {
             var count = 0;
+#if DEBUG
+            logLines.Append($"From {guid}-{RootText(root.Name)}\n");
+#endif
 
             foreach (var animElem in root.Elements(ManifestArrayItem))
             {
@@ -97,7 +117,7 @@ namespace AnimationLoader
                 data.Guid = guid;
                 reader.Close();
 #if KKS
-                //var overrideRoot = animElem?.Element(ManifestOverride)?.Element("KoikatsuSunshine");
+                // TODO: Test for KK (logic may be too KK default=>overrides for KKS)
                 var overrideRoot = animElem?
                     .Element(ManifestOverride)?
                     .Element(KoikatuAPI.GameProcessName);
@@ -115,17 +135,23 @@ namespace AnimationLoader
                 {
                     animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
                 }
-
                 list.Add(data);
+#if DEBUG
+                logLines.Append($"{AnimationInfo.GetKey(data),40} - {data.AnimationName}\n");
+#endif
                 count++;
             }
             return count;
         }
 
-        private static void DoOverrides(ref SwapAnimationInfo data, OverrideInfo overrides)
-        {
-            // TODO: This is an Ugly hack check alternatives
+        internal static Func<XName, string> RootText = x => x == KoikatuAPI.GameProcessName ?
+            $"Game specific elements of {x}" : $"Root elements of {x}";
 
+#if KKS
+        private static void DoOverrides(
+            ref SwapAnimationInfo data, 
+            OverrideInfo overrides)
+        {
             if (overrides.PathFemale != null)
             {
                 data.PathFemale = string.Copy(overrides.PathFemale);
@@ -191,5 +217,6 @@ namespace AnimationLoader
                 data.PositionPlayer = overrides.PositionPlayer;
             }
         }
+#endif
     }
 }

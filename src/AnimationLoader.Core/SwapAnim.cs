@@ -25,15 +25,16 @@ namespace AnimationLoader
         private static ConfigEntry<bool> UseGrid { get; set; }
 #endif
         private static ConfigEntry<KeyboardShortcut> ReloadManifests { get; set; }
+        internal static ConfigEntry<bool> DebugInfo { get; set; }
+        internal static ConfigEntry<bool> Reposition { get; set; }
         private const string GeneralSection = "General";
+        private static readonly Color buttonColor = new(0.96f, 1f, 0.9f);
 
-        private static new ManualLogSource Logger;
-        
         private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
         private static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>
             swapAnimationMapping;
-        private static readonly Type vrType = Type.GetType("VRHScene, Assembly-CSharp");
-        private static readonly Color buttonColor = new(0.96f, 1f, 0.9f);
+        private static readonly Type VRHSceneType = Type.GetType("VRHScene, Assembly-CSharp");
+        
 
         private static readonly Dictionary<string, string> SiruPasteFiles = new() {
             { "", "" },
@@ -61,7 +62,7 @@ namespace AnimationLoader
 
         private void Awake()
         {
-            Logger = base.Logger;
+            Log.SetLogSource(Logger); ;
 
             SortPositions = Config.Bind(
                 section: GeneralSection,
@@ -69,7 +70,7 @@ namespace AnimationLoader
                 defaultValue: true,
                 configDescription: new ConfigDescription(
                     description: "Sort positions alphabetically",
-                    tags: new ConfigurationManagerAttributes {Order = 3}));
+                    tags: new ConfigurationManagerAttributes {Order = 4}));
             ReloadManifests = Config.Bind(
                 section: GeneralSection,
                 key: nameof(ReloadManifests),
@@ -77,7 +78,7 @@ namespace AnimationLoader
                 configDescription: new ConfigDescription(
                     description: "Load positions from all manifest format xml files inside " +
                         "config/AnimationLoader folder",
-                    tags: new ConfigurationManagerAttributes { Order = 4 }));
+                    tags: new ConfigurationManagerAttributes { Order = 5 }));
             // For KKS the application code handles the display of animators buttons no grid UI.
 #if KKS
             LoadInCharStudio = Config.Bind(
@@ -86,18 +87,20 @@ namespace AnimationLoader
                 defaultValue: true,
                 configDescription: new ConfigDescription(
                     description: "Disabled module for Studio",
-                    tags: new ConfigurationManagerAttributes { Order = 1 }));
+                    tags: new ConfigurationManagerAttributes { Order = 3 }));
             if (KoikatuAPI.GetCurrentGameMode() == GameMode.Studio)
             {
                 if (!LoadInCharStudio.Value)
                 {
-                    Logger.LogMessage("0013: MOD disabled in configuration.");
+                    Log.Message("0013: MOD disabled in configuration.");
                     enabled = false;
                     return;
                 }
             }
 #endif
 #if KK
+            // TODO: Grid UI for KKS
+            // How many animations will require a scrollable grid
             UseGrid = Config.Bind(
                 section: GeneralSection,
                 key: nameof(UseGrid),
@@ -105,7 +108,37 @@ namespace AnimationLoader
                 configDescription: new ConfigDescription(
                     description: "If you don't want to use the scrollable" +
                         " list for some reason",
-                    tags: new ConfigurationManagerAttributes { Order = 2 }));
+                    tags: new ConfigurationManagerAttributes { Order = 3 }));
+#endif
+            // Reposition characters in the animations it can help with clipping
+            Reposition = Config.Bind(
+                section: "Debug",
+                key: "Reposition Characters",
+                defaultValue: true,
+                configDescription: new ConfigDescription(
+                    description: "Reposition characters in the animation before it starts",
+                    acceptableValues: null,
+                    tags: new ConfigurationManagerAttributes { Order = 2, IsAdvanced = true }));
+            // To generate debug information this has to be enabled
+            // Almost all Logs are in conditional compilation
+            DebugInfo = Config.Bind(
+                section: "Debug",
+                key: "Debug Information",
+                defaultValue: false,
+                configDescription: new ConfigDescription(
+                    description: "Show debug information",
+                    acceptableValues: null,
+                    tags: new ConfigurationManagerAttributes { Order = 1, IsAdvanced = true }));
+            DebugInfo.SettingChanged += (_sender, _args) =>
+            {
+                Log.Enabled = DebugInfo.Value;
+#if DEBUG
+                Log.Level(LogLevel.Info, $"0028: Log.Enabled set to {Log.Enabled}");
+#endif
+            };
+            Log.Enabled = DebugInfo.Value;
+#if DEBUG
+            Log.Level(LogLevel.Info, $"0028: Log.Enabled set to {Log.Enabled}");
 #endif
             Hooks.Init();
             // Register move characters controller
@@ -114,8 +147,13 @@ namespace AnimationLoader
 
         private void Start()
         {
+            // TODO: Save names for animations for players who change them
             LoadXmls(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
 #if DEBUG
+            //
+            // For test environment animations manifest are kept in config/AnimationLoader
+            // when the plug-in starts it will load them if no zipmod with manifests found
+            //
             if (animationDict.Count < 1)
             {
                 LoadTestXml();
