@@ -64,22 +64,6 @@ namespace AnimationLoader
         [XmlElement]
         public int MotionIKDonor = -1;
 
-        // TODO: More research to avoid unity code stripping work around for KK is not working
-        // hard time trying to at list ignore this node even treating as string when running
-        // in game does not work.  GameSpecificOverrides only will work for KKS which is kind
-        // of the natural way
-        //
-        //[XmlElement]
-        //public string GameSpecificOverrides;
-        //
-        // Not defining the node works
-#if KKS
-        // This works if reading the xml files from config\AnimationLoader but not when receiving
-        // the manifests for Sideloader read from a zipmod
-        // they receive the same values
-        //[XmlElement]
-        //public XElement GameSpecificOverrides = new XElement();
-#endif
         [XmlElement]
         public Vector3 PositionHeroine = Vector3.zero;
 
