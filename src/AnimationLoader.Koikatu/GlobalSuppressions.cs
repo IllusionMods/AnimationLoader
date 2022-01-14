@@ -5,5 +5,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0022:Use block body for methods", Justification = "<Pending>", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.GetMoveController(ChaControl)~AnimationLoader.SwapAnim.MoveController")]
-[assembly: SuppressMessage("Style", "IDE0022:Use block body for methods", Justification = "<Pending>", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.MoveController.SetOriginalPosition")]
+[assembly: SuppressMessage("Style", "IDE0022:Use block body for methods", Justification = "Style use by community", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.GetMoveController(ChaControl)~AnimationLoader.SwapAnim.MoveController")]
+[assembly: SuppressMessage("Style", "IDE0022:Use block body for methods", Justification = "Style use by community", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.MoveController.SetOriginalPosition")]
+[assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Discerning the parameter type in overloding methods", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.AnimationInfo.IsAnimationLoader(AnimationLoader.SwapAnimationInfo)~System.Boolean")]
