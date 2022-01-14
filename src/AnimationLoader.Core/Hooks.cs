@@ -87,15 +87,25 @@ namespace AnimationLoader
 
                     if (donorInfo == null)
                     {
-                        Logger.LogWarning($"0001: No donor: {anim.Mode} {anim.DonorPoseId}");
+                        Logger.LogWarning($"0001: No donor: mode={anim.Mode} DonorPoseId={anim.DonorPoseId}");
                         continue;
                     }
 
                     if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
-                    {
-                        donorInfo.paramFemale.fileMotionNeck = 
-                            animListInfo
-                                .First(x => x.id == anim.NeckDonorId).paramFemale.fileMotionNeck;
+                    {                                               
+                        var newNeckDonor = animListInfo.FirstOrDefault(x => x.id == anim.NeckDonorId);
+                        if (newNeckDonor == null)
+                        {
+                            Logger.LogWarning($"0001: Invalid or missing NeckDonorId: mode={anim.Mode} NeckDonorId={anim.NeckDonorId}");
+                        }
+                        else
+                        {
+                            var newMotionNeck = newNeckDonor?.paramFemale?.fileMotionNeck;
+                            if (newMotionNeck == null)
+                                Logger.LogWarning($"0001: NeckDonorId didn't point to a usable fileMotionNeck: mode={anim.Mode} NeckDonorId={anim.NeckDonorId}");
+                            else
+                                donorInfo.paramFemale.fileMotionNeck = newMotionNeck;
+                        }
                     }
                     if (anim.FileMotionNeck != null)
                     {
