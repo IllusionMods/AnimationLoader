@@ -39,9 +39,9 @@ namespace AnimationLoader
                 {
 #if DEBUG
                     Log.Warning($"0007: Animator changing - " +
-                        $"{Utilities.TranslateName(_nextAinmInfo.nameAnimation)} " +
-                        $"Key {AnimationInfo.GetKey(_nextAinmInfo)} " +
-                        $"SiruPaste {SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}.");
+                        $"{AnimationInfo.TranslateName(_nextAinmInfo)}, " +
+                        $"Key={AnimationInfo.GetKey(_nextAinmInfo)}, " +
+                        $"SiruPaste={SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}.");
 #endif
                     // Reposition characters before animation starts
                     if (Reposition.Value)
@@ -54,6 +54,8 @@ namespace AnimationLoader
                         var nowAnim = new AnimationInfo(nowAnimationInfo);
                         if (nowAnim != null)
                         {
+                            // If there is a position adjustment
+                            // Reset position for new animation in same HPoint
                             if (Utilities.HasMovement(nowAnim))
                             {
                                 if (nowAnim.SwapAnim.PositionHeroine != Vector3.zero)
@@ -75,6 +77,7 @@ namespace AnimationLoader
                         var nextAnim = new AnimationInfo(_nextAinmInfo);
                         if (nextAnim != null)
                         {
+                            // Move characters
                             if (Utilities.HasMovement(nextAnim))
                             {
                                 if (nextAnim.SwapAnim.PositionHeroine != Vector3.zero)
