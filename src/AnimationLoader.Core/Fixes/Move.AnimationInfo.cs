@@ -119,6 +119,16 @@ namespace AnimationLoader
                 }
                 return false;
             }
+
+            public static string TranslateName(HSceneProc.AnimationListInfo animation)
+            {
+                swapAnimationMapping.TryGetValue(animation, out var anim);
+                if (anim != null)
+                {
+                    return Utilities.TranslateName(anim.AnimationName);
+                }
+                return Utilities.TranslateName(animation.nameAnimation);
+            }
         }
     }
 }
