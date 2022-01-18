@@ -42,7 +42,7 @@ namespace AnimationLoader
             {
                 ChaControl.transform.position = _originalPosition;
 #if DEBUG
-                //
+                Log.Warning($"0032: Resetting character positions.");
 #endif
             }
 
@@ -50,6 +50,11 @@ namespace AnimationLoader
             {
                 try
                 {
+#if DEBUG
+                    Log.Warning($"0031: Adjusting character positions.");
+#else
+                    Log.Debug($"0031: Adjusting character positions.");
+#endif
                     //if (_originalPosition == Vector3.zero)
                     //{
                     //    originalPosition = character.transform.position;
