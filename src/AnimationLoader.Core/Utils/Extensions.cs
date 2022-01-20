@@ -27,7 +27,16 @@ namespace AnimationLoader
             }
         }
 
-        public static void SetRect(this Transform self, float anchorLeft = 0f, float anchorBottom = 0f, float anchorRight = 1f, float anchorTop = 1f, float offsetLeft = 0f, float offsetBottom = 0f, float offsetRight = 0f, float offsetTop = 0f)
+        public static void SetRect(
+            this Transform self,
+            float anchorLeft = 0f,
+            float anchorBottom = 0f,
+            float anchorRight = 1f,
+            float anchorTop = 1f,
+            float offsetLeft = 0f,
+            float offsetBottom = 0f,
+            float offsetRight = 0f,
+            float offsetTop = 0f)
         {
             var rt = (RectTransform)self;
             rt.anchorMin = new Vector2(anchorLeft, anchorBottom);
