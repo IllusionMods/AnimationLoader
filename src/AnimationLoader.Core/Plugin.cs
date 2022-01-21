@@ -156,9 +156,7 @@ namespace AnimationLoader
         private void Start()
         {
             //
-            // TODO: Save names for animations for players who change them
-            //
-            // Read saved names
+            // Save names for animations for users who update them and not overwrite with updates
             //
             LoadNamesXml();
 
@@ -172,7 +170,6 @@ namespace AnimationLoader
             // when the plug-in starts it will load them if no zipmod with manifests found
             // May be a feature config flag for everybody or load from here not from there??
             // I like the last one.
-            // If someone needs this they may ask.
             //
             if (animationDict.Count < 1)
             {
