@@ -46,133 +46,37 @@ namespace AnimationLoader
             }
 
             /// <summary>
-            /// Add new animations
+            /// Initialize MoveController for characters
             /// </summary>
             /// <param name="__instance"></param>
-            [HarmonyPostfix]
-            [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateAllAnimationList))]
-            private static void ExtendList(object __instance)
+            /// <param name="___lstFemale"></param>
+            /// <param name="___male"></param>
+            [HarmonyPrefix]
+            [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.SetShortcutKey))]
+            private static void SetShortcutKeyPrefix(
+                object __instance,
+                List<ChaControl> ___lstFemale,
+                ChaControl ___male)
             {
-                var procObj = Traverse.Create(__instance);
-                var addedAnimations = new StringBuilder();
-#if KK
-                var hlist = Singleton<Game>.Instance.glSaveData.playHList;
-#elif KKS
-                var hlist = Game.globalData.playHList;
-                var flags = procObj.Field<HFlag>("flags").Value;
-                var hExp = flags.lstHeroine[0].hExp;
-#endif
-                var lstAnimInfo = procObj
-                    .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
-                swapAnimationMapping = 
-                    new Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>();
-                var countGameA = 0;
-                var countAL = 0;
-                countGameA = Utilities.CountAnimations(lstAnimInfo);
-                foreach (var anim in animationDict.SelectMany(
-                    e => e.Value,
-                    (e, a) => a
-                ))
+                _hprocObjInstance = __instance;
+                _lstHeroines = ___lstFemale;
+                _heroine = _lstHeroines[0];
+                GetMoveController(_heroine).Init();
+
+                if (___lstFemale.Count > 1)
                 {
-                    var mode = (int)anim.Mode;
-                    if (mode < 0 || mode >= lstAnimInfo.Length)
-                    {
-                        continue;
-                    }
-                    var animListInfo = lstAnimInfo[(int)anim.Mode];
-
-                    var donorInfo = animListInfo
-                        .FirstOrDefault(x => x.id == anim.DonorPoseId)?.DeepCopy();
-
-                    if (donorInfo == null)
-                    {
-                        Log.Level(LogLevel.Warning, $"0001: No donor: mode={anim.Mode} " +
-                            $"DonorPoseId={anim.DonorPoseId}");
-                        continue;
-                    }
-
-                    if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
-                    {                                               
-                        var newNeckDonor = animListInfo
-                            .FirstOrDefault(x => x.id == anim.NeckDonorId);
-                        if (newNeckDonor == null)
-                        {
-                            Log.Level(LogLevel.Warning, $"0029: Invalid or missing " +
-                                $"NeckDonorId: mode={anim.Mode} NeckDonorId={anim.NeckDonorId}");
-                        }
-                        else
-                        {
-                            var newMotionNeck = newNeckDonor?.paramFemale?.fileMotionNeck;
-                            if (newMotionNeck == null)
-                            {
-                                Log.Level(LogLevel.Warning, $"0030: NeckDonorId didn't point to" +
-                                    $" a usable fileMotionNeck: " +
-                                    $"mode={anim.Mode} NeckDonorId={anim.NeckDonorId}");
-                            }
-                            else
-                            {
-                                donorInfo.paramFemale.fileMotionNeck = newMotionNeck;
-                            }
-                        }
-                    }
-                    if (anim.FileMotionNeck != null)
-                    {
-                        donorInfo.paramFemale.fileMotionNeck = anim.FileMotionNeck;
-                    }
-                    if (anim.IsFemaleInitiative != null)
-                    {
-                        donorInfo.isFemaleInitiative = anim.IsFemaleInitiative.Value;
-                    }
-
-                    if (!string.IsNullOrEmpty(anim.FileSiruPaste))
-                    {
-                        // Check if FileSuruPaset is on dictionary first
-                        if (SiruPasteFiles.TryGetValue(
-                            anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
-                        {
-                            donorInfo.paramFemale.fileSiruPaste = fileSiruPaste;
-                        }
-                        else
-                        {
-                            // TODO: Check that it is a valid name
-                            donorInfo.paramFemale.fileSiruPaste = anim.FileSiruPaste.ToLower();
-                        }
-                    }
-
-                    donorInfo.lstCategory = anim.categories.Select(c =>
-                        {
-                            var cat = new HSceneProc.Category
-                            {
-                                category = (int)c
-                            };
-                            return cat;
-                        }).ToList();
-
-                    // The mode and <kindHoushi>Hand</kindHoushi> is not honored
-                    if (anim.Mode == HFlag.EMode.houshi)
-                    {
-                        donorInfo.kindHoushi = (int)anim.kindHoushi;
-                    }
-#if KKS
-                    // Update name so it shows on button text label
-                    donorInfo.nameAnimation = anim.AnimationName;
-#endif
-                    animListInfo.Add(donorInfo);
-                    swapAnimationMapping[donorInfo] = anim;
-                    addedAnimations.Append($"EMode {anim.Mode,6} Name {anim.AnimationName} " +
-                        $"[Key {AnimationInfo.GetKey(anim)}]\n");
-                    countAL++;
+                    _heroine3P = _lstHeroines[1];
+                    GetMoveController(_heroine3P).Init();
                 }
-                addedAnimations.Append($"\n{countAL + countGameA} animations available: Game " +
-                    $"standard - {countGameA} " +
-                    $"AnimationLoader - {countAL}\n");
-#if DEBUG
-                Log.Warning($"0012: Added animations:\n\n{addedAnimations}");
-                Utilities.SaveAnimInfo();
-#else
-                Log.Level(LogLevel.Debug, $"0012: Added animations:\n\n{addedAnimations}");
-#endif
+
+                _player = ___male;
+                GetMoveController(_player).Init();
+
+                _flags = Traverse
+                    .Create(__instance)
+                    .Field<HFlag>("flags").Value;
             }
+
 
             [HarmonyTranspiler]
             [HarmonyPatch(typeof(HSprite), nameof(HSprite.OnChangePlaySelect))]
@@ -199,156 +103,6 @@ namespace AnimationLoader
                     )
                     .SetAndAdvance(OpCodes.Nop, null)
                     .InstructionEnumeration();
-            }
-
-            [HarmonyPostfix]
-            [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.ChangeAnimator))]
-            private static void SwapAnimation(
-                object __instance,
-                HSceneProc.AnimationListInfo _nextAinmInfo)
-            {
-                if (!swapAnimationMapping.TryGetValue(_nextAinmInfo, out var swapAnimationInfo))
-                {
-                    return;
-                }
-
-                RuntimeAnimatorController femaleCtrl = null;
-                RuntimeAnimatorController maleCtrl = null;
-                if (!string.IsNullOrEmpty(swapAnimationInfo.PathFemale)
-                    || !string.IsNullOrEmpty(swapAnimationInfo.ControllerFemale))
-                {
-                    femaleCtrl = AssetBundleManager.LoadAsset(
-                        swapAnimationInfo.PathFemale,
-                        swapAnimationInfo.ControllerFemale,
-                        typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
-                }
-                if (!string.IsNullOrEmpty(swapAnimationInfo.PathMale)
-                    || !string.IsNullOrEmpty(swapAnimationInfo.ControllerMale))
-                {
-                    maleCtrl = AssetBundleManager.LoadAsset(
-                        swapAnimationInfo.PathMale,
-                        swapAnimationInfo.ControllerMale,
-                        typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
-                }
-                var t_hsp = Traverse.Create(__instance);
-                var female = t_hsp.Field<List<ChaControl>>("lstFemale").Value[0];
-                var male = t_hsp.Field<ChaControl>("male").Value;
-                ////TODO: lstFemale[1], male1
-
-                if (femaleCtrl != null)
-                {
-                    female.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
-                        female.animBody.runtimeAnimatorController,
-                        femaleCtrl);
-                }
-                if (maleCtrl != null)
-                {
-                    male.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
-                        male.animBody.runtimeAnimatorController, maleCtrl);
-                }
-
-                var mi = t_hsp.Field<List<MotionIK>>("lstMotionIK").Value;
-                mi.ForEach(mik => mik.Release());
-                mi.Clear();
-
-                //TODO: MotionIKData.
-                mi.Add(new MotionIK(female));
-                mi.Add(new MotionIK(male));
-                mi.ForEach(mik =>
-                {
-                    mik.SetPartners(mi);
-                    mik.Reset();
-                });
-            }
-
-            [HarmonyPostfix]
-            [HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]
-            private static void LoadStudioAnims(Studio.Info __instance, ref IEnumerator __result)
-            {
-                __result = __result.AppendCo(() =>
-                {
-                    foreach (var keyVal in animationDict)
-                    {
-                        CreateGroup(0);
-                        CreateGroup(1);
-
-                        void CreateGroup(byte sex)
-                        {
-                            var grp = new Info.GroupInfo 
-                                { name = $"AL {(sex == 0 ? "M" : "F")} {keyVal.Key}" };
-                            var animGrp = 
-                                new Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>();
-
-                            var grpKey = $"{keyVal.Key}{sex}";
-                            if (!EModeGroups.TryGetValue(grpKey, out var grpId))
-                            {
-                                return;
-                            }
-
-                            foreach (var swapAnimInfo in keyVal.Value.Where(x => x.StudioId >= 0))
-                            {
-                                var path = 
-                                    sex == 0 ? swapAnimInfo.PathMale
-                                    : swapAnimInfo.PathFemale;
-                                var ctrl = 
-                                    sex == 0 ? swapAnimInfo.ControllerMale
-                                    : swapAnimInfo.ControllerFemale;
-
-                                if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(ctrl))
-                                {
-                                    continue;
-                                }
-
-                                var controller = AssetBundleManager.LoadAsset(
-                                    path, 
-                                    ctrl,
-                                    typeof(RuntimeAnimatorController))
-                                        .GetAsset<RuntimeAnimatorController>();
-                                if (controller == null)
-                                {
-                                    continue;
-                                }
-
-                                var animName = string.IsNullOrEmpty(swapAnimInfo.AnimationName) ?
-                                    ctrl : swapAnimInfo.AnimationName;
-                                grp.dicCategory.Add(swapAnimInfo.StudioId, animName);
-                                var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
-                                animGrp.Add(swapAnimInfo.StudioId, animCat);
-
-                                var clips = controller.animationClips;
-                                for (var i = 0; i < clips.Length; i++)
-                                {
-                                    var newSlot = UniversalAutoResolver.GetUniqueSlotID();
-
-                                    UniversalAutoResolver.LoadedStudioResolutionInfo
-                                        .Add(new StudioResolveInfo
-                                            {
-                                                GUID = swapAnimInfo.Guid,
-                                                Slot = i,
-                                                ResolveItem = true,
-                                                LocalSlot = newSlot,
-                                                Group = grpId,
-                                                Category = swapAnimInfo.StudioId
-                                            });
-
-                                    animCat.Add(newSlot, new Info.AnimeLoadInfo
-                                        {
-                                            name = clips[i].name,
-                                            bundlePath = path,
-                                            fileName = ctrl,
-                                            clip = clips[i].name,
-                                        });
-                                }
-                            }
-
-                            if (animGrp.Count > 0)
-                            {
-                                __instance.dicAGroupCategory.Add(grpId, grp);
-                                __instance.dicAnimeLoadInfo.Add(grpId, animGrp);
-                            }
-                        }
-                    }
-                });
             }
         }
     }
