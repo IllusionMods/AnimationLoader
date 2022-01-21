@@ -11,6 +11,7 @@ internal static class Log
 {
     private static ManualLogSource _logSource;
     private static bool _enabled = false;
+    private static bool _debugToConsole = false;
 
     public static bool Enabled {
         get 
@@ -21,6 +22,17 @@ internal static class Log
         set 
         {
             _enabled = value;
+        }
+    }
+
+    public static bool DebugToConsole {
+        get 
+        {
+            return _debugToConsole;
+        }
+        set 
+        {
+            _debugToConsole = value;
         }
     }
 
@@ -41,7 +53,14 @@ internal static class Log
     {
         if (_enabled)
         {
-            _logSource.LogDebug(data);
+            if (_debugToConsole)
+            {
+                _logSource.LogInfo(data);
+            }
+            else
+            {
+                _logSource.LogDebug(data);
+            }
         }
     }
 
