@@ -14,13 +14,15 @@ using AnimationLoader;
 
 #endregion Assembly attributes
 
+// Log ID: 0034
+
 namespace AnimationLoader
 {
     internal struct PInfo
     {
         internal const string GUID = "essuhauled.animationloader";
         internal const string PluginDisplayName = "Animation Loader";
-        internal const string Version = "1.1.0.0";
+        internal const string Version = "1.1.1.0";
 #if KK
         internal const string PluginName = "AnimationLoader.Koikatu";
 #elif KKS
