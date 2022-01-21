@@ -28,8 +28,10 @@ namespace AnimationLoader
         private const string ManifestOverride = "GameSpecificOverrides";
         private static readonly XmlSerializer xmlOverrideSerializer = new(typeof(OverrideInfo));
 #endif
-        private static XElement animRoot;
-        private static XElement animRootGS;
+        private static XElement _animRoot;
+        private static XElement _animRootGS;
+
+        private static bool _saveNames = false;
 
         private static void LoadTestXml()
         {
@@ -53,6 +55,7 @@ namespace AnimationLoader
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
             var count = 0;
+            var overrideNames = false;
             var logLines = new StringBuilder();
 
             // Select the only manifests that AnimationLoader will process
@@ -60,32 +63,60 @@ namespace AnimationLoader
                 .Select(x => x.Root)
                 .Where(x => x?.Element(ManifestRootElement) != null))
             {
-                animRoot = manifest?.Element(ManifestRootElement);
+                _animRoot = manifest?.Element(ManifestRootElement);
                 // Look for game specific configuration
-                animRootGS = manifest
+                _animRootGS = manifest
                     .Element(ManifestRootElement)?
                     .Element(KoikatuAPI.GameProcessName);
 
-                if ((animRoot is null) && (animRootGS is null))
+                if ((_animRoot is null) && (_animRootGS is null))
                 {
                     continue;
                 }
                 var guid = manifest.Element("guid").Value;
                 var version = manifest.Element("version").Value;
-                // Process elements valid for any game
-                count += ProcessArray(animRoot, guid, version, ref logLines);
-                if (animRootGS is null)
+
+                // setup for names
+                overrideNames = true;
+                _saveNames = false;
+                if (!animationNamesDict.ContainsKey(guid))
                 {
+                    NamesAddGuid(manifest);
+                    overrideNames = false;
+                }
+                else
+                {
+                    // There are names to override the ones in the manifest
+                    overrideNames = true;
+                }
+
+                // Process elements valid for any game
+                count += ProcessArray(_animRoot, guid, version, overrideNames, ref logLines);
+                if (_animRootGS is null)
+                {
+                    if (_saveNames)
+                    {
+                        SaveNames(animationNamesDict[guid], guid, true);
+                    }
                     continue;
                 }
                 // Process game specific animations
-                foreach (var gameSpecificElement in animRoot.Elements(ManifestGSArrayItem))
+                foreach (var gameSpecificElement in _animRoot.Elements(ManifestGSArrayItem))
                 {
                     if (gameSpecificElement is null)
                     {
                         continue;
                     }
-                    count += ProcessArray(gameSpecificElement, guid, version, ref logLines);
+                    count += ProcessArray(
+                        gameSpecificElement, 
+                        guid, 
+                        version, 
+                        overrideNames, 
+                        ref logLines);
+                }
+                if (_saveNames)
+                {
+                    SaveNames(animationNamesDict[guid], guid, true);
                 }
             }
             if (count > 0)
@@ -106,7 +137,8 @@ namespace AnimationLoader
         private static int ProcessArray(
             XElement root, 
             string guid, 
-            string version, 
+            string version,
+            bool overrideNames,
             ref StringBuilder logLines)
         {
             var count = 0;
@@ -117,11 +149,50 @@ namespace AnimationLoader
                 {
                     continue;
                 }
+                var animation = new Animation();
                 var reader = animElem.CreateReader();
+                var overrideName = overrideNames;
                 var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
                 data.Guid = guid;
                 reader.Close();
+                if (overrideName)
+                {
+                    // override name
+                    // get name in fast direct way possible
+                    // Temp to continue testing
+
+                    animation = animationNamesDict[guid].Anim
+                        .Where(x => (x.StudioId == data.StudioId) && 
+                                    (x.Controller == data.ControllerFemale)).FirstOrDefault();
+                    if (animation == null)
+                    {
+                        overrideName = false;
+                        animation = new Animation();
+                    }
+                    else
+                    {
 #if KKS
+                        data.AnimationName = animation.KoikatsuSunshine;
+#endif
+#if KK
+                        data.AnimationName = animation.Koikatu;
+#endif
+                    }
+                }
+
+                if (!overrideName)
+                {
+
+                    // new names file
+                    animation.StudioId = data.StudioId;
+                    animation.Controller = string.Copy(data.ControllerFemale);
+                    animation.Koikatu = string.Copy(data.AnimationName);
+                    animation.KoikatsuSunshine = string.Copy(data.AnimationName);
+                }
+#if KKS
+                // Assuming configuration is for KK like originally is and the overrides are for
+                // KKS only no the other way around.
+                // TODO: Consider changing it so it can be the other way around also.
                 var overrideRoot = animElem?
                     .Element(ManifestOverride)?
                     .Element(KoikatuAPI.GameProcessName);
@@ -131,7 +202,7 @@ namespace AnimationLoader
                     var overrideData = (OverrideInfo)xmlOverrideSerializer
                         .Deserialize(overrideReader);
                     overrideReader.Close();
-                    DoOverrides(ref data, overrideData);
+                    DoOverrides(ref data, overrideData, ref animation, overrideName);
                 }
 #endif
                 if (!animationDict.TryGetValue(data.Mode, out var list))
@@ -141,6 +212,16 @@ namespace AnimationLoader
                 list.Add(data);
                 logLines.Append($"{AnimationInfo.GetKey(data),-30} - {data.AnimationName}\n");
                 count++;
+                // Save names no names were read
+                // TODO: re-save with new animations names
+                if (!overrideName)
+                {
+                    animationNamesDict[guid].Anim.Add(animation);
+                    if (!_saveNames)
+                    {
+                        _saveNames = true;
+                    }
+                }
             }
             return count;
         }
@@ -151,7 +232,9 @@ namespace AnimationLoader
 #if KKS
         private static void DoOverrides(
             ref SwapAnimationInfo data, 
-            OverrideInfo overrides)
+            OverrideInfo overrides,
+            ref Animation animation,
+            bool overrideNames)
         {
             if (overrides.PathFemale != null)
             {
@@ -169,9 +252,10 @@ namespace AnimationLoader
             {
                 data.ControllerMale = string.Copy(overrides.ControllerMale);
             }
-            if (overrides.AnimationName != null)
+            if ((overrides.AnimationName != null) && !overrideNames)
             {
                 data.AnimationName = string.Copy(overrides.AnimationName);
+                animation.KoikatsuSunshine = string.Copy(overrides.AnimationName);
             }
             if (overrides.Mode >= 0)
             {

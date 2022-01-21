@@ -146,14 +146,25 @@ namespace AnimationLoader
             // Register move characters controller
             CharacterApi.RegisterExtraBehaviour<MoveController>(PInfo.GUID);
 #if KKS
+            // Read used animations
             _usedAnimations.Read();
+            // To save used animations on H exit
             GameAPI.RegisterExtraBehaviour<AnimationLoaderGameController>(PInfo.GUID);
 #endif
         }
 
         private void Start()
         {
+            //
             // TODO: Save names for animations for players who change them
+            //
+            // Read saved names
+            //
+            LoadNamesXml();
+
+            //
+            // Load manifests
+            //
             LoadXmls(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
 #if DEBUG
             //
@@ -177,7 +188,6 @@ namespace AnimationLoader
                 LoadTestXml();
             }
         }
-
 
         /// <summary>
         /// Get move controller for characters

@@ -9,6 +9,7 @@
     <Import_RootNamespace>AnimationLoader.Core</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AnimationsNames.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AnimatorOverrideController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.AnimationLists.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.Studio.cs" />
