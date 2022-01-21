@@ -23,12 +23,11 @@ namespace AnimationLoader
         private const string ManifestGSArrayItem = KoikatuAPI.GameProcessName;
 
         private static readonly XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
-
+        // TODO: Read game overrides when running in KK
 #if KKS
         private const string ManifestOverride = "GameSpecificOverrides";
         private static readonly XmlSerializer xmlOverrideSerializer = new(typeof(OverrideInfo));
 #endif
-
         private static XElement animRoot;
         private static XElement animRootGS;
 
@@ -72,40 +71,46 @@ namespace AnimationLoader
                     continue;
                 }
                 var guid = manifest.Element("guid").Value;
+                var version = manifest.Element("version").Value;
                 // Process elements valid for any game
-                count += ProcessArray(animRoot, guid, ref logLines);
-                // Process game specific animations
+                count += ProcessArray(animRoot, guid, version, ref logLines);
                 if (animRootGS is null)
                 {
                     continue;
                 }
+                // Process game specific animations
                 foreach (var gameSpecificElement in animRoot.Elements(ManifestGSArrayItem))
                 {
                     if (gameSpecificElement is null)
                     {
                         continue;
                     }
-                    count += ProcessArray(gameSpecificElement, guid, ref logLines);
+                    count += ProcessArray(gameSpecificElement, guid, version, ref logLines);
                 }
             }
-#if DEBUG
             if (count > 0)
             {
                 logLines.Append($"\n{count} animations processed from manifests.\n");
-                Log.Debug($"0016: Animations:\n\n{logLines}");
-            }
+#if DEBUG
+                Log.Info($"0016: Animations:\n\n{logLines}");
 #else
-            Log.Warning($"0017: Added {count} animations.");
+                Log.Debug($"0016: Animations:\n\n{logLines}");
 #endif
+            }
+            else
+            {
+                Log.Level(LogLevel.Warning, "0017: No animation manifests found.");
+            }
         }
 
-        private static int ProcessArray(XElement root, string guid, ref StringBuilder logLines)
+        private static int ProcessArray(
+            XElement root, 
+            string guid, 
+            string version, 
+            ref StringBuilder logLines)
         {
             var count = 0;
-#if DEBUG
-            logLines.Append($"From {guid}-{RootText(root.Name)}\n");
-#endif
-
+            logLines.Append($"From {guid}-{version}: {RootText(root.Name)}\n");
             foreach (var animElem in root.Elements(ManifestArrayItem))
             {
                 if (animElem == null)
@@ -117,13 +122,11 @@ namespace AnimationLoader
                 data.Guid = guid;
                 reader.Close();
 #if KKS
-                // TODO: Test for KK (logic may be too KK default=>overrides for KKS)
                 var overrideRoot = animElem?
                     .Element(ManifestOverride)?
                     .Element(KoikatuAPI.GameProcessName);
                 if (overrideRoot != null)
                 {
-                    // TODO: Test for KK
                     var overrideReader = overrideRoot.CreateReader();
                     var overrideData = (OverrideInfo)xmlOverrideSerializer
                         .Deserialize(overrideReader);
@@ -136,9 +139,7 @@ namespace AnimationLoader
                     animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
                 }
                 list.Add(data);
-#if DEBUG
-                logLines.Append($"{AnimationInfo.GetKey(data),40} - {data.AnimationName}\n");
-#endif
+                logLines.Append($"{AnimationInfo.GetKey(data),-30} - {data.AnimationName}\n");
                 count++;
             }
             return count;
