@@ -143,7 +143,8 @@ namespace AnimationLoader
                     var newT = t.FindLoop("New");
                     if (newT)
                     {
-                        newT.gameObject.SetActive(false);
+                        //newT.gameObject.SetActive(false);
+                        newT.SetActive(false);
                     }
 
                     if (SortPositions.Value)
