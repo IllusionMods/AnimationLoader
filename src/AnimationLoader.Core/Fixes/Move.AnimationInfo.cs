@@ -1,4 +1,6 @@
-﻿
+﻿//
+// Class to help identify the animations
+//
 using KKAPI;
 
 using static HFlag;
@@ -14,6 +16,7 @@ namespace AnimationLoader
         public class AnimationInfo
         {
             internal SwapAnimationInfo _anim;
+            internal bool _isAnimationLoader;
 
             internal string _Guid;
             internal EMode _mode;
@@ -30,10 +33,26 @@ namespace AnimationLoader
                 get { return _id; }
             }
 
+            internal string Controller {
+                get { return _controller; }
+            }
+
             public string Key {
                 get { return $"{_Guid}-{_mode}-{_controller}-{_id:D3}"; }
             }
 
+            public SwapAnimationInfo SwapAnim {
+                get { return _anim; }
+            }
+
+            /// <summary>
+            /// These are the fields for the key
+            ///     _Guid - The guid of the zipmod
+            ///     _mode - Animator mode (aibu, hoshi, ..)
+            ///     _controller - Controller for the animation some zipmod don't define StudioId
+            ///         this is added to make key unique
+            ///     _id = Studio ID
+            /// </summary>
             public AnimationInfo()
             {
                 _Guid = string.Empty;
@@ -42,8 +61,9 @@ namespace AnimationLoader
                 _id = -1;
             }
 
-            public SwapAnimationInfo SwapAnim {
-                get { return _anim; }
+            public AnimationInfo(HSceneProc.AnimationListInfo animation)
+            {
+                AnimationInfoHelper(animation);
             }
 
             internal void AnimationInfoHelper(HSceneProc.AnimationListInfo animation)
@@ -55,10 +75,9 @@ namespace AnimationLoader
                     // AnimationLoader animation
                     _Guid = anim.Guid;
                     _id = anim.StudioId;
-                    // Some manifest don't define a StudioId using this to make sure
-                    // key is one-to-one (so far so god)
                     _controller = anim.ControllerFemale;
                     _anim = anim;
+                    _isAnimationLoader = true;
                 }
                 else
                 {
@@ -67,18 +86,18 @@ namespace AnimationLoader
                     _Guid = KoikatuAPI.GameProcessName;
                     _controller = animation.paramFemale.path.file;
                     _id = animation.id;
+                    _isAnimationLoader = false;
                 }
             }
-            public AnimationInfo(HSceneProc.AnimationListInfo animation)
-            {
-                AnimationInfoHelper(animation);
-            }
 
-            public static string GetKey(HSceneProc.AnimationListInfo animation, bool withguid = true)
+            public static string GetKey(
+                HSceneProc.AnimationListInfo animation,
+                bool withguid = true)
             {
                 string Guid;
                 EMode mode;
                 int id;
+                string controller;
 
                 mode = animation.mode;
                 swapAnimationMapping.TryGetValue(animation, out var anim);
@@ -86,18 +105,22 @@ namespace AnimationLoader
                 {
                     Guid = anim.Guid;
                     id = anim.StudioId;
+                    controller = anim.ControllerFemale;
                 }
                 else
                 {
                     Guid = "com.illusion";
                     id = animation.id;
+                    controller = animation.paramFemale.path.file;
                 }
-                return withguid ? $"{Guid}-{mode}-{id:D3}" : $"{mode}-{id:D3}";
+                return withguid ? 
+                    $"{Guid}-{mode}-{controller}-{id:D3}" : $"{mode}-{controller}-{id:D3}";
             }
 
             public static string GetKey(SwapAnimationInfo animation)
             {
-                return $"{animation.Guid}-{animation.Mode}-{animation.ControllerFemale}-{animation.StudioId:D3}";
+                return $"{animation.Guid}-{animation.Mode}-{animation.ControllerFemale}" +
+                    $"-{animation.StudioId:D3}";
             }
 
             public void SetAnimation(object animation)
@@ -105,6 +128,10 @@ namespace AnimationLoader
                 AnimationInfoHelper((HSceneProc.AnimationListInfo)animation);
             }
 
+            public bool IsAnimationLoader()
+            {
+                return _isAnimationLoader;
+            }
             public static bool IsAnimationLoader(SwapAnimationInfo animation)
             {
                 return true;
