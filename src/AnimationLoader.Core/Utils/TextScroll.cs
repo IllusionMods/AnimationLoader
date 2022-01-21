@@ -39,7 +39,6 @@ namespace AnimationLoader
                 {
                     MarginAdd(-speed * Time.deltaTime);
                 }
-
                 yield return null;
             }
         }
