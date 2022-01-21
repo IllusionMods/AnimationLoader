@@ -4,9 +4,21 @@
 
 ##### Added
 
+- The majority of logs are enabled in config
+- Log warning when moving characters
+- [KKS] New labels for added animations work as expected
+
 ##### Changed
 
+- Log of lists are done in one log call
+- Reorganize the project renaming and major refactoring
+- [KKS] LoadMotionList re-done complete code for buttons in order to ease extensions to plug-in
+
 ##### Fixed
+
+- [KK] Fixed button duplication in Grid
+- [@Kokaiinum] fix exception when setting NeckDonorId
+
 
 ### <u>v1.1.0.0 - 2021-12-25</u>
 
