@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -21,10 +20,6 @@ namespace AnimationLoader
             {
                 if (_hprocObjInstance == null)
                 {
-#if DEBUG
-                    Log.Warning($"0016: [ShowAnimInfo] Instance? " +
-                        $"{_hprocObjInstance is not null}");
-#endif
                     return;
                 }
 
@@ -76,8 +71,6 @@ namespace AnimationLoader
                 return $"{tmp} ({animationName})";
             }
 
-            // TODO: Tried a few ways to make it work with/without casting
-            // did not work check why later
             internal static string CategoryList(List<HSceneProc.Category> categories)
             {
                 var tmp = "";
@@ -111,7 +104,7 @@ namespace AnimationLoader
 
             internal static bool HasMovement(AnimationInfo anim)
             {
-                if (anim.SwapAnim != null)
+                if (anim?.SwapAnim != null)
                 {
                     if (anim.SwapAnim.PositionHeroine != Vector3.zero)
                     {
@@ -150,7 +143,6 @@ namespace AnimationLoader
                     GetMoveController(_flags.player.chaCtrl).SetOriginalPosition();
                 }
             }
-
 
             /// <summary>
             /// Determine if there is a change in original position
