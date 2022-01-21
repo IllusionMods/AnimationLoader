@@ -9,6 +9,9 @@
     <Import_RootNamespace>AnimationLoader.Core</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AnimatorOverrideController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hooks.AnimationLists.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Hooks.Studio.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fixes\Move.Controller.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.Animators.cs" />
@@ -16,7 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LoadXML.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin.Info.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)SwapAnim.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugin.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SwapAnimationInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\TextScroll.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fixes\Move.AnimationInfo.cs" />

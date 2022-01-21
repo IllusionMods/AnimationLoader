@@ -7,6 +7,7 @@ using BepInEx.Logging;
 
 using KKAPI;
 using KKAPI.Chara;
+using KKAPI.MainGame;
 using KKAPI.Utilities;
 
 using UnityEngine;
@@ -141,8 +142,13 @@ namespace AnimationLoader
             Log.Level(LogLevel.Info, $"0028: Log.Enabled set to {Log.Enabled}");
 #endif
             Hooks.Init();
+
             // Register move characters controller
             CharacterApi.RegisterExtraBehaviour<MoveController>(PInfo.GUID);
+#if KKS
+            _usedAnimations.Read();
+            GameAPI.RegisterExtraBehaviour<AnimationLoaderGameController>(PInfo.GUID);
+#endif
         }
 
         private void Start()
@@ -153,6 +159,9 @@ namespace AnimationLoader
             //
             // For test environment animations manifest are kept in config/AnimationLoader
             // when the plug-in starts it will load them if no zipmod with manifests found
+            // May be a feature config flag for everybody or load from here not from there??
+            // I like the last one.
+            // If someone needs this they may ask.
             //
             if (animationDict.Count < 1)
             {
@@ -169,30 +178,6 @@ namespace AnimationLoader
             }
         }
 
-        private static AnimatorOverrideController SetupAnimatorOverrideController(
-            RuntimeAnimatorController src,
-            RuntimeAnimatorController over)
-        {
-            if(src == null || over == null)
-            {
-                return null;
-            }
-
-            var aoc = new AnimatorOverrideController(src);
-            var target = new AnimatorOverrideController(over);
-            foreach(var ac in src.animationClips.Where(x => x != null)) //thanks omega/katarsys
-            {
-                aoc[ac.name] = ac;
-            }
-
-            foreach (var ac in target.animationClips.Where(x => x != null)) //thanks omega/katarsys
-            {
-                aoc[ac.name] = ac;
-            }
-
-            aoc.name = over.name;
-            return aoc;
-        }
 
         /// <summary>
         /// Get move controller for characters
