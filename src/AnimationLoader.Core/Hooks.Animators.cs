@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using UnityEngine;
 
@@ -23,12 +21,14 @@ namespace AnimationLoader
         internal partial class Hooks
         {
             /// <summary>
-            /// Set the new original position when changing positions not using the H point picker
+            /// Set the new original position when changing positions
             /// </summary>
             /// <param name="_nextAinmInfo"></param>
             [HarmonyPrefix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.ChangeAnimator))]
-            private static void ChangeAnimatorPrefix(object __instance, HSceneProc.AnimationListInfo _nextAinmInfo)
+            private static void ChangeAnimatorPrefix(
+                object __instance,
+                HSceneProc.AnimationListInfo _nextAinmInfo)
             {
                 if (_nextAinmInfo == null)
                 {
@@ -82,19 +82,28 @@ namespace AnimationLoader
                             {
                                 if (nextAnim.SwapAnim.PositionHeroine != Vector3.zero)
                                 {
-                                    GetMoveController(_heroine).Move(nextAnim.SwapAnim.PositionHeroine);
+                                    GetMoveController(_heroine)
+                                        .Move(nextAnim.SwapAnim.PositionHeroine);
                                 }
                                 if (nextAnim.SwapAnim.PositionPlayer != Vector3.zero)
                                 {
-                                    GetMoveController(_player).Move(nextAnim.SwapAnim.PositionPlayer);
+                                    GetMoveController(_player)
+                                        .Move(nextAnim.SwapAnim.PositionPlayer);
                                 }
                             }
+#if KKS
+                            // Save animation as used
+                            if (nextAnim.IsAnimationLoader())
+                            {
+                                _usedAnimations.Keys.Add(nextAnim.Key);
+                            }
+#endif
                         }
                     }
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"0008: Error - {e}");
+                    Log.Error($"0008: Error={e}");
                 }
             }
 
@@ -102,35 +111,68 @@ namespace AnimationLoader
                 $"None" : $"{x}";
 
             /// <summary>
-            /// Initialize MoveController for characters
+            /// Swap animation if found in mapping dictionary
             /// </summary>
             /// <param name="__instance"></param>
-            /// <param name="___lstFemale"></param>
-            /// <param name="___male"></param>
-            [HarmonyPrefix]
-            [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.SetShortcutKey))]
-            private static void SetShortcutKeyPrefix(
+            /// <param name="_nextAinmInfo"></param>
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.ChangeAnimator))]
+            private static void SwapAnimation(
                 object __instance,
-                List<ChaControl> ___lstFemale,
-                ChaControl ___male)
+                HSceneProc.AnimationListInfo _nextAinmInfo)
             {
-                _hprocObjInstance = __instance;
-                _lstHeroines = ___lstFemale;
-                _heroine = _lstHeroines[0];
-                GetMoveController(_heroine).Init();
-
-                if (___lstFemale.Count > 1)
+                if (!swapAnimationMapping.TryGetValue(_nextAinmInfo, out var swapAnimationInfo))
                 {
-                    _heroine3P = _lstHeroines[1];
-                    GetMoveController(_heroine3P).Init();
+                    return;
                 }
 
-                _player = ___male;
-                GetMoveController(_player).Init();
+                RuntimeAnimatorController femaleCtrl = null;
+                RuntimeAnimatorController maleCtrl = null;
+                if (!string.IsNullOrEmpty(swapAnimationInfo.PathFemale)
+                    || !string.IsNullOrEmpty(swapAnimationInfo.ControllerFemale))
+                {
+                    femaleCtrl = AssetBundleManager.LoadAsset(
+                        swapAnimationInfo.PathFemale,
+                        swapAnimationInfo.ControllerFemale,
+                        typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
+                }
+                if (!string.IsNullOrEmpty(swapAnimationInfo.PathMale)
+                    || !string.IsNullOrEmpty(swapAnimationInfo.ControllerMale))
+                {
+                    maleCtrl = AssetBundleManager.LoadAsset(
+                        swapAnimationInfo.PathMale,
+                        swapAnimationInfo.ControllerMale,
+                        typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
+                }
+                var t_hsp = Traverse.Create(__instance);
+                var female = t_hsp.Field<List<ChaControl>>("lstFemale").Value[0];
+                var male = t_hsp.Field<ChaControl>("male").Value;
+                ////TODO: lstFemale[1], male1
 
-                _flags = Traverse
-                    .Create(__instance)
-                    .Field<HFlag>("flags").Value;
+                if (femaleCtrl != null)
+                {
+                    female.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
+                        female.animBody.runtimeAnimatorController,
+                        femaleCtrl);
+                }
+                if (maleCtrl != null)
+                {
+                    male.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
+                        male.animBody.runtimeAnimatorController, maleCtrl);
+                }
+
+                var mi = t_hsp.Field<List<MotionIK>>("lstMotionIK").Value;
+                mi.ForEach(mik => mik.Release());
+                mi.Clear();
+
+                //TODO: MotionIKData.
+                mi.Add(new MotionIK(female));
+                mi.Add(new MotionIK(male));
+                mi.ForEach(mik =>
+                {
+                    mik.SetPartners(mi);
+                    mik.Reset();
+                });
             }
         }
     }
