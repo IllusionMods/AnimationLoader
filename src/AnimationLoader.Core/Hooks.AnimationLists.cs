@@ -22,6 +22,7 @@ namespace AnimationLoader
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateAllAnimationList))]
             private static void ExtendList(object __instance)
             {
+                _hprocEarlyObjInstance = __instance;
                 var procObj = Traverse.Create(__instance);
                 var addedAnimations = new StringBuilder();
 #if KK
@@ -142,7 +143,7 @@ namespace AnimationLoader
                     $"standard = {countGameA} " +
                     $"AnimationLoader = {countAL}\n");
 #if DEBUG
-                Log.Warning($"0012: Added animations:\n\n{addedAnimations}");
+                // Log.Warning($"0012: Added animations:\n\n{addedAnimations}");
                 Utilities.SaveAnimInfo();
 #else
                 Log.Level(LogLevel.Debug, $"0012: Added animations:\n\n{addedAnimations}");
