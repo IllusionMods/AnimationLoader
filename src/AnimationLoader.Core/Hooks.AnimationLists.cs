@@ -56,7 +56,7 @@ namespace AnimationLoader
 
                     if (donorInfo == null)
                     {
-                        Log.Level(LogLevel.Warning, $"0001: No donor: mode={anim.Mode} " +
+                        Log.Level(LogLevel.Warning, $"0009: No donor: mode={anim.Mode} " +
                             $"DonorPoseId={anim.DonorPoseId}");
                         continue;
                     }

@@ -18,7 +18,7 @@ namespace AnimationLoader
         public List<string> Keys = new();
 
         private static readonly string _path = Path.Combine(UserData.Path, "save");
-        private static readonly string _fileName = $"{_path}\\animations.xml";
+        private static readonly string _fileName = $"{_path}/animations.xml";
         private static readonly XmlSerializer xmlSerializer = new(typeof(UsedAnimations));
         private static readonly FileInfo file = new(_fileName);
 
@@ -48,7 +48,7 @@ namespace AnimationLoader
             file.Directory.Create();
             if (file.Exists)
             {
-                Console.WriteLine($"File {_fileName} already exits.");
+                Log.Debug($"0018: Overwriting file {_fileName}.");
             }
             StreamWriter writer = new(_fileName);
             xmlSerializer.Serialize(writer.BaseStream, this);
@@ -59,12 +59,11 @@ namespace AnimationLoader
         {
             if (file.Exists)
             {
+                Log.Debug($"0019: Reading File {_fileName}.");
                 StreamReader reader = new(_fileName);
                 var tmp = (UsedAnimations)xmlSerializer.Deserialize(reader.BaseStream);
                 reader.Close();
-
                 Keys = tmp.Keys;
-                Console.WriteLine($"File {_fileName} already exits.");
             }
         }
     }

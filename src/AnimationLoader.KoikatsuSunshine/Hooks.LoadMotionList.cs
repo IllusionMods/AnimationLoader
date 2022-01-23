@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using HarmonyLib;
+using System.Text;
 
 using IllusionUtility.GetUtility;
+using Manager;
 using SceneAssist;
 using TMPro;
 
 using UnityEngine;
 using UnityEngine.UI;
+
+using HarmonyLib;
+
+using Newtonsoft.Json;
+using static HScene.AddParameter;
 
 
 namespace AnimationLoader
@@ -71,7 +76,7 @@ namespace AnimationLoader
 
                     var button = Instantiate<GameObject>(__instance.objMotionListNode);
 
-                    var animationInfoComponent = 
+                    var animationInfoComponent =
                         button.AddComponent<HSprite.AnimationInfoComponent>();
 
                     // Assign animation
@@ -201,91 +206,174 @@ namespace AnimationLoader
                         t.SetAsLastSibling();
                     }
                 }
-
             }
 
-
-            /*
-            /// <summary>
-            /// The functionality of this patch differs to much between versions.
-            /// The method just highlight the animation and sort the list if selected.
-            /// The is no grid UI implementation if needed for VR can be implemented.
-            /// There is no scroll text functions these are not needed for KKS.
-            /// </summary>
-            /// <param name="__instance"></param>
-            /// <param name="_lstAnimInfo"></param>
-            /// <param name="_objParent"></param>
             [HarmonyPostfix]
-            [HarmonyPatch(typeof(HSprite), nameof(HSprite.LoadMotionList))]
-            private static void LoadMotionList(
-                HSprite __instance,
-                List<HSceneProc.AnimationListInfo> _lstAnimInfo,
-                GameObject _objParent)
+            [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateListAnimationFileName))]
+            private static void WhatIsThis(
+                object __instance, bool _isAnimListCreate = true)
             {
-                if (_lstAnimInfo == null || _lstAnimInfo.Count == 0)
+                PPrintUseAnimInfo(__instance, _isAnimListCreate);
+
+                return;
+
+                /*var hsceneTraverse = Traverse.Create(__instance);
+
+                var flags = hsceneTraverse
+                    .Field<HFlag>("flags").Value;
+                var hExp = flags.lstHeroine[0].hExp;
+
+                //var lstUseAnimInfo = Traverse
+                //    .Create(__instance)
+                //    .Field<List<HSceneProc.AnimationListInfo>[]>("lstUseAnimInfo").Value;
+
+                var categorys = hsceneTraverse
+                    .Field<List<int>>("categorys").Value;
+                var useCategorys = hsceneTraverse
+                    .Field<List<int>>("useCategorys").Value;
+                var lstAnimInfo = hsceneTraverse
+                    .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
+                var lstUseAnimInfo = new List<HSceneProc.AnimationListInfo>[8];
+                //var theThis = (HSceneProc)__instance;
+ 
+                var checkExpAddTaii = hsceneTraverse
+                    .Method("CheckExpAddTaii", 
+                        new Type[] { typeof(int), typeof(int), typeof(float) });
+                var checkShopAdd = hsceneTraverse
+                    .Method("CheckShopAdd",
+                        new Type[] { typeof(HashSet<int>), typeof(int), typeof(int) });
+
+                var saveData = Game.saveData;
+                var playHlist = Game.globalData.playHList;
+
+                // Test for range 1010-1099 and 1100-1199
+                var flagRange1 = categorys.Any<int>((Func<int, bool>)(c =>
+                    MathfEx.IsRange<int>(1010, c, 1099, true)
+                    || MathfEx.IsRange<int>(1100, c, 1199, true)));
+
+                // Test for range 3000-3099
+                var flagRange2 = categorys.Any<int>((Func<int, bool>)(c =>
+                    MathfEx.IsRange<int>(3000, c, 3099, true)));
+
+                // index1 loop through categories aibu, hoshi, sonyu, ...
+                for (var index1 = 0; index1 < lstAnimInfo.Length; ++index1)
                 {
-                    return;
-                }
+                    // clear animations in category index1
+                    lstUseAnimInfo[index1] = new List<HSceneProc.AnimationListInfo>();
+                    HashSet<int> intSet;
 
-                var countGA = 0;
-                var countAL = 0;
-                var buttonParent = _objParent.transform;
-                var buttons = _objParent.transform.Cast<Transform>().ToList();
-
-                foreach (var button in buttons)
-                {
-                    // button.gameObject.SetActive(false);
-                    var label = button.GetComponentInChildren<TextMeshProUGUI>();
-
-                    try
+                    // get list of already used animations for category index1
+                    if (!playHlist.TryGetValue(index1, out intSet))
                     {
-                        var anim = button
-                            .GetComponentInChildren<HSprite.AnimationInfoComponent>().info;
+                        intSet = new HashSet<int>();
+                    }
 
-                        if (anim != null)
+                    // if not Free-h or inset.count != 0 or in range1 or in range2
+                    if (!flags.isFreeH || intSet.Count != 0 || flagRange1 || flagRange2)
+                    {
+                        // index2 loop through animations in category index1
+                        for (var index2 = 0; index2 < lstAnimInfo[index1].Count; ++index2)
                         {
-#if DEBUG
-                            //Logger.LogWarning($"0019: Loaded button =" +
-                            //    $" {Utilities.Translate(anim.nameAnimation)}");
-#endif
-                            swapAnimationMapping.TryGetValue(anim, out var swap);
-                            if (swap != null)
+                            var anim = lstAnimInfo[index1][index2];
+                            // Not clear: is animation in range1 continue
+                            if (flagRange1)
                             {
-                                //
-                                // swap.Guid, swap.StudioId key for loaded animation
-                                //
-                                button.transform
-                                    .FindLoop("Background")
-                                    .GetComponent<Image>().color = buttonColor;
-                                label.color = Color.yellow;
-                                countAL++;
+                                if (!lstAnimInfo[index1][index2].lstCategory
+                                    .Any<HSceneProc.Category>(
+                                        (Func<HSceneProc.Category, bool>)
+                                        (c => categorys.Contains(c.category))))
+                                {
+                                    continue;
+                                }
                             }
-                            else
+                            // Animation 
+                            else if (!lstAnimInfo[index1][index2].lstCategory
+                                .Any<HSceneProc.Category>(
+                                    (Func<HSceneProc.Category, bool>)
+                                    (c => useCategorys.Contains(c.category))))
                             {
-                                countGA++;
+                                continue;
                             }
+
+                            if (!flags.isFreeH)
+                            {
+                                if (((!lstAnimInfo[index1][index2].isRelease ?
+                                    0 : (!checkExpAddTaii.GetValue<bool>(
+                                            index1,
+                                            lstAnimInfo[index1][index2].id,
+                                            flags.lstHeroine[0].hExp) ? 1 : 0))
+                                      | (!checkShopAdd.GetValue<bool>(
+                                            new HashSet<int>((IEnumerable<int>)saveData.player.buyNumTable.Keys),
+                                            index1,
+                                            lstAnimInfo[index1][index2].id) ? 1 : 0)) != 0 
+                                            || lstAnimInfo[index1][index2].isExperience != 2 
+                                            && (HSceneProc.EExperience)lstAnimInfo[index1][index2].isExperience > flags.experience)
+                                {
+                                    continue;
+                                }
+                            }
+                            else if ((SaveData.Heroine.HExperienceKind)lstAnimInfo[index1][index2].stateRestriction 
+                                        > flags.lstHeroine[0].HExperience 
+                                     || !intSet.Contains(lstAnimInfo[index1][index2].id) 
+                                     && !flagRange1 
+                                     && !flagRange2)
+                            {
+                                continue;
+                            }
+                            lstUseAnimInfo[index1].Add(lstAnimInfo[index1][index2]);
                         }
                     }
-                    catch
-                    {
-                    }
-                }
-#if DEBUG
-                Log.Warning($"0021: System animations {countGA} Animation Loader {countAL}");
-#endif
-                // sort all buttons by name
-                if (SortPositions.Value)
+                }*/
+            }
+
+            private static void PPrintUseAnimInfo(
+                object __instance, bool _isAnimListCreate = true)
+            {
+                var lines = new StringBuilder();
+
+                var hsceneTraverse = Traverse.Create(__instance);
+
+                var flags = hsceneTraverse
+                    .Field<HFlag>("flags").Value;
+                var hExp = flags.lstHeroine[0].hExp;
+                var dicExpAddTaii = hsceneTraverse
+                    .Field<Dictionary<int, Dictionary<int, int>>>("dicExpAddTaii").Value;
+                lines.Append($"Heroine: {flags.lstHeroine[0].Name} with Experience {hExp}\n");
+
+                var lstUseAnimInfo = hsceneTraverse
+                    .Field<List<HSceneProc.AnimationListInfo>[]>("lstUseAnimInfo").Value;
+                var dictTaii = JsonConvert.SerializeObject(dicExpAddTaii);
+                var categorys = hsceneTraverse.Field<List<int>>("categorys").Value;
+                var strCategories = Utilities.CategoryList(categorys, true, false);
+                var playHlist = JsonConvert.SerializeObject(Game.globalData.playHList);
+
+                if (_isAnimListCreate)
                 {
-                    var allButtons = buttonParent.Cast<Transform>().OrderBy(
-                        x => x.GetComponentInChildren<TextMeshProUGUI>().text).ToList();
-                    foreach (var t in allButtons)
+                    lines.Append("Asked to create animation list\n");
+                }
+
+                lines.Append($"category: {strCategories}\n");
+                lines.Append($"dictExpAddTaii:\n{dictTaii}\n");
+                lines.Append($"playHList:\n{playHlist}\n");
+
+                for (var i = 0; i < lstUseAnimInfo.Length; ++i)
+                {
+                    for (var j = 0; j < lstUseAnimInfo[i].Count; ++j)
                     {
-                        t.SetAsLastSibling();
+                        var anim = lstUseAnimInfo[i][j];
+                        var prefix = AnimationInfo.IsAnimationLoader(anim) ? "AL" : "GA";
+                        lines.Append($"{prefix}-{i}-{anim.mode,-6}-{anim.id:D2}-{anim.sysTaii:D2}-" +
+                            $"{anim.stateRestriction:D2} {Utilities.TranslateName(anim.nameAnimation)} - " +
+                            $"{Utilities.CategoryList(anim.lstCategory, true, false)}\n");
                     }
                 }
-            }*/
 
+                lines.Append('\n');
+                var countGameA = Utilities.CountAnimations(lstUseAnimInfo);
+                lines.Append($"Used Animations - {countGameA}\n");
 
+                Log.Info($"0025: [CreateListAnimationFileName] Selected animations:\n\n{lines}\n");
+            }
         }
     }
 }

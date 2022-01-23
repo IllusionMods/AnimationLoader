@@ -70,7 +70,7 @@ namespace AnimationLoader
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"0015: Cannot adjust {ChaControl.name} - {e}.");
+                    Log.Error($"0010: Cannot adjust {ChaControl.name} - {e}.");
                 }
             }
         }
