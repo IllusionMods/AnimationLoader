@@ -16,6 +16,9 @@ namespace AnimationLoader
     {
         internal class Utilities
         {
+            /// <summary>
+            /// Save information for template.xml
+            /// </summary>
             internal static void SaveAnimInfo()
             {
                 if (_hprocObjInstance == null)
@@ -40,14 +43,14 @@ namespace AnimationLoader
                          $" {TranslateName(x.nameAnimation)}, {x.posture}," +
                          $" {x.numCtrl}, {x.kindHoushi}," +
                          $" {x.houshiLoopActionS}, {x.isFemaleInitiative}," +
-                         $"{CategoryList(x.lstCategory)}," +
+                         $"{CategoryList(x.lstCategory, true)}," +
                          $" {x.paramFemale.fileSiruPaste}");
 
                     File.WriteAllLines($"lst{i}.csv", lines.ToArray());
                     total += lines.ToArray().Length;
                 }
 #if DEBUG
-                Log.Warning($"0017: Total animations {total}");
+                Log.Warning($"0011: Total animations {total}");
 #endif
             }
 
@@ -71,7 +74,14 @@ namespace AnimationLoader
                 return $"{tmp} ({animationName})";
             }
 
-            internal static string CategoryList(List<HSceneProc.Category> categories)
+            /// <summary>
+            /// Return categories in the string form "{ cat 1, cat 2, ,,,}"
+            /// </summary>
+            /// <param name="categories"></param>
+            /// <param name="names"></param>
+            /// <param name="quotes"></param>
+            /// <returns></returns>
+            internal static string CategoryList(List<HSceneProc.Category> categories, bool names = false, bool quotes = true)
             {
                 var tmp = "";
                 var first = true;
@@ -80,15 +90,70 @@ namespace AnimationLoader
                 {
                     if (first)
                     {
-                        tmp += c.category.ToString();
+                        if (names)
+                        {
+                            tmp += (PositionCategory)c.category;
+                        }
+                        else
+                        {
+                            tmp += c.category.ToString();
+                        }
                         first = false;
                     }
                     else
                     {
-                        tmp += ", " + c.category.ToString();
+                        if (names)
+                        {
+                            tmp += ", " + (PositionCategory)c.category;
+                        }
+                        else
+                        {
+                            tmp += ", " + c.category.ToString();
+                        }
                     }
                 }
-                return "\" { " + tmp + " }\"";
+                return quotes ? "\" { " + tmp + " }\"" : "{ " + tmp + " }";
+            }
+
+            /// <summary>
+            /// Ditto
+            /// </summary>
+            /// <param name="categories"></param>
+            /// <param name="names"></param>
+            /// <param name="quotes"></param>
+            /// <returns></returns>
+            internal static string CategoryList(List<int> categories, bool names = false, bool quotes = true)
+            {
+                var tmp = "";
+                var first = true;
+
+                foreach (var c in categories)
+                {
+                    if (first)
+                    {
+                        if (names)
+                        {
+                            tmp += (PositionCategory)c;
+                        }
+                        else
+                        {
+                            tmp += c.ToString();
+                        }
+                        first = false;
+                    }
+                    else
+                    {
+                        if (names)
+                        {
+                            tmp += ", " + (PositionCategory)c;
+                        }
+                        else
+                        {
+                            tmp += ", " + c.ToString();
+                        }
+                    }
+                }
+                return quotes ? "\" { " + tmp + " }\"" : "{ " + tmp + " }";
             }
 
             internal static int CountAnimations(List<HSceneProc.AnimationListInfo>[] lstAnimInfo)
