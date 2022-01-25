@@ -64,7 +64,7 @@ namespace AnimationLoader
 
                     if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
                     {
-                        // PR # 23 Change to Log.Level to always show log, update log ID's
+                        // PR #23 Change to Log.Level to always show log, update log ID's
                         // use temp variable to add log to log list
                         var newNeckDonor = animListInfo
                             .FirstOrDefault(x => x.id == anim.NeckDonorId);
@@ -136,14 +136,14 @@ namespace AnimationLoader
                     animListInfo.Add(donorInfo);
                     swapAnimationMapping[donorInfo] = anim;
                     addedAnimations.Append($"EMode={anim.Mode,6} Name={anim.AnimationName}, " +
-                        $"[Key={AnimationInfo.GetKey(anim)}]\n");
+                        $"[Key={AnimationInfo.GetKey(anim)}] donor release={donorInfo.isRelease}\n");
                     countAL++;
                 }
                 addedAnimations.Append($"\n{countAL + countGameA} animations available: Game " +
                     $"standard = {countGameA} " +
                     $"AnimationLoader = {countAL}\n");
 #if DEBUG
-                // Log.Warning($"0012: Added animations:\n\n{addedAnimations}");
+                Log.Warning($"0012: Added animations:\n\n{addedAnimations}");
                 Utilities.SaveAnimInfo();
 #else
                 Log.Level(LogLevel.Debug, $"0012: Added animations:\n\n{addedAnimations}");
