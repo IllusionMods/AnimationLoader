@@ -84,7 +84,7 @@ namespace AnimationLoader
                                 }
                             }
 #if KKS
-                            // Save animation as used
+                            // Save used animation
                             if (nextAnim.IsAnimationLoader())
                             {
                                 _usedAnimations.Keys.Add(nextAnim.Key);
