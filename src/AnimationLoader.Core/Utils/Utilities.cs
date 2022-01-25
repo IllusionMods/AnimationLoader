@@ -21,21 +21,22 @@ namespace AnimationLoader
             /// </summary>
             internal static void SaveAnimInfo()
             {
-                if (_hprocObjInstance == null)
+                if (_hprocEarlyObjInstance == null)
                 {
+                    Log.Warning("_hprocObjInstanceOut");
                     return;
                 }
 
                 var total = 0;
                 var lstAnimInfo = Traverse
-                    .Create(_hprocObjInstance)
+                    .Create(_hprocEarlyObjInstance)
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
 
                 // id, mode,
                 // nameAnimation (Japanese name), posture,
                 // numCtrl, kindHoshi,
                 // hoshiLoopActionS, isFemaleInitiative,
-                // {category list},
+                // {category list}, dicExpTaii[mode][id]
                 // fileSiruPaste
                 for (var i = 0; i < lstAnimInfo.Length; i++)
                 {
@@ -44,7 +45,12 @@ namespace AnimationLoader
                          $" {x.numCtrl}, {x.kindHoushi}," +
                          $" {x.houshiLoopActionS}, {x.isFemaleInitiative}," +
                          $"{CategoryList(x.lstCategory, true)}," +
+#if KKS
+                         $" {x.paramFemale.fileSiruPaste}," +
+                         $" {getExpTaii((int)x.mode, x.id)}");
+#else
                          $" {x.paramFemale.fileSiruPaste}");
+#endif
 
                     File.WriteAllLines($"lst{i}.csv", lines.ToArray());
                     total += lines.ToArray().Length;
@@ -227,6 +233,18 @@ namespace AnimationLoader
                 return false;
             }
 
+            internal static int getExpTaii(int mode, int id)
+            {
+                var hsceneTraverse = Traverse.Create(_hprocEarlyObjInstance);
+                var dicExpAddTaii = hsceneTraverse
+                    .Field<Dictionary<int, Dictionary<int, int>>>("dicExpAddTaii").Value;
+
+                if (dicExpAddTaii.ContainsKey(mode) && dicExpAddTaii[mode].ContainsKey(id)) 
+                {
+                    return dicExpAddTaii[mode][id];
+                }
+                return 0;
+            }
         }
     }
 }

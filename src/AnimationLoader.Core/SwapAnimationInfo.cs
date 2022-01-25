@@ -15,6 +15,8 @@ namespace AnimationLoader
     [Serializable]
     public class SwapAnimationInfo
     {
+        private bool _isRelease = false;
+
         [XmlIgnore]
         public string Guid;
 
@@ -65,10 +67,24 @@ namespace AnimationLoader
         public int MotionIKDonor = -1;
 
         [XmlElement]
+        public int ExpTaii = -1;
+
+        [XmlElement]
         public Vector3 PositionHeroine = Vector3.zero;
 
         [XmlElement]
         public Vector3 PositionPlayer = Vector3.zero;
+
+        public bool IsRelease {
+            get 
+            {
+                return _isRelease;
+            }
+            set 
+            { 
+                _isRelease = value; 
+            }
+        }
     }
 
     [XmlRoot(KoikatuAPI.GameProcessName)]
@@ -123,6 +139,9 @@ namespace AnimationLoader
 
         [XmlElement]
         public int MotionIKDonor = -1;
+
+        [XmlElement]
+        public int ExpTaii = -1;
 
         [XmlElement]
         public Vector3 PositionHeroine = Vector3.zero;
