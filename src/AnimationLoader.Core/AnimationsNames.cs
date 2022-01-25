@@ -43,9 +43,6 @@ namespace AnimationLoader
             [XmlElement]
             public string website = string.Empty;
 
-            //[XmlElement]
-            //public string format = "1.0";
-
             [XmlArray("AnimationLoader")]
             public List<Animation> Anim = new();
         }
