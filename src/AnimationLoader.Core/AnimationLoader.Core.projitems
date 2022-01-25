@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)AnimatorOverrideController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.AnimationLists.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.Studio.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Plugin.ConfigEntries.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fixes\Move.Controller.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.Animators.cs" />
