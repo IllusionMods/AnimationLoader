@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("https://github.com/IllusionMods/AnimationLoader")]
-[assembly: AssemblyCopyright("Copyright ©IllusionMods  2021")]
+[assembly: AssemblyCopyright("Copyright ©IllusionMods  2021-2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
