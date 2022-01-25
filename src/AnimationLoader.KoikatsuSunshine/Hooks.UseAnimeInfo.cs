@@ -7,6 +7,7 @@ using Manager;
 
 using HarmonyLib;
 
+using KKAPI;
 using Newtonsoft.Json;
 
 
@@ -90,7 +91,7 @@ namespace AnimationLoader
                             var prefix = AnimationInfo.IsAnimationLoader(anim) ? "AL" : "GA";
                             lines.Append($"{prefix}-{index1}-{anim.mode,-6}-{anim.id:D2}-{anim.sysTaii:D2}-" +
                                 $"{anim.stateRestriction:D2} {Utilities.TranslateName(anim.nameAnimation)} - " +
-                                $"{Utilities.CategoryList(anim.lstCategory, true, false)}\n");
+                                $"{Utilities.CategoryList(anim.lstCategory, true, false)} ");
                             // Not clear: is animation in range1 continue
                             /*lines.Append(
                                 $"Element=[{index1},{index2}]\n" +
@@ -112,7 +113,7 @@ namespace AnimationLoader
                                         (Func<HSceneProc.Category, bool>)
                                         (c => categorys.Contains(c.category))))
                                 {
-                                    lines.Append($"Continue in first range test.\n");
+                                    lines.Append($"Continue in first categorys range test.\n");
                                     continue;
                                 }
                             }
@@ -122,7 +123,7 @@ namespace AnimationLoader
                                     (Func<HSceneProc.Category, bool>)
                                     (c => useCategorys.Contains(c.category))))
                             {
-                                lines.Append($"Continue in category test.\n");
+                                lines.Append($"Continue in useCategorys test.\n");
                                 continue;
                             }
 
@@ -176,7 +177,7 @@ namespace AnimationLoader
                 var hExp = flags.lstHeroine[0].hExp;
                 var dicExpAddTaii = hsceneTraverse
                     .Field<Dictionary<int, Dictionary<int, int>>>("dicExpAddTaii").Value;
-                lines.Append($"Heroine: {flags.lstHeroine[0].Name} with Experience {hExp}\n");
+                lines.Append($"{Scene.ActiveScene.name} Heroine: {flags.lstHeroine[0].Name} with Experience {hExp}\n");
 
                 var lstUseAnimInfo = hsceneTraverse
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstUseAnimInfo").Value;
@@ -217,6 +218,86 @@ namespace AnimationLoader
             }
 
             private static bool UseAnimation(
+                HSceneProc.AnimationListInfo anim)
+            {
+                if (_hprocEarlyObjInstance == null)
+                {
+                    return false;
+                }
+
+                var hsceneTraverse = Traverse.Create(_hprocEarlyObjInstance);
+                var flags = hsceneTraverse
+                    .Field<HFlag>("flags").Value;
+                var hExp = flags.lstHeroine[0].hExp;
+
+                var categorys = hsceneTraverse
+                    .Field<List<int>>("categorys").Value;
+                var useCategorys = hsceneTraverse
+                    .Field<List<int>>("useCategorys").Value;
+                var lstAnimInfo = hsceneTraverse
+                    .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
+                var lstUseAnimInfo = new List<HSceneProc.AnimationListInfo>[8];
+                var checkExpAddTaii = hsceneTraverse
+                    .Method("CheckExpAddTaii",
+                        new Type[] { typeof(int), typeof(int), typeof(float) });
+                var checkShopAdd = hsceneTraverse
+                    .Method("CheckShopAdd",
+                        new Type[] { typeof(HashSet<int>), typeof(int), typeof(int) });
+                var saveData = Game.saveData;
+                var playHlist = Game.globalData.playHList;
+
+                // get list of already used animations for category index1
+                if (!playHlist.TryGetValue((int)anim.mode, out HashSet<int> intSet))
+                {
+                    intSet = new HashSet<int>();
+                }
+
+                if (!flags.isFreeH || intSet.Count != 0)
+                {
+                    if (!anim.lstCategory
+                        .Any<HSceneProc.Category>(
+                            (Func<HSceneProc.Category, bool>)
+                            (c => useCategorys.Contains(c.category))))
+                    {
+                        return false;
+                    }
+
+                    if (!flags.isFreeH)
+                    {
+                        if (((!anim.isRelease ?
+                            0 : (!checkExpAddTaii.GetValue<bool>(
+                                    (int)anim.mode,
+                                    anim.id,
+                                    flags.lstHeroine[0].hExp) ? 1 : 0))
+                                | (!checkShopAdd.GetValue<bool>(
+                                    new HashSet<int>((IEnumerable<int>)saveData.player.buyNumTable.Keys),
+                                    (int)anim.mode,
+                                    anim.id) ? 1 : 0)) != 0
+                                    || anim.isExperience != 2
+                                    && (HSceneProc.EExperience)anim.isExperience > flags.experience)
+                        {
+                            return false;
+                        }
+                    }
+                    else if ((SaveData.Heroine.HExperienceKind)anim.stateRestriction
+                                > flags.lstHeroine[0].HExperience
+                                || !_usedAnimations.Keys.Contains(AnimationInfo.GetKey(anim)))
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            //private Dictionary<int, Dictionary<int, int>> dicExpAddTaii = new Dictionary<int, Dictionary<int, int>>();
+
+            //private bool CheckExpAddTaii(int mode, int id, float exp) => 
+            //    !this.dicExpAddTaii.ContainsKey(mode) 
+            //    || !this.dicExpAddTaii[mode].ContainsKey(id) 
+            //    || (double)exp >= (double)  this.dicExpAddTaii[mode][id];
+
+            private static bool UseAnimationOriginal(
                 HSceneProc.AnimationListInfo anim)
             {
                 if (_hprocEarlyObjInstance == null)
