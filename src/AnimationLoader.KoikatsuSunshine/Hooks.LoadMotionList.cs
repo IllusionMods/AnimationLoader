@@ -65,6 +65,7 @@ namespace AnimationLoader
                 var animationOn = false;
                 var isALAnim = false;
 
+                // Loop through selected animations
                 for (var index = 0; index < _lstAnimInfo.Count; ++index)
                 {
                     isALAnim = false;
@@ -72,8 +73,14 @@ namespace AnimationLoader
                     if (swap is not null)
                     {
                         isALAnim = true;
-                        if (__instance.flags.isFreeH)
+                        if (!AnimationCheckOk(__instance, swap))
                         {
+                            continue;
+                        }
+
+                        /*if (__instance.flags.isFreeH)
+                        {
+                            // Only show used animations in Free-H
                             if (_usedAnimations.Keys.Count < 0)
                             {
                                 continue;
@@ -82,7 +89,11 @@ namespace AnimationLoader
                             {
                                 continue;
                             }
-                        }
+                        } else if (UseAnimationLevels.Value && !CheckExperince(swap))
+                        {
+                            // if not enough experience continue to next animation
+                            continue;
+                        }*/
                     }
 
                     var button = Instantiate<GameObject>(__instance.objMotionListNode);
@@ -217,6 +228,43 @@ namespace AnimationLoader
                         t.SetAsLastSibling();
                     }
                 }
+            }
+
+            internal static bool AnimationCheckOk(HSprite hsprite, SwapAnimationInfo anim)
+            {
+                if (hsprite.flags.isFreeH)
+                {
+                    // Only show used animations in FreeH
+                    if (_usedAnimations.Keys.Count < 0)
+                    {
+                        return false;
+                    }
+                    if (!_usedAnimations.Keys.Contains(AnimationInfo.GetKey(anim)))
+                    {
+                        return false;
+                    }
+                } else if (UseAnimationLevels.Value && !CheckExperince(hsprite, anim))
+                {
+                    // if not enough experience continue to next animation
+                    return false;
+                }
+                return true;
+            }
+
+            /// <summary>
+            /// Checks heroine experience against ExpTaii of swap animation
+            /// </summary>
+            /// <param name="anim"></param>
+            /// <returns></returns>
+            internal static bool CheckExperince(HSprite hsprite, SwapAnimationInfo anim)
+            {
+                var hExp = hsprite.flags.lstHeroine[0].hExp;
+
+                if ((double)hExp >= (double)anim.ExpTaii)
+                {
+                    return true;
+                }
+                return false;
             }
         }
     }
