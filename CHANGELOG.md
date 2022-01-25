@@ -7,6 +7,8 @@
 - The majority of logs are enabled in config
 - Log warning when moving characters
 - [KKS] New labels for added animations work as expected
+- [KKS] In Free-H if added animations are New they are not available conforming with the game
+- [KKS] Animations can be made dependent of experience.
 
 ##### Changed
 
@@ -18,7 +20,6 @@
 
 - [KK] Fixed button duplication in Grid
 - [@Kokaiinum] fix exception when setting NeckDonorId
-
 
 ### <u>v1.1.0.0 - 2021-12-25</u>
 
@@ -63,3 +64,8 @@ depending on the Heroine experience.a
 
 
 ###### Known Issues
+
+- For the game the experience has three levels 0-49, 50-99 and a 100. Dependency in experience can 
+be increased that is if a donor has 100% experience requirement it can not be lowered. If the
+experience is level 2 (50-99) it can go level 3 for example. For added animations is dot not have to
+be 3 levels.

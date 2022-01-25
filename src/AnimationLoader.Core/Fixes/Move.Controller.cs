@@ -15,6 +15,9 @@ namespace AnimationLoader
         {
             internal Vector3 _originalPosition = new(0, 0, 0);
             internal Vector3 _lastMovePosition = new(0, 0, 0);
+            internal CharacterType _chaType = CharacterType.Unknown;
+
+            public enum CharacterType { Heroine, Heroine3P, Player, Janitor, Group, Unknown }
 
             /// <summary>
             /// Required definition.
@@ -24,8 +27,9 @@ namespace AnimationLoader
             {
             }
 
-            internal void Init()
+            internal void Init(CharacterType chaType)
             {
+                _chaType = chaType;
                 SetOriginalPosition();
             }
 
@@ -42,7 +46,7 @@ namespace AnimationLoader
             {
                 ChaControl.transform.position = _originalPosition;
 #if DEBUG
-                Log.Warning($"0032: Resetting character positions.");
+                Log.Warning($"0032: Resetting character position for {_chaType}.");
 #endif
             }
 
@@ -51,9 +55,9 @@ namespace AnimationLoader
                 try
                 {
 #if DEBUG
-                    Log.Warning($"0031: Adjusting character positions.");
+                    Log.Warning($"0031: Adjusting character position for {_chaType}.");
 #else
-                    Log.Debug($"0031: Adjusting character positions.");
+                    Log.Debug($"0031: Adjusting character position for {_chaType}.");
 #endif
                     //if (_originalPosition == Vector3.zero)
                     //{
@@ -70,7 +74,7 @@ namespace AnimationLoader
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"0015: Cannot adjust {ChaControl.name} - {e}.");
+                    Log.Error($"0010: Cannot adjust {_chaType} - {ChaControl.name} - {e}.");
                 }
             }
         }

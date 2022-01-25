@@ -22,6 +22,7 @@ namespace AnimationLoader
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateAllAnimationList))]
             private static void ExtendList(object __instance)
             {
+                _hprocEarlyObjInstance = __instance;
                 var procObj = Traverse.Create(__instance);
                 var addedAnimations = new StringBuilder();
 #if KK
@@ -56,14 +57,14 @@ namespace AnimationLoader
 
                     if (donorInfo == null)
                     {
-                        Log.Level(LogLevel.Warning, $"0001: No donor: mode={anim.Mode} " +
+                        Log.Level(LogLevel.Warning, $"0009: No donor: mode={anim.Mode} " +
                             $"DonorPoseId={anim.DonorPoseId}");
                         continue;
                     }
 
                     if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
                     {
-                        // PR # 23 Change to Log.Level to always show log, update log ID's
+                        // PR #23 Change to Log.Level to always show log, update log ID's
                         // use temp variable to add log to log list
                         var newNeckDonor = animListInfo
                             .FirstOrDefault(x => x.id == anim.NeckDonorId);
@@ -135,7 +136,7 @@ namespace AnimationLoader
                     animListInfo.Add(donorInfo);
                     swapAnimationMapping[donorInfo] = anim;
                     addedAnimations.Append($"EMode={anim.Mode,6} Name={anim.AnimationName}, " +
-                        $"[Key={AnimationInfo.GetKey(anim)}]\n");
+                        $"[Key={AnimationInfo.GetKey(anim)}] donor release={donorInfo.isRelease}\n");
                     countAL++;
                 }
                 addedAnimations.Append($"\n{countAL + countGameA} animations available: Game " +

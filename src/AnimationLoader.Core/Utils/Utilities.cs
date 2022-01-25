@@ -16,23 +16,27 @@ namespace AnimationLoader
     {
         internal class Utilities
         {
+            /// <summary>
+            /// Save information for template.xml
+            /// </summary>
             internal static void SaveAnimInfo()
             {
-                if (_hprocObjInstance == null)
+                if (_hprocEarlyObjInstance == null)
                 {
+                    Log.Warning("_hprocObjInstanceOut");
                     return;
                 }
 
                 var total = 0;
                 var lstAnimInfo = Traverse
-                    .Create(_hprocObjInstance)
+                    .Create(_hprocEarlyObjInstance)
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
 
                 // id, mode,
                 // nameAnimation (Japanese name), posture,
                 // numCtrl, kindHoshi,
                 // hoshiLoopActionS, isFemaleInitiative,
-                // {category list},
+                // {category list}, dicExpTaii[mode][id]
                 // fileSiruPaste
                 for (var i = 0; i < lstAnimInfo.Length; i++)
                 {
@@ -40,14 +44,19 @@ namespace AnimationLoader
                          $" {TranslateName(x.nameAnimation)}, {x.posture}," +
                          $" {x.numCtrl}, {x.kindHoushi}," +
                          $" {x.houshiLoopActionS}, {x.isFemaleInitiative}," +
-                         $"{CategoryList(x.lstCategory)}," +
+                         $"{CategoryList(x.lstCategory, true)}," +
+#if KKS
+                         $" {x.paramFemale.fileSiruPaste}," +
+                         $" {getExpTaii((int)x.mode, x.id)}");
+#else
                          $" {x.paramFemale.fileSiruPaste}");
+#endif
 
                     File.WriteAllLines($"lst{i}.csv", lines.ToArray());
                     total += lines.ToArray().Length;
                 }
 #if DEBUG
-                Log.Warning($"0017: Total animations {total}");
+                Log.Warning($"0011: Total animations {total}");
 #endif
             }
 
@@ -71,7 +80,14 @@ namespace AnimationLoader
                 return $"{tmp} ({animationName})";
             }
 
-            internal static string CategoryList(List<HSceneProc.Category> categories)
+            /// <summary>
+            /// Return categories in the string form "{ cat 1, cat 2, ,,,}"
+            /// </summary>
+            /// <param name="categories"></param>
+            /// <param name="names"></param>
+            /// <param name="quotes"></param>
+            /// <returns></returns>
+            internal static string CategoryList(List<HSceneProc.Category> categories, bool names = false, bool quotes = true)
             {
                 var tmp = "";
                 var first = true;
@@ -80,15 +96,70 @@ namespace AnimationLoader
                 {
                     if (first)
                     {
-                        tmp += c.category.ToString();
+                        if (names)
+                        {
+                            tmp += (PositionCategory)c.category;
+                        }
+                        else
+                        {
+                            tmp += c.category.ToString();
+                        }
                         first = false;
                     }
                     else
                     {
-                        tmp += ", " + c.category.ToString();
+                        if (names)
+                        {
+                            tmp += ", " + (PositionCategory)c.category;
+                        }
+                        else
+                        {
+                            tmp += ", " + c.category.ToString();
+                        }
                     }
                 }
-                return "\" { " + tmp + " }\"";
+                return quotes ? "\" { " + tmp + " }\"" : "{ " + tmp + " }";
+            }
+
+            /// <summary>
+            /// Ditto
+            /// </summary>
+            /// <param name="categories"></param>
+            /// <param name="names"></param>
+            /// <param name="quotes"></param>
+            /// <returns></returns>
+            internal static string CategoryList(List<int> categories, bool names = false, bool quotes = true)
+            {
+                var tmp = "";
+                var first = true;
+
+                foreach (var c in categories)
+                {
+                    if (first)
+                    {
+                        if (names)
+                        {
+                            tmp += (PositionCategory)c;
+                        }
+                        else
+                        {
+                            tmp += c.ToString();
+                        }
+                        first = false;
+                    }
+                    else
+                    {
+                        if (names)
+                        {
+                            tmp += ", " + (PositionCategory)c;
+                        }
+                        else
+                        {
+                            tmp += ", " + c.ToString();
+                        }
+                    }
+                }
+                return quotes ? "\" { " + tmp + " }\"" : "{ " + tmp + " }";
             }
 
             internal static int CountAnimations(List<HSceneProc.AnimationListInfo>[] lstAnimInfo)
@@ -162,6 +233,18 @@ namespace AnimationLoader
                 return false;
             }
 
+            internal static int getExpTaii(int mode, int id)
+            {
+                var hsceneTraverse = Traverse.Create(_hprocEarlyObjInstance);
+                var dicExpAddTaii = hsceneTraverse
+                    .Field<Dictionary<int, Dictionary<int, int>>>("dicExpAddTaii").Value;
+
+                if (dicExpAddTaii.ContainsKey(mode) && dicExpAddTaii[mode].ContainsKey(id)) 
+                {
+                    return dicExpAddTaii[mode][id];
+                }
+                return 0;
+            }
         }
     }
 }

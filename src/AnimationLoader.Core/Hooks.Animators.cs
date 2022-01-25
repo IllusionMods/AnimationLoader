@@ -10,14 +10,6 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        // TODO: Change to a CharaCustomFunctionController when logic works
-        internal static object _hprocObjInstance;
-        internal static ChaControl _heroine;
-        internal static ChaControl _heroine3P;
-        internal static List<ChaControl> _lstHeroines;
-        internal static ChaControl _player;
-        internal static HFlag _flags;
-        
         internal partial class Hooks
         {
             /// <summary>
@@ -92,7 +84,7 @@ namespace AnimationLoader
                                 }
                             }
 #if KKS
-                            // Save animation as used
+                            // Save used animation
                             if (nextAnim.IsAnimationLoader())
                             {
                                 _usedAnimations.Keys.Add(nextAnim.Key);

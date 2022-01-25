@@ -1,8 +1,9 @@
 ﻿//
-// For people who keep there own name for the animations.
+// For people who keep there own names for the animations.
+//
 // Save animations names to UserData/AnimationLoader/Names so they are not overwritten by
 // updates. They can be maintained updated there.
-// TODO: add names for new animations in updates.
+// TODO: add names for new animations in updates. OK.
 //
 using System;
 using System.Collections.Generic;
@@ -42,13 +43,9 @@ namespace AnimationLoader
             [XmlElement]
             public string website = string.Empty;
 
-            //[XmlElement]
-            //public string format = "1.0";
-
             [XmlArray("AnimationLoader")]
             public List<Animation> Anim = new();
         }
-
 
         //
         // A real dictionary was better for programming but less friendly to user interaction
@@ -81,9 +78,7 @@ namespace AnimationLoader
                 var docs = Directory.GetFiles(path, "*.xml").Select(XDocument.Load).ToList();
                 if (docs.Count > 0)
                 {
-#if DEBUG
                     Log.Debug($"0001: [{PInfo.PluginName}] Loading animations names.");
-#endif
                     LoadNamesXmls(docs);
                     return;
                 }
@@ -165,6 +160,7 @@ namespace AnimationLoader
                 Log.Debug($"0005: File {fileName} already exits not overwritten.");
                 return;
             }
+
             XmlSerializer xmlSerializer = new(typeof(Names));
             var writer = new StreamWriter($"{path}/names-{guid}.xml");
             xmlSerializer.Serialize(writer.BaseStream, names);

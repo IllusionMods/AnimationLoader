@@ -18,17 +18,6 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        private static ConfigEntry<bool> SortPositions { get; set; }
-#if KKS
-        private static ConfigEntry<bool> LoadInCharStudio { get; set; }
-#endif
-#if KK
-        private static ConfigEntry<bool> UseGrid { get; set; }
-#endif
-        private static ConfigEntry<KeyboardShortcut> ReloadManifests { get; set; }
-        internal static ConfigEntry<bool> DebugInfo { get; set; }
-        internal static ConfigEntry<bool> Reposition { get; set; }
-        private const string GeneralSection = "General";
         private static readonly Color buttonColor = new(0.96f, 1f, 0.9f);
 
         private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
@@ -65,84 +54,9 @@ namespace AnimationLoader
         {
             Log.SetLogSource(Logger); ;
 
-            SortPositions = Config.Bind(
-                section: GeneralSection,
-                key: nameof(SortPositions),
-                defaultValue: true,
-                configDescription: new ConfigDescription(
-                    description: "Sort positions alphabetically",
-                    tags: new ConfigurationManagerAttributes {Order = 4}));
-            ReloadManifests = Config.Bind(
-                section: GeneralSection,
-                key: nameof(ReloadManifests),
-                defaultValue: new KeyboardShortcut(KeyCode.None),
-                configDescription: new ConfigDescription(
-                    description: "Load positions from all manifest format xml files inside " +
-                        "config/AnimationLoader folder",
-                    tags: new ConfigurationManagerAttributes { Order = 5 }));
-            // For KKS the application code handles the display of animators buttons no grid UI.
-#if KKS
-            LoadInCharStudio = Config.Bind(
-                section: GeneralSection,
-                key: "Character Studio",
-                defaultValue: true,
-                configDescription: new ConfigDescription(
-                    description: "Disabled module for Studio",
-                    tags: new ConfigurationManagerAttributes { Order = 3 }));
-            if (KoikatuAPI.GetCurrentGameMode() == GameMode.Studio)
-            {
-                if (!LoadInCharStudio.Value)
-                {
-                    Log.Message("0013: MOD disabled in configuration.");
-                    enabled = false;
-                    return;
-                }
-            }
-#endif
-#if KK
-            // TODO: Grid UI for KKS
-            // How many animations will require a scrollable grid
-            UseGrid = Config.Bind(
-                section: GeneralSection,
-                key: nameof(UseGrid),
-                defaultValue: false,
-                configDescription: new ConfigDescription(
-                    description: "If you don't want to use the scrollable" +
-                        " list for some reason",
-                    tags: new ConfigurationManagerAttributes { Order = 3 }));
-#endif
-            // Reposition characters in the animations it can help with clipping
-            Reposition = Config.Bind(
-                section: "Debug",
-                key: "Reposition Characters",
-                defaultValue: true,
-                configDescription: new ConfigDescription(
-                    description: "Reposition characters in the animation before it starts",
-                    acceptableValues: null,
-                    tags: new ConfigurationManagerAttributes { Order = 2, IsAdvanced = true }));
-            // To generate debug information this has to be enabled
-            // Almost all Logs are in conditional compilation
-            DebugInfo = Config.Bind(
-                section: "Debug",
-                key: "Debug Information",
-                defaultValue: false,
-                configDescription: new ConfigDescription(
-                    description: "Show debug information",
-                    acceptableValues: null,
-                    tags: new ConfigurationManagerAttributes { Order = 1, IsAdvanced = true }));
-            DebugInfo.SettingChanged += (_sender, _args) =>
-            {
-                Log.Enabled = DebugInfo.Value;
-#if DEBUG
-                Log.Level(LogLevel.Info, $"0028: Log.Enabled set to {Log.Enabled}");
-#endif
-            };
-            Log.Enabled = DebugInfo.Value;
-#if DEBUG
-            Log.Level(LogLevel.Info, $"0028: Log.Enabled set to {Log.Enabled}");
-#endif
-            Hooks.Init();
+            ConfigEntries();
 
+            Hooks.Init();
             // Register move characters controller
             CharacterApi.RegisterExtraBehaviour<MoveController>(PInfo.GUID);
 #if KKS

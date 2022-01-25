@@ -1,23 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection.Emit;
 
-using Illusion.Extensions;
-using Manager;
-using Studio;
-using UnityEngine;
-
-using Sideloader.AutoResolver;
 using HarmonyLib;
-using BepInEx.Logging;
-using System.Text;
+
+using static AnimationLoader.SwapAnim.MoveController;
+
 
 namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        internal static Harmony _hookInstance;
+        // TODO: Change to a CharaCustomFunctionController when logic works
+        private static object _hprocObjInstance;
+        private static object _hprocEarlyObjInstance;
+        private static ChaControl _heroine;
+        private static ChaControl _heroine3P;
+        private static List<ChaControl> _lstHeroines;
+        private static ChaControl _player;
+        private static HFlag _flags;
+        private static Harmony _hookInstance;
 
         internal partial class Hooks
         {
@@ -61,16 +62,16 @@ namespace AnimationLoader
                 _hprocObjInstance = __instance;
                 _lstHeroines = ___lstFemale;
                 _heroine = _lstHeroines[0];
-                GetMoveController(_heroine).Init();
+                GetMoveController(_heroine).Init(CharacterType.Heroine);
 
                 if (___lstFemale.Count > 1)
                 {
                     _heroine3P = _lstHeroines[1];
-                    GetMoveController(_heroine3P).Init();
+                    GetMoveController(_heroine3P).Init(CharacterType.Heroine3P);
                 }
 
                 _player = ___male;
-                GetMoveController(_player).Init();
+                GetMoveController(_player).Init(CharacterType.Player);
 
                 _flags = Traverse
                     .Create(__instance)

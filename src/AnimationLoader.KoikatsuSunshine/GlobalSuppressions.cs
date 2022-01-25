@@ -10,3 +10,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Style", "IDE0022:Use block body for methods", Justification = "Community usage", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.GetMoveController(ChaControl)~AnimationLoader.SwapAnim.MoveController")]
 [assembly: SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations", Justification = "KK does not have Array.Empty", Scope = "member", Target = "~F:AnimationLoader.OverrideInfo.categories")]
 [assembly: SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations", Justification = "KK does not have Array.Empty", Scope = "member", Target = "~F:AnimationLoader.SwapAnimationInfo.categories")]
+[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Leave for reference", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.SaveNamesXmls")]
+[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Leave for reference", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.ReadNames(AnimationLoader.SwapAnim.Names@,System.String)")]

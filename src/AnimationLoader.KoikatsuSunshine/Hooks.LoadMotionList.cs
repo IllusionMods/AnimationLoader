@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using HarmonyLib;
+using System.Text;
 
 using IllusionUtility.GetUtility;
+using Manager;
 using SceneAssist;
 using TMPro;
 
 using UnityEngine;
 using UnityEngine.UI;
+
+using HarmonyLib;
+
+using Newtonsoft.Json;
+using static HScene.AddParameter;
 
 
 namespace AnimationLoader
@@ -60,6 +65,7 @@ namespace AnimationLoader
                 var animationOn = false;
                 var isALAnim = false;
 
+                // Loop through selected animations
                 for (var index = 0; index < _lstAnimInfo.Count; ++index)
                 {
                     isALAnim = false;
@@ -67,11 +73,32 @@ namespace AnimationLoader
                     if (swap is not null)
                     {
                         isALAnim = true;
+                        if (!AnimationCheckOk(__instance, swap))
+                        {
+                            continue;
+                        }
+
+                        /*if (__instance.flags.isFreeH)
+                        {
+                            // Only show used animations in Free-H
+                            if (_usedAnimations.Keys.Count < 0)
+                            {
+                                continue;
+                            }
+                            if (!_usedAnimations.Keys.Contains(AnimationInfo.GetKey(_lstAnimInfo[index])))
+                            {
+                                continue;
+                            }
+                        } else if (UseAnimationLevels.Value && !CheckExperince(swap))
+                        {
+                            // if not enough experience continue to next animation
+                            continue;
+                        }*/
                     }
 
                     var button = Instantiate<GameObject>(__instance.objMotionListNode);
 
-                    var animationInfoComponent = 
+                    var animationInfoComponent =
                         button.AddComponent<HSprite.AnimationInfoComponent>();
 
                     // Assign animation
@@ -201,91 +228,44 @@ namespace AnimationLoader
                         t.SetAsLastSibling();
                     }
                 }
-
             }
 
-
-            /*
-            /// <summary>
-            /// The functionality of this patch differs to much between versions.
-            /// The method just highlight the animation and sort the list if selected.
-            /// The is no grid UI implementation if needed for VR can be implemented.
-            /// There is no scroll text functions these are not needed for KKS.
-            /// </summary>
-            /// <param name="__instance"></param>
-            /// <param name="_lstAnimInfo"></param>
-            /// <param name="_objParent"></param>
-            [HarmonyPostfix]
-            [HarmonyPatch(typeof(HSprite), nameof(HSprite.LoadMotionList))]
-            private static void LoadMotionList(
-                HSprite __instance,
-                List<HSceneProc.AnimationListInfo> _lstAnimInfo,
-                GameObject _objParent)
+            internal static bool AnimationCheckOk(HSprite hsprite, SwapAnimationInfo anim)
             {
-                if (_lstAnimInfo == null || _lstAnimInfo.Count == 0)
+                if (hsprite.flags.isFreeH)
                 {
-                    return;
-                }
-
-                var countGA = 0;
-                var countAL = 0;
-                var buttonParent = _objParent.transform;
-                var buttons = _objParent.transform.Cast<Transform>().ToList();
-
-                foreach (var button in buttons)
+                    // Only show used animations in FreeH
+                    if (_usedAnimations.Keys.Count < 0)
+                    {
+                        return false;
+                    }
+                    if (!_usedAnimations.Keys.Contains(AnimationInfo.GetKey(anim)))
+                    {
+                        return false;
+                    }
+                } else if (UseAnimationLevels.Value && !CheckExperince(hsprite, anim))
                 {
-                    // button.gameObject.SetActive(false);
-                    var label = button.GetComponentInChildren<TextMeshProUGUI>();
-
-                    try
-                    {
-                        var anim = button
-                            .GetComponentInChildren<HSprite.AnimationInfoComponent>().info;
-
-                        if (anim != null)
-                        {
-#if DEBUG
-                            //Logger.LogWarning($"0019: Loaded button =" +
-                            //    $" {Utilities.Translate(anim.nameAnimation)}");
-#endif
-                            swapAnimationMapping.TryGetValue(anim, out var swap);
-                            if (swap != null)
-                            {
-                                //
-                                // swap.Guid, swap.StudioId key for loaded animation
-                                //
-                                button.transform
-                                    .FindLoop("Background")
-                                    .GetComponent<Image>().color = buttonColor;
-                                label.color = Color.yellow;
-                                countAL++;
-                            }
-                            else
-                            {
-                                countGA++;
-                            }
-                        }
-                    }
-                    catch
-                    {
-                    }
+                    // if not enough experience continue to next animation
+                    return false;
                 }
-#if DEBUG
-                Log.Warning($"0021: System animations {countGA} Animation Loader {countAL}");
-#endif
-                // sort all buttons by name
-                if (SortPositions.Value)
+                return true;
+            }
+
+            /// <summary>
+            /// Checks heroine experience against ExpTaii of swap animation
+            /// </summary>
+            /// <param name="anim"></param>
+            /// <returns></returns>
+            internal static bool CheckExperince(HSprite hsprite, SwapAnimationInfo anim)
+            {
+                var hExp = hsprite.flags.lstHeroine[0].hExp;
+
+                if ((double)hExp >= (double)anim.ExpTaii)
                 {
-                    var allButtons = buttonParent.Cast<Transform>().OrderBy(
-                        x => x.GetComponentInChildren<TextMeshProUGUI>().text).ToList();
-                    foreach (var t in allButtons)
-                    {
-                        t.SetAsLastSibling();
-                    }
+                    return true;
                 }
-            }*/
-
-
+                return false;
+            }
         }
     }
 }

@@ -32,6 +32,7 @@ namespace AnimationLoader
         private static XElement _animRootGS;
 
         private static bool _saveNames = false;
+        private static bool _testMode = false;
 
         private static void LoadTestXml()
         {
@@ -43,6 +44,7 @@ namespace AnimationLoader
                 {
                     Log.Level(LogLevel.Message, $"0014: [{PInfo.PluginName}] Loading test " +
                         $"animations");
+                    _testMode = true;
                     LoadXmls(docs);
                     return;
                 }
@@ -142,7 +144,15 @@ namespace AnimationLoader
             ref StringBuilder logLines)
         {
             var count = 0;
-            logLines.Append($"From {guid}-{version}: {RootText(root.Name)}\n");
+
+            if (Sideloader.Sideloader.ZipArchives.TryGetValue(guid, out string zipFileName))
+            {
+                logLines.Append($"From {zipFileName} {guid}-{version}: {RootText(root.Name)}\n");
+            }
+            else
+            {
+                logLines.Append($"From {guid}-{version}: {RootText(root.Name)}\n");
+            }
             foreach (var animElem in root.Elements(ManifestArrayItem))
             {
                 if (animElem == null)
@@ -158,9 +168,7 @@ namespace AnimationLoader
                 if (overrideName)
                 {
                     // override name
-                    // get name in fast direct way possible
                     // Temp to continue testing
-
                     animation = animationNamesDict[guid].Anim
                         .Where(x => (x.StudioId == data.StudioId) && 
                                     (x.Controller == data.ControllerFemale)).FirstOrDefault();
@@ -179,11 +187,9 @@ namespace AnimationLoader
 #endif
                     }
                 }
-
                 if (!overrideName)
                 {
-
-                    // new names file
+                    // new name
                     animation.StudioId = data.StudioId;
                     animation.Controller = string.Copy(data.ControllerFemale);
                     animation.Koikatu = string.Copy(data.AnimationName);
@@ -223,6 +229,7 @@ namespace AnimationLoader
                     }
                 }
             }
+            logLines.Append("\n");
             return count;
         }
 
@@ -292,6 +299,10 @@ namespace AnimationLoader
             if (overrides.MotionIKDonor >= 0)
             {
                 data.MotionIKDonor = overrides.MotionIKDonor;
+            }
+            if (overrides.ExpTaii >= 0) 
+            { 
+                data.ExpTaii = overrides.ExpTaii; 
             }
             if (overrides.PositionHeroine != Vector3.zero)
             {
