@@ -335,3 +335,4 @@ ASALocalRun/
 
 # Local configuraton
 /PostBuild.bat
+/.editorconfig
