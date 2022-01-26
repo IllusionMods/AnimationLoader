@@ -69,6 +69,28 @@ will be 55.
 When KKS reads this manifest the animation with StudioId 1 will be ignored. Koikatu will read both
 StudioId 1 and 2.
 
+4. **Game experience levels and animations**
+```xml
+<Animation>
+  <StudioId>1</StudioId>
+  <AnimationName>Animation 1</AnimationName>
+  <NeckDonorId>0</NeckDonorId>
+  <GameSpecificOverrides>
+    <KoikatsuSunshine>
+      <NeckDonorId>55</NeckDonorId>
+      <ExpTaii>50</ExpTaii>
+    </KoikatsuSunshine>
+  <GameSpecificOverrides>
+</Animation>
+```
+For KKS the animations are available gradually one of the factors is the heroine experience. For the
+game there are 3 levels None, 50%, 100%.
+- **None** the animation does not require experience
+- **50%** the animation requires at least 50% experience
+- **100%** the animation requires 100% experience
+
+Setting this field will apply levels to the animations. In the example above the animation will be
+available after the heroine reaches 50% experience.
 
 More detailed information in the
 [wiki](https://github.com/IllusionMods/AnimationLoader/wiki/manifest.xml).
