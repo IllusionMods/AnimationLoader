@@ -1,4 +1,7 @@
-﻿using System;
+﻿//
+// Debug testing
+//
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,21 +14,19 @@ using KKAPI;
 using Newtonsoft.Json;
 
 
-
 namespace AnimationLoader
 {
     public partial class SwapAnim
     {
         internal partial class Hooks
         {
-            [HarmonyPostfix]
-            [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateListAnimationFileName))]
+            //[HarmonyPostfix]
+            //[HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateListAnimationFileName))]
+
             private static void CreateListAnimationFileNamePostfix(
                 object __instance, bool _isAnimListCreate = true)
             {
                 PPrintUseAnimInfo(__instance, _isAnimListCreate);
-
-                //return;
 
                 var hsceneTraverse = Traverse.Create(__instance);
                 var lines = new StringBuilder();
@@ -44,7 +45,6 @@ namespace AnimationLoader
                 var lstAnimInfo = hsceneTraverse
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
                 var lstUseAnimInfo = new List<HSceneProc.AnimationListInfo>[8];
-                //var theThis = (HSceneProc)__instance;
  
                 var strInSet = string.Empty;
 
@@ -141,7 +141,8 @@ namespace AnimationLoader
                                             || lstAnimInfo[index1][index2].isExperience != 2 
                                             && (HSceneProc.EExperience)lstAnimInfo[index1][index2].isExperience > flags.experience)
                                 {
-                                    lines.Append($"Continue not Free-H\n");
+                                    lines.Append($"Continue not Free-H Experience {flags.lstHeroine[0].hExp} ExpTaii " +
+                                        $"{Utilities.GetExpTaii(__instance, index1, lstAnimInfo[index1][index2].id)}\n");
                                     continue;
                                 }
                             }
@@ -154,7 +155,7 @@ namespace AnimationLoader
                                 lines.Append($"Continue State sateRestriction > HExperience...\n");
                                 continue;
                             }
-                            lines.Append($"Added UseAnimation said {UseAnimation(lstAnimInfo[index1][index2])}\n");
+                            lines.Append($"Added UseAnimation said {UseAnimation(__instance, lstAnimInfo[index1][index2])}\n");
                             lstUseAnimInfo[index1].Add(lstAnimInfo[index1][index2]);
                         }
                     }
@@ -218,14 +219,15 @@ namespace AnimationLoader
             }
 
             private static bool UseAnimation(
+                object hsceneProc,
                 HSceneProc.AnimationListInfo anim)
             {
-                if (_hprocEarlyObjInstance == null)
+                if (hsceneProc == null)
                 {
                     return false;
                 }
 
-                var hsceneTraverse = Traverse.Create(_hprocEarlyObjInstance);
+                var hsceneTraverse = Traverse.Create(hsceneProc);
                 var flags = hsceneTraverse
                     .Field<HFlag>("flags").Value;
                 var hExp = flags.lstHeroine[0].hExp;
@@ -298,14 +300,15 @@ namespace AnimationLoader
             //    || (double)exp >= (double)  this.dicExpAddTaii[mode][id];
 
             private static bool UseAnimationOriginal(
+                object hsceneProc,
                 HSceneProc.AnimationListInfo anim)
             {
-                if (_hprocEarlyObjInstance == null)
+                if (hsceneProc == null)
                 {
                     return false;
                 }
 
-                var hsceneTraverse = Traverse.Create(_hprocEarlyObjInstance);
+                var hsceneTraverse = Traverse.Create(hsceneProc);
                 var flags = hsceneTraverse
                     .Field<HFlag>("flags").Value;
                 var hExp = flags.lstHeroine[0].hExp;
@@ -334,8 +337,6 @@ namespace AnimationLoader
                 // Test for range 3000-3099
                 var flagRange2 = categorys.Any<int>((Func<int, bool>)(c =>
                     MathfEx.IsRange<int>(3000, c, 3099, true)));
-
-                //HashSet<int> intSet;
 
                 // get list of already used animations for category index1
                 if (!playHlist.TryGetValue((int)anim.mode, out HashSet<int> intSet))
