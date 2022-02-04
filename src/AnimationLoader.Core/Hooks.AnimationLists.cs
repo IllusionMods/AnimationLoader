@@ -168,7 +168,7 @@ namespace AnimationLoader
                 if (!once)
                 {
                     Log.Debug($"0012: Added animations:\n\n{addedAnimations}");
-                    once = true
+                    once = true;
                 }
 #endif
             }
