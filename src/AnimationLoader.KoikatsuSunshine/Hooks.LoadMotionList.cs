@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-using IllusionUtility.GetUtility;
-using Manager;
-using SceneAssist;
 using TMPro;
-
 using UnityEngine;
 using UnityEngine.UI;
 
-using HarmonyLib;
+using IllusionUtility.GetUtility;
+using SceneAssist;
 
-using Newtonsoft.Json;
-using static HScene.AddParameter;
+using HarmonyLib;
 
 
 namespace AnimationLoader
@@ -26,13 +20,9 @@ namespace AnimationLoader
         internal partial class Hooks
         {
             /// <summary>
-            /// The functionality of this patch differs to much between versions.
-            /// The method just highlight the animation and sort the list if selected.
-            /// The is no grid UI implementation if needed for VR can be implemented.
-            /// There is no scroll text functions these are not needed for KKS.
+            /// In order to expand more easily had to replicate the original function and 
+            /// adjust to needs.
             /// 
-            /// The stated previously is no more.  In order to expand more easily had to replicate
-            /// the original function and adjust to needs.
             /// TODO: Work on grid UI.
             /// 
             /// </summary>
@@ -48,6 +38,15 @@ namespace AnimationLoader
             {
                 var buttonParent = _objParent.transform;
 
+                if (animationDict.Count == 0)
+                {
+                    // Let game code handle this if no animations loaded
+                    // TODO: If VR continue when grid Code added if necessary
+#if DEBUG
+                    Log.Warning($"0020: No animations loaded.");
+#endif
+                    return;
+                }
                 if (buttonParent.childCount > 0)
                 {
                     buttonParent.Cast<Transform>().ToList().ForEach(x => Destroy(x.gameObject));
@@ -78,18 +77,20 @@ namespace AnimationLoader
                             continue;
                         }
 
-                        /*if (__instance.flags.isFreeH)
+                        /*
+                        if (__instance.flags.isFreeH)
                         {
                             // Only show used animations in Free-H
                             if (_usedAnimations.Keys.Count < 0)
                             {
                                 continue;
                             }
-                            if (!_usedAnimations.Keys.Contains(AnimationInfo.GetKey(_lstAnimInfo[index])))
+                            if (!_usedAnimations.Keys
+                                .Contains(AnimationInfo.GetKey(_lstAnimInfo[index])))
                             {
                                 continue;
                             }
-                        } else if (UseAnimationLevels.Value && !CheckExperince(swap))
+                        } else if (UseAnimationLevels.Value && !CheckExperince(__instance, swap))
                         {
                             // if not enough experience continue to next animation
                             continue;
@@ -116,6 +117,10 @@ namespace AnimationLoader
                         label.text = animationInfoComponent.info.nameAnimation;
                         if (isALAnim)
                         {
+#if DEBUG
+                            label.text = $"{animationInfoComponent.info.nameAnimation} " +
+                                $"E({swap.ExpTaii})";
+#endif
                             // Foreground color yellow for loaded animations
                             label.color = Color.yellow;
                         }
@@ -125,21 +130,23 @@ namespace AnimationLoader
 
                     if ((toggle is not null) && (toggleGroup is not null))
                     {
-                        toggle.group = toggleGroup;  // Assign button to toggle group 
-                        // Magic operations
+                        // Assign button to toggle group 
+                        toggle.group = toggleGroup;  
+                        // ?? Magic operations
                         toggle.enabled = false;
                         toggle.enabled = true;
                     }
 
-                    var newLabel = button.transform.FindLoop("New"); // Look for New label
+                    // Look for New label
+                    var newLabel = button.transform.FindLoop("New");
 
                     // Activate New label according to previous usage saved in playHlist
                     if ((bool)(UnityEngine.Object)newLabel)
                     {
                         if (isALAnim)
                         {
-                            // TODO: Lookup animation key in list of used animations.
-                            // Will maintain new status.
+                            // TODO: Lookup animation key in list of used animations. Ok.
+                            // Manage new status for loaded animations.
                             if (_usedAnimations.Keys.Count > 0)
                             {
                                 newLabel.SetActive(!_usedAnimations.Keys.Contains(
@@ -157,8 +164,8 @@ namespace AnimationLoader
                             //     1:[1,33,32,36,59,63,17],
                             //     2:[44,23,3,12,8,19,9,47,40,1,49,42],
                             //     ..}
-                            //
-                            //Dictionary<int, HashSet<int>> playHlist = Manager.Game.globalData.playHList;
+                            // 
+                            // Dictionary<int, HashSet<int>> playHlist = Manager.Game.globalData.playHList;
                             var playHlist = Manager.Game.globalData.playHList;
                             // HashSet<int> intSet;
                             if (!playHlist.TryGetValue((int)animationInfoComponent.info.mode, out var intSet))
@@ -169,14 +176,13 @@ namespace AnimationLoader
                         }
                     }
 
-                    // Check where are the characters to see what categories
-                    // are available
                     var nowPosition = button.transform.FindLoop("NowPos");
-
+                    
                     if (nowPosition is not null)
                     {
+                        // Check animation to see if it correspond to current one to show/hide
+                        // change of position icon
                         var foundCategory = false;
-                        // Check to see if animation is enabled for current category
                         foreach (var category in _lstAnimInfo[index].lstCategory)
                         {
                             if (__instance.lstCategory.Contains(category.category))
@@ -185,6 +191,7 @@ namespace AnimationLoader
                                 break;
                             }
                         }
+
                         nowPosition.SetActive(!foundCategory);
                     }
 
@@ -234,20 +241,38 @@ namespace AnimationLoader
             {
                 if (hsprite.flags.isFreeH)
                 {
+                    if (_testMode)
+                    {
+                        return true;
+                    }
                     // Only show used animations in FreeH
                     if (_usedAnimations.Keys.Count < 0)
                     {
+#if DEBUG
+                        Log.Warning($"XXXX: No loaded animations used in story mode.");
+#endif
                         return false;
                     }
                     if (!_usedAnimations.Keys.Contains(AnimationInfo.GetKey(anim)))
                     {
+#if DEBUG
+                        Log.Warning($"XXXX: Animation {anim.AnimationName} not used in story mode.");
+#endif
                         return false;
                     }
-                } else if (UseAnimationLevels.Value && !CheckExperince(hsprite, anim))
+                }
+                else if (UseAnimationLevels.Value && !CheckExperince(hsprite, anim))
                 {
-                    // if not enough experience continue to next animation
+                    // Not enough experience
+#if DEBUG
+                    Log.Warning($"XXXX: Not enough experience {anim.AnimationName} - " +
+                        $"{anim.ExpTaii} experience is {hsprite.flags.lstHeroine[0].hExp}.");
+#endif
                     return false;
                 }
+#if DEBUG
+                Log.Warning($"XXXX: Animation {anim.AnimationName} OK.");
+#endif
                 return true;
             }
 
