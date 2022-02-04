@@ -2,6 +2,8 @@
 
 #### <u>(Unreleased)</u>
 
+### <u>v1.1.0.1b1 - 2022-02-03</u>
+
 ##### Added
 
 - The majority of logs are enabled in config
