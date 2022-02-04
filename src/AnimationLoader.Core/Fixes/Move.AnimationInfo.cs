@@ -90,6 +90,13 @@ namespace AnimationLoader
                 }
             }
 
+            /// <summary>
+            /// Static function to get the key for any animation 
+            /// no need for and instance of the class
+            /// </summary>
+            /// <param name="animation"></param>
+            /// <param name="withguid"></param>
+            /// <returns></returns>
             public static string GetKey(
                 HSceneProc.AnimationListInfo animation,
                 bool withguid = true)
@@ -117,6 +124,11 @@ namespace AnimationLoader
                     $"{Guid}-{mode}-{controller}-{id:D3}" : $"{mode}-{controller}-{id:D3}";
             }
 
+            /// <summary>
+            /// GetKey overload
+            /// </summary>
+            /// <param name="animation"></param>
+            /// <returns></returns>
             public static string GetKey(SwapAnimationInfo animation)
             {
                 return $"{animation.Guid}-{animation.Mode}-{animation.ControllerFemale}" +
@@ -128,10 +140,13 @@ namespace AnimationLoader
                 AnimationInfoHelper((HSceneProc.AnimationListInfo)animation);
             }
 
+            // IsAnimationLoader no parameters refers to instance
             public bool IsAnimationLoader()
             {
                 return _isAnimationLoader;
             }
+
+            // IsAnimationLoader static check if it parameter is an AnimationLoader animation
             public static bool IsAnimationLoader(SwapAnimationInfo animation)
             {
                 return true;

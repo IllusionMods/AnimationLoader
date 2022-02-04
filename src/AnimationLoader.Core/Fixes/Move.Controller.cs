@@ -4,13 +4,15 @@ using UnityEngine;
 
 using KKAPI;
 using KKAPI.Chara;
-using Studio;
 
 
 namespace AnimationLoader
 {
     public partial class SwapAnim
     {
+        /// <summary>
+        /// Move characters to a different positions
+        /// </summary>
         public partial class MoveController : CharaCustomFunctionController
         {
             internal Vector3 _originalPosition = new(0, 0, 0);

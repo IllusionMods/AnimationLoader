@@ -1,5 +1,6 @@
 ﻿//
 // class to control the display of logs
+// Missing rotating logs :( have to do something about that
 //
 using BepInEx.Logging;
 
