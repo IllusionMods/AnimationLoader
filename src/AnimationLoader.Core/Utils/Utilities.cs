@@ -4,8 +4,9 @@ using System.Linq;
 
 using UnityEngine;
 
-using HarmonyLib;
 using Illusion.Extensions;
+
+using HarmonyLib;
 
 using KKAPI.Utilities;
 
@@ -19,25 +20,18 @@ namespace AnimationLoader
             /// <summary>
             /// Save information for template.xml
             /// </summary>
-            internal static void SaveAnimInfo()
+            internal static void SaveAnimInfo(
+                object hsceneProc, 
+                List<HSceneProc.AnimationListInfo>[] lstAnimInfo)
             {
-                if (_hprocEarlyObjInstance == null)
-                {
-                    Log.Warning("_hprocObjInstanceOut");
-                    return;
-                }
-
                 var total = 0;
-                var lstAnimInfo = Traverse
-                    .Create(_hprocEarlyObjInstance)
-                    .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
 
                 // id, mode,
                 // nameAnimation (Japanese name), posture,
                 // numCtrl, kindHoshi,
                 // hoshiLoopActionS, isFemaleInitiative,
-                // {category list}, dicExpTaii[mode][id]
-                // fileSiruPaste
+                // {category list}, fileSiruPaste
+                // dicExpTaii[mode][id]
                 for (var i = 0; i < lstAnimInfo.Length; i++)
                 {
                     var lines = lstAnimInfo[i].Select(x => $"{x.id}, {x.mode}," +
@@ -47,11 +41,10 @@ namespace AnimationLoader
                          $"{CategoryList(x.lstCategory, true)}," +
 #if KKS
                          $" {x.paramFemale.fileSiruPaste}," +
-                         $" {getExpTaii((int)x.mode, x.id)}");
+                         $" {GetExpTaii(hsceneProc, (int)x.mode, x.id)}");
 #else
                          $" {x.paramFemale.fileSiruPaste}");
 #endif
-
                     File.WriteAllLines($"lst{i}.csv", lines.ToArray());
                     total += lines.ToArray().Length;
                 }
@@ -196,7 +189,7 @@ namespace AnimationLoader
             /// <param name="message"></param>
             internal static void SetOriginalPositionAll()
             {
-                if (_hprocObjInstance == null)
+                if (_flags == null)
                 {
                     return;
                 }
@@ -233,9 +226,9 @@ namespace AnimationLoader
                 return false;
             }
 
-            internal static int getExpTaii(int mode, int id)
+            internal static int GetExpTaii(object hsceneProc, int mode, int id)
             {
-                var hsceneTraverse = Traverse.Create(_hprocEarlyObjInstance);
+                var hsceneTraverse = Traverse.Create(hsceneProc);
                 var dicExpAddTaii = hsceneTraverse
                     .Field<Dictionary<int, Dictionary<int, int>>>("dicExpAddTaii").Value;
 
