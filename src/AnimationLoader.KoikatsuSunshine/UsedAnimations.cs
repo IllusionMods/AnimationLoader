@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
+
 namespace AnimationLoader
 {
     [XmlRoot("Animations")]
@@ -19,8 +20,8 @@ namespace AnimationLoader
 
         private static readonly string _path = Path.Combine(UserData.Path, "save");
         private static readonly string _fileName = $"{_path}/animations.xml";
-        private static readonly XmlSerializer xmlSerializer = new(typeof(UsedAnimations));
-        private static readonly FileInfo file = new(_fileName);
+        private static readonly XmlSerializer _xmlSerializer = new(typeof(UsedAnimations));
+        private static readonly FileInfo _fileInfo = new(_fileName);
 
         public override string ToString()
         {
@@ -45,23 +46,23 @@ namespace AnimationLoader
 
         public void Save()
         {
-            file.Directory.Create();
-            if (file.Exists)
+            _fileInfo.Directory.Create();
+            if (_fileInfo.Exists)
             {
                 Log.Debug($"0018: Overwriting file {_fileName}.");
             }
             StreamWriter writer = new(_fileName);
-            xmlSerializer.Serialize(writer.BaseStream, this);
+            _xmlSerializer.Serialize(writer.BaseStream, this);
             writer.Close();
         }
 
         public void Read()
         {
-            if (file.Exists)
+            if (_fileInfo.Exists)
             {
                 Log.Debug($"0019: Reading File {_fileName}.");
                 StreamReader reader = new(_fileName);
-                var tmp = (UsedAnimations)xmlSerializer.Deserialize(reader.BaseStream);
+                var tmp = (UsedAnimations)_xmlSerializer.Deserialize(reader.BaseStream);
                 reader.Close();
                 Keys = tmp.Keys;
             }
