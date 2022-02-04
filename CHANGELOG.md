@@ -7,12 +7,13 @@
 - The majority of logs are enabled in config
 - Log warning when moving characters
 - [KKS] New labels for added animations work as expected
-- [KKS] In Free-H if added animations are New they are not available conforming with the game
+- [KKS] In Free-H if added animations are New they are not available like the standard ones
 - [KKS] Animations can be made dependent of experience.
+- Animation names can be maintained by the user. (Off by default)
 
 ##### Changed
 
-- Log of lists are done in one log call
+- Log of lists are done in one call
 - Reorganize the project renaming and major refactoring
 - [KKS] LoadMotionList re-done complete code for buttons in order to ease extensions to plug-in
 
