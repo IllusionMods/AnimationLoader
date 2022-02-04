@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection.Emit;
 
 using HarmonyLib;
@@ -10,9 +11,6 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        // TODO: Change to a CharaCustomFunctionController when logic works
-        private static object _hprocObjInstance;
-        private static object _hprocEarlyObjInstance;
         private static ChaControl _heroine;
         private static ChaControl _heroine3P;
         private static List<ChaControl> _lstHeroines;
@@ -34,16 +32,43 @@ namespace AnimationLoader
                     _hookInstance.Patch(
                         AccessTools.Method(
                             VRHSceneType,
-                            nameof(HSceneProc.ChangeAnimator)),
+                                nameof(HSceneProc.ChangeAnimator)),
                             postfix: new HarmonyMethod(typeof(Hooks),
-                            nameof(SwapAnimation)));
+                                nameof(SwapAnimation)));
                     _hookInstance.Patch(
                         AccessTools.Method(
                             VRHSceneType,
-                            nameof(HSceneProc.CreateAllAnimationList)),
+                                nameof(HSceneProc.CreateAllAnimationList)),
                             postfix: new HarmonyMethod(typeof(Hooks),
-                            nameof(ExtendList)));
+                                nameof(ExtendList)));
                 }
+#if DEBUG && KKS
+                _hookInstance.Patch(
+                    AccessTools.Method(
+                        Type.GetType("HSceneProc, Assembly-CSharp"),
+                            nameof(HSceneProc.CreateListAnimationFileName)),
+                        postfix: new HarmonyMethod(typeof(Hooks),
+                            nameof(CreateListAnimationFileNamePostfix)));
+
+                _hookInstance.Patch(
+                    AccessTools.Method(
+                        Type.GetType("HSceneProc, Assembly-CSharp"),
+                            nameof(HSceneProc.ChangeCategory)),
+                        postfix: new HarmonyMethod(typeof(Hooks),
+                            nameof(ChangeCategoryPostfix)));
+
+                /*
+                 * Why this does not work...when method runs does not find stuff
+                 * 
+                 * var HSceneProcType = Type.GetType("HSceneProc, Assembly-CSharp");
+                 * _hsHookInstance.Patch(
+                 *     HSceneProcType.GetMethod("SetShortcutKey", AccessTools.all),
+                 *     postfix: new HarmonyMethod(typeof(HSHooks), nameof(HSHooks.SetShortcutKeyPostfix)));
+                 * _hookInstance.Patch(
+                 *     HSceneProcType.GetMethod("CreateListAnimationFileName", AccessTools.all),
+                 *     prefix: new HarmonyMethod(typeof(Hooks), nameof(Hooks.CreateListAnimationFileNamePostfix)));
+                 */
+#endif
             }
 
             /// <summary>
@@ -59,7 +84,6 @@ namespace AnimationLoader
                 List<ChaControl> ___lstFemale,
                 ChaControl ___male)
             {
-                _hprocObjInstance = __instance;
                 _lstHeroines = ___lstFemale;
                 _heroine = _lstHeroines[0];
                 GetMoveController(_heroine).Init(CharacterType.Heroine);
