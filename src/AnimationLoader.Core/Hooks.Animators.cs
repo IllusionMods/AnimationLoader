@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using H;
+
 using HarmonyLib;
 
 
@@ -165,6 +167,18 @@ namespace AnimationLoader
                     mik.SetPartners(mi);
                     mik.Reset();
                 });
+            }
+
+            /// <summary>
+            /// Debug only method
+            /// </summary>
+            private static void ChangeCategoryPostfix(HPointData _data, int _category)
+            {
+                Log.Warning(
+                    $"0021: HPoint mode={(PositionCategory)_category} " +
+                    $"name={_data.name} " +
+                    $"Experience={_data.Experience} " +
+                    $"position {_data.transform.position}");
             }
         }
     }
