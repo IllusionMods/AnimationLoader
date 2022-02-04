@@ -18,7 +18,7 @@ namespace AnimationLoader
     public partial class SwapAnim
     {
         private static readonly XmlSerializer xmlNamesSerializer = new(typeof(Names));
-        private static Dictionary<string, Names> animationNamesDict;
+        private static Dictionary<string, Names> animationNamesDict = new();
 
         #region Serializable classes
         [XmlRoot("Names")]
@@ -70,8 +70,11 @@ namespace AnimationLoader
         /// </summary>
         private static void LoadNamesXml()
         {
-            // Make sure is initialized.
-            animationNamesDict = new();
+            if (!UserOverrides.Value)
+            {
+                return;
+            }
+
             var path = Path.Combine(UserData.Path, "AnimationLoader/Names");
             if (Directory.Exists(path))
             {
@@ -92,6 +95,11 @@ namespace AnimationLoader
         /// <param name="namesDocs"></param>
         private static void LoadNamesXmls(IEnumerable<XDocument> namesDocs)
         {
+            if (!UserOverrides.Value)
+            {
+                return;
+            }
+
             foreach (var animElem in namesDocs.Select(x => x.Root))
             {
                 try
@@ -114,6 +122,11 @@ namespace AnimationLoader
         /// <param name="manifest"></param>
         private static void NamesAddGuid(XElement manifest)
         {
+            if (!UserOverrides.Value)
+            {
+                return;
+            }
+
             // new names
             var names = new Names();
             // initialize fields with manifest date
@@ -132,6 +145,11 @@ namespace AnimationLoader
         /// </summary>
         private static void SaveNamesXmls()
         {
+            if (!UserOverrides.Value)
+            {
+                return;
+            }
+
             foreach (var guid in animationNamesDict.Keys)
             {
                 var animNames = animationNamesDict[guid];
@@ -146,6 +164,11 @@ namespace AnimationLoader
         /// <param name="guid"></param>
         private static void SaveNames(Names names, string guid, bool overwrite = false)
         {
+            if (!UserOverrides.Value)
+            {
+                return;
+            }
+
             var path = Path.Combine(UserData.Path, "AnimationLoader/Names");
             var fileName = $"{path}/names-{guid}.xml";
             FileInfo file = new(fileName);
@@ -174,6 +197,11 @@ namespace AnimationLoader
         /// <param name="guid"></param>
         private static void ReadNames(ref Names names, string guid)
         {
+            if (!UserOverrides.Value)
+            {
+                return;
+            }
+
             var path = Path.Combine(UserData.Path, "AnimationLoader/Names");
             var fileName = $"{path}/names-{guid}.xml";
             FileInfo file = new(fileName);
