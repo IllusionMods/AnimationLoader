@@ -44,7 +44,6 @@ namespace AnimationLoader
                 {
                     Log.Level(LogLevel.Message, $"0014: [{PInfo.PluginName}] Loading test " +
                         $"animations");
-                    _testMode = true;
                     LoadXmls(docs);
                     return;
                 }
@@ -78,18 +77,21 @@ namespace AnimationLoader
                 var guid = manifest.Element("guid").Value;
                 var version = manifest.Element("version").Value;
 
-                // setup for names
-                overrideNames = true;
-                _saveNames = false;
-                if (!animationNamesDict.ContainsKey(guid))
+                if (UserOverrides.Value)
                 {
-                    NamesAddGuid(manifest);
-                    overrideNames = false;
-                }
-                else
-                {
-                    // There are names to override the ones in the manifest
+                    // setup for names
                     overrideNames = true;
+                    _saveNames = false;
+                    if (!animationNamesDict.ContainsKey(guid))
+                    {
+                        NamesAddGuid(manifest);
+                        overrideNames = false;
+                    }
+                    else
+                    {
+                        // There are names to override the ones in the manifest
+                        overrideNames = true;
+                    }
                 }
 
                 // Process elements valid for any game
@@ -125,9 +127,10 @@ namespace AnimationLoader
             {
                 logLines.Append($"\n{count} animations processed from manifests.\n");
 #if DEBUG
-                Log.Info($"0016: Animations:\n\n{logLines}");
+                _testMode = TestMode.Value;
+                Log.Info($"0016: Animations loaded:\n\n{logLines}");
 #else
-                Log.Debug($"0016: Animations:\n\n{logLines}");
+                Log.Level(LogLevel.Debug, $"0016: Animations loaded:\n\n{logLines}");
 #endif
             }
             else
@@ -145,7 +148,7 @@ namespace AnimationLoader
         {
             var count = 0;
 
-            if (Sideloader.Sideloader.ZipArchives.TryGetValue(guid, out string zipFileName))
+            if (Sideloader.Sideloader.ZipArchives.TryGetValue(guid, out var zipFileName))
             {
                 logLines.Append($"From {zipFileName} {guid}-{version}: {RootText(root.Name)}\n");
             }
@@ -165,40 +168,44 @@ namespace AnimationLoader
                 var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
                 data.Guid = guid;
                 reader.Close();
-                if (overrideName)
+
+                if (UserOverrides.Value)
                 {
-                    // override name
-                    // Temp to continue testing
-                    animation = animationNamesDict[guid].Anim
-                        .Where(x => (x.StudioId == data.StudioId) && 
-                                    (x.Controller == data.ControllerFemale)).FirstOrDefault();
-                    if (animation == null)
+                    if (overrideName)
                     {
-                        overrideName = false;
-                        animation = new Animation();
-                    }
-                    else
-                    {
+                        // user override name
+                        // Temp to continue testing
+                        animation = animationNamesDict[guid].Anim
+                            .Where(x => (x.StudioId == data.StudioId) &&
+                                        (x.Controller == data.ControllerFemale)).FirstOrDefault();
+                        if (animation == null)
+                        {
+                            overrideName = false;
+                            animation = new Animation();
+                        }
+                        else
+                        {
 #if KKS
-                        data.AnimationName = animation.KoikatsuSunshine;
+                            data.AnimationName = animation.KoikatsuSunshine;
 #endif
 #if KK
-                        data.AnimationName = animation.Koikatu;
+                            data.AnimationName = animation.Koikatu;
 #endif
+                        }
                     }
-                }
-                if (!overrideName)
-                {
-                    // new name
-                    animation.StudioId = data.StudioId;
-                    animation.Controller = string.Copy(data.ControllerFemale);
-                    animation.Koikatu = string.Copy(data.AnimationName);
-                    animation.KoikatsuSunshine = string.Copy(data.AnimationName);
+                    if (!overrideName)
+                    {
+                        // new name
+                        animation.StudioId = data.StudioId;
+                        animation.Controller = string.Copy(data.ControllerFemale);
+                        animation.Koikatu = string.Copy(data.AnimationName);
+                        animation.KoikatsuSunshine = string.Copy(data.AnimationName);
+                    }
                 }
 #if KKS
                 // Assuming configuration is for KK like originally is and the overrides are for
                 // KKS only no the other way around.
-                // TODO: Consider changing it so it can be the other way around also.
+                // TODO: Changing it so it can be the other way around also.
                 var overrideRoot = animElem?
                     .Element(ManifestOverride)?
                     .Element(KoikatuAPI.GameProcessName);
@@ -218,18 +225,21 @@ namespace AnimationLoader
                 list.Add(data);
                 logLines.Append($"{AnimationInfo.GetKey(data),-30} - {data.AnimationName}\n");
                 count++;
-                // Save names no names were read
-                // TODO: re-save with new animations names
-                if (!overrideName)
+                if (UserOverrides.Value)
                 {
-                    animationNamesDict[guid].Anim.Add(animation);
-                    if (!_saveNames)
+                    // Save names no names were read
+                    // TODO: re-save with new animations names
+                    if (!overrideName)
                     {
-                        _saveNames = true;
+                        animationNamesDict[guid].Anim.Add(animation);
+                        if (!_saveNames)
+                        {
+                            _saveNames = true;
+                        }
                     }
                 }
             }
-            logLines.Append("\n");
+            logLines.Append('\n');
             return count;
         }
 
@@ -241,7 +251,7 @@ namespace AnimationLoader
             ref SwapAnimationInfo data, 
             OverrideInfo overrides,
             ref Animation animation,
-            bool overrideNames)
+            bool overrideName)
         {
             if (overrides.PathFemale != null)
             {
@@ -259,10 +269,13 @@ namespace AnimationLoader
             {
                 data.ControllerMale = string.Copy(overrides.ControllerMale);
             }
-            if ((overrides.AnimationName != null) && !overrideNames)
+            if ((overrides.AnimationName != null) && !overrideName)
             {
                 data.AnimationName = string.Copy(overrides.AnimationName);
-                animation.KoikatsuSunshine = string.Copy(overrides.AnimationName);
+                if (UserOverrides.Value)
+                {
+                    animation.KoikatsuSunshine = string.Copy(overrides.AnimationName);
+                }
             }
             if (overrides.Mode >= 0)
             {
