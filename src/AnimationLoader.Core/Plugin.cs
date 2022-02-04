@@ -2,15 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using BepInEx.Configuration;
-using BepInEx.Logging;
+using UnityEngine;
 
-using KKAPI;
 using KKAPI.Chara;
 using KKAPI.MainGame;
-using KKAPI.Utilities;
 
-using UnityEngine;
 using static HFlag;
 
 
@@ -18,8 +14,9 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
+#if KK
         private static readonly Color buttonColor = new(0.96f, 1f, 0.9f);
-
+#endif
         private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
         private static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>
             swapAnimationMapping;
