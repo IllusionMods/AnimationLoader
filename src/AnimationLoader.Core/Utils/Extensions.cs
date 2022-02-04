@@ -22,6 +22,7 @@ namespace AnimationLoader
         {
             foreach (var action in actions)
             {
+                Log.Warning($"Entering Action");
                 action();
                 yield return null;
             }
