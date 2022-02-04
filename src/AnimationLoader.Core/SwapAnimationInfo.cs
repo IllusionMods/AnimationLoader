@@ -70,6 +70,9 @@ namespace AnimationLoader
         public int ExpTaii = -1;
 
         [XmlElement]
+        public bool? IsAnal;
+
+        [XmlElement]
         public Vector3 PositionHeroine = Vector3.zero;
 
         [XmlElement]
@@ -142,6 +145,9 @@ namespace AnimationLoader
 
         [XmlElement]
         public int ExpTaii = -1;
+
+        [XmlElement]
+        public bool? IsAnal;
 
         [XmlElement]
         public Vector3 PositionHeroine = Vector3.zero;
