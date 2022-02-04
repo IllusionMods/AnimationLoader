@@ -20,26 +20,13 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AnimationLoader.Core", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.KoikatsuSunshine", "src\AnimationLoader.KoikatsuSunshine\AnimationLoader.KoikatsuSunshine.csproj", "{269D192E-9499-429F-A07F-C8B7E13DC861}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Archive", "Archive", "{48B4290A-7B2E-429F-81AA-96B1776489BF}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F58B38FF-9297-4735-B9B7-AF959BB9A24C}"
-	ProjectSection(SolutionItems) = preProject
-		src\Archive\src\Extensions.cs = src\Archive\src\Extensions.cs
-		src\Archive\src\Program.cs = src\Archive\src\Program.cs
-		src\Archive\src\SwapAnim.cs = src\Archive\src\SwapAnim.cs
-		src\Archive\src\SwapAnimationInfo.cs = src\Archive\src\SwapAnimationInfo.cs
-		src\Archive\src\TextScroll.cs = src\Archive\src\TextScroll.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template", "template", "{1020489C-650B-447E-9FFA-D3B5E4670D74}"
-	ProjectSection(SolutionItems) = preProject
-		src\Archive\template\template.xml = src\Archive\template\template.xml
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.KoikatsuSunshine.VR", "src\AnimationLoader.KoikatsuSunshine.VR\AnimationLoader.KoikatsuSunshine.VR.csproj", "{BA5A65CB-A461-449B-9AE5-5CEF89E4F0C4}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{269d192e-9499-429f-a07f-c8b7e13dc861}*SharedItemsImports = 5
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{3ef70928-3925-4f6c-96e9-0ef3b9228e0d}*SharedItemsImports = 5
+		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{ba5a65cb-a461-449b-9ae5-5cef89e4f0c4}*SharedItemsImports = 5
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{e48d1a5f-a706-4293-88bb-d82bd68cdfed}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,14 +42,13 @@ Global
 		{269D192E-9499-429F-A07F-C8B7E13DC861}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{269D192E-9499-429F-A07F-C8B7E13DC861}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{269D192E-9499-429F-A07F-C8B7E13DC861}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA5A65CB-A461-449B-9AE5-5CEF89E4F0C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA5A65CB-A461-449B-9AE5-5CEF89E4F0C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA5A65CB-A461-449B-9AE5-5CEF89E4F0C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA5A65CB-A461-449B-9AE5-5CEF89E4F0C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{48B4290A-7B2E-429F-81AA-96B1776489BF} = {6B1C4EAA-7ADD-47A9-AC1E-004D83C9BC6C}
-		{F58B38FF-9297-4735-B9B7-AF959BB9A24C} = {48B4290A-7B2E-429F-81AA-96B1776489BF}
-		{1020489C-650B-447E-9FFA-D3B5E4670D74} = {48B4290A-7B2E-429F-81AA-96B1776489BF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F34D347D-7842-4922-A372-47ECD316CD6E}
