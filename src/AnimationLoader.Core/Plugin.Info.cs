@@ -14,7 +14,7 @@ using AnimationLoader;
 
 #endregion Assembly attributes
 
-// Log ID: 0020, 0021, 0022, 0023, 0024, 0026, 0027, 0034
+// Log ID: 0022, 0023, 0024, 0026, 0027, 0034
 
 namespace AnimationLoader
 {
@@ -22,7 +22,7 @@ namespace AnimationLoader
     {
         internal const string GUID = "essuhauled.animationloader";
         internal const string PluginDisplayName = "Animation Loader";
-        internal const string Version = "1.1.1.0";
+        internal const string Version = "1.1.0.1";
 #if KK
         internal const string PluginName = "AnimationLoader.Koikatu";
 #elif KKS
