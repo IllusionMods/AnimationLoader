@@ -59,8 +59,11 @@ namespace AnimationLoader
 #if KKS
             // Read used animations
             _usedAnimations.Read();
+#if !KKSVR
             // To save used animations on H exit
+            // Testing VR
             GameAPI.RegisterExtraBehaviour<AnimationLoaderGameController>(PInfo.GUID);
+#endif
 #endif
         }
 
