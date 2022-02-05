@@ -42,7 +42,7 @@ namespace AnimationLoader
                             postfix: new HarmonyMethod(typeof(Hooks),
                                 nameof(ExtendList)));
                 }
-#if DEBUG && KKS
+#if DEBUG && KKS && !KKSVR
                 _hookInstance.Patch(
                     AccessTools.Method(
                         Type.GetType("HSceneProc, Assembly-CSharp"),
