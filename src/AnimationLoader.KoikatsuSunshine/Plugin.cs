@@ -17,6 +17,7 @@ namespace AnimationLoader
     [BepInDependency(KoikatuAPI.GUID, KoikatuAPI.VersionConst)]
     [BepInProcess(KoikatuAPI.GameProcessName)]
     [BepInProcess(KoikatuAPI.StudioProcessName)]
+    [BepInProcess(KoikatuAPI.VRProcessName)]
     public partial class SwapAnim : BaseUnityPlugin
     {
     }
