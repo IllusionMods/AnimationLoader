@@ -248,31 +248,18 @@ namespace AnimationLoader
                     // Only show used animations in FreeH
                     if (_usedAnimations.Keys.Count < 0)
                     {
-#if DEBUG
-                        Log.Warning($"XXXX: No loaded animations used in story mode.");
-#endif
                         return false;
                     }
                     if (!_usedAnimations.Keys.Contains(AnimationInfo.GetKey(anim)))
                     {
-#if DEBUG
-                        Log.Warning($"XXXX: Animation {anim.AnimationName} not used in story mode.");
-#endif
                         return false;
                     }
                 }
                 else if (UseAnimationLevels.Value && !CheckExperince(hsprite, anim))
                 {
                     // Not enough experience
-#if DEBUG
-                    Log.Warning($"XXXX: Not enough experience {anim.AnimationName} - " +
-                        $"{anim.ExpTaii} experience is {hsprite.flags.lstHeroine[0].hExp}.");
-#endif
                     return false;
                 }
-#if DEBUG
-                Log.Warning($"XXXX: Animation {anim.AnimationName} OK.");
-#endif
                 return true;
             }
 
