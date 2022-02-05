@@ -17,6 +17,7 @@ namespace AnimationLoader
 #if KKS
         internal static ConfigEntry<bool> LoadInCharStudio { get; set; }
         internal static ConfigEntry<bool> UseAnimationLevels { get; set; }
+        internal static ConfigEntry<bool> EnableAllFreeH { get; set; }
 #endif
 #if KK
         private static ConfigEntry<bool> UseGrid { get; set; }
@@ -44,6 +45,7 @@ namespace AnimationLoader
                 configDescription: new ConfigDescription(
                     description: "Enable/Disabled module for Studio",
                     tags: new ConfigurationManagerAttributes { Order = 35 }));
+
             if (KoikatuAPI.GetCurrentGameMode() == GameMode.Studio)
             {
                 if (!LoadInCharStudio.Value)
@@ -55,12 +57,21 @@ namespace AnimationLoader
             }
 
             UseAnimationLevels = Config.Bind(
-                section: AdvanceSection,
+                section: GeneralSection,
                 key: "Use Experience Levels",
                 defaultValue: true,
                 configDescription: new ConfigDescription(
                     description: "Apply experience levels to animations",
-                    tags: new ConfigurationManagerAttributes { Order = 17, IsAdvanced = true }));
+                    tags: new ConfigurationManagerAttributes { Order = 17}));
+
+            EnableAllFreeH = Config.Bind(
+                section: GeneralSection,
+                key: "Enable All in FreeH",
+                defaultValue: false,
+                configDescription: new ConfigDescription(
+                    description: "Enable all loaded animations without needing to use them " +
+                        "in story mode",
+                    tags: new ConfigurationManagerAttributes { Order = 15}));
 #endif
 #if KK
             // TODO: Grid UI for KKS
