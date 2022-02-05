@@ -2,6 +2,15 @@
 
 #### <u>(Unreleased)</u>
 
+##### Added
+
+##### Changed
+
+##### Fixed
+
+- Change List to HashSet any duplicate entries will be safely removed
+ 
+
 ### <u>v1.1.0.1b1 - 2022-02-03</u>
 
 ##### Added
