@@ -143,11 +143,13 @@ namespace AnimationLoader
                         {
                             // TODO: Lookup animation key in list of used animations. Ok.
                             // Manage new status for loaded animations.
-                            if (_usedAnimations.Keys.Count > 0)
+                            /* Testing
+                             * if (_usedAnimations.Keys.Count > 0)
                             {
                                 newLabel.SetActive(!_usedAnimations.Keys.Contains(
                                     AnimationInfo.GetKey(animationInfoComponent.info)));
-                            }
+                            }*/
+                            newLabel.SetActive(false);
                         }
                         else
                         {
@@ -235,6 +237,8 @@ namespace AnimationLoader
 
             internal static bool AnimationCheckOk(HSprite hsprite, SwapAnimationInfo anim)
             {
+                /*
+                 * Testing
                 if (hsprite.flags.isFreeH)
                 {
                     if (_testMode)
@@ -255,7 +259,7 @@ namespace AnimationLoader
                 {
                     // Not enough experience
                     return false;
-                }
+                }*/
                 return true;
             }
 
