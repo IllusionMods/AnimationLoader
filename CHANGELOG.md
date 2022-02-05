@@ -1,15 +1,20 @@
 # Changelog
 
-#### <u>(Unreleased)</u>
+#### <u>v1.1.0.3b1 - 2022-02-05</u>
+
+Only one dll for standard and VR in KoikatsuSunshine.  It needs KKAPI 1.31.2 minimum.
 
 ##### Added
 
 ##### Changed
 
+- [KKS] One dll for standard and VR modes
+
 ##### Fixed
 
-- Change List to HashSet any duplicate entries will be safely removed
- 
+- [KKS] Configuration for FreeH animations was missing.
+- [KKS] Change List to HashSet for used animations tracking any duplicate entries will be safely 
+  removed
 
 ### <u>v1.1.0.1b1 - 2022-02-03</u>
 
