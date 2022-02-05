@@ -25,7 +25,7 @@ namespace AnimationLoader
         internal const string Version = "1.1.0.2";
 #if KK
         internal const string PluginName = "AnimationLoader.Koikatu";
-#elif KKS
+#else
         internal const string PluginName = "AnimationLoader.KoikatsuSunshine";
 #endif
     }
