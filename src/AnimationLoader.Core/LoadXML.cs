@@ -32,7 +32,9 @@ namespace AnimationLoader
         private static XElement _animRootGS;
 
         private static bool _saveNames = false;
+#if DEBUG && KKS
         private static bool _testMode = false;
+#endif
 
         private static void LoadTestXml()
         {
@@ -127,7 +129,9 @@ namespace AnimationLoader
             {
                 logLines.Append($"\n{count} animations processed from manifests.\n");
 #if DEBUG
+#if KKS
                 _testMode = TestMode.Value;
+#endif
                 Log.Info($"0016: Animations loaded:\n\n{logLines}");
 #else
                 Log.Level(LogLevel.Debug, $"0016: Animations loaded:\n\n{logLines}");
