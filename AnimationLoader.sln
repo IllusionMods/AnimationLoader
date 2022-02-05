@@ -18,8 +18,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.KoikatsuSun
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AnimationLoader.Core", "src\AnimationLoader.Core\AnimationLoader.Core.shproj", "{E48D1A5F-A706-4293-88BB-D82BD68CDFED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.KoikatsuSunshine.VR", "src\AnimationLoader.KoikatsuSunshine.VR\AnimationLoader.KoikatsuSunshine.VR.csproj", "{BA5A65CB-A461-449B-9AE5-5CEF89E4F0C4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.Koikatu", "src\AnimationLoader.Koikatu\AnimationLoader.Koikatu.csproj", "{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "KoikatsuSunshine.Shared", "src\KoikatsuSunshine.Core\KoikatsuSunshine.Shared.shproj", "{CAB43C3E-3E96-44CE-9221-1D07B1022379}"
@@ -29,8 +27,6 @@ Global
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{269d192e-9499-429f-a07f-c8b7e13dc861}*SharedItemsImports = 5
 		src\KoikatsuSunshine.Core\KoikatsuSunshine.Core.projitems*{269d192e-9499-429f-a07f-c8b7e13dc861}*SharedItemsImports = 5
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{3ef70928-3925-4f6c-96e9-0ef3b9228e0d}*SharedItemsImports = 5
-		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{ba5a65cb-a461-449b-9ae5-5cef89e4f0c4}*SharedItemsImports = 5
-		src\KoikatsuSunshine.Core\KoikatsuSunshine.Core.projitems*{ba5a65cb-a461-449b-9ae5-5cef89e4f0c4}*SharedItemsImports = 5
 		src\KoikatsuSunshine.Core\KoikatsuSunshine.Core.projitems*{cab43c3e-3e96-44ce-9221-1d07b1022379}*SharedItemsImports = 13
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{e48d1a5f-a706-4293-88bb-d82bd68cdfed}*SharedItemsImports = 13
 	EndGlobalSection
@@ -43,10 +39,6 @@ Global
 		{269D192E-9499-429F-A07F-C8B7E13DC861}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{269D192E-9499-429F-A07F-C8B7E13DC861}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{269D192E-9499-429F-A07F-C8B7E13DC861}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BA5A65CB-A461-449B-9AE5-5CEF89E4F0C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BA5A65CB-A461-449B-9AE5-5CEF89E4F0C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BA5A65CB-A461-449B-9AE5-5CEF89E4F0C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BA5A65CB-A461-449B-9AE5-5CEF89E4F0C4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
