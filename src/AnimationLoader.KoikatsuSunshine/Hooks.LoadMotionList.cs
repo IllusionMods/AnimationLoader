@@ -76,25 +76,6 @@ namespace AnimationLoader
                         {
                             continue;
                         }
-
-                        /*
-                        if (__instance.flags.isFreeH)
-                        {
-                            // Only show used animations in Free-H
-                            if (_usedAnimations.Keys.Count < 0)
-                            {
-                                continue;
-                            }
-                            if (!_usedAnimations.Keys
-                                .Contains(AnimationInfo.GetKey(_lstAnimInfo[index])))
-                            {
-                                continue;
-                            }
-                        } else if (UseAnimationLevels.Value && !CheckExperince(__instance, swap))
-                        {
-                            // if not enough experience continue to next animation
-                            continue;
-                        }*/
                     }
 
                     var button = Instantiate<GameObject>(__instance.objMotionListNode);
@@ -109,9 +90,8 @@ namespace AnimationLoader
 
                     // TextMesh of button
                     var textMesh = button.transform.FindLoop("TextMeshPro Text");
-                    var label = textMesh.GetComponent<TextMeshProUGUI>();
-
-                    if (label != null)
+                    
+                    if (textMesh.TryGetComponent<TextMeshProUGUI>(out var label))
                     {
                         // Text label
                         label.text = animationInfoComponent.info.nameAnimation;
@@ -151,6 +131,10 @@ namespace AnimationLoader
                             {
                                 newLabel.SetActive(!_usedAnimations.Keys.Contains(
                                     AnimationInfo.GetKey(animationInfoComponent.info)));
+                            }
+                            if (__instance.flags.isFreeH && EnableAllFreeH.Value)
+                            {
+                                newLabel.SetActive(false);
                             }
                         }
                         else
@@ -241,7 +225,13 @@ namespace AnimationLoader
             {
                 if (hsprite.flags.isFreeH)
                 {
-                    if (_testMode)
+#if DEBUG
+                    if (TestMode.Value)
+                    {
+                        return true;
+                    }
+#endif
+                    if (EnableAllFreeH.Value)
                     {
                         return true;
                     }
