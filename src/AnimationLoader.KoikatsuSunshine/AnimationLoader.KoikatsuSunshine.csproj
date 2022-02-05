@@ -34,7 +34,7 @@
       <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.TextRenderingModule" Version="2019.4.9" />
       <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.UI" Version="2019.4.9" />
       <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.UIModule" Version="2019.4.9" />
-      <PackageReference Include="IllusionModdingAPI.KKSAPI" Version="1.31.1" />
+      <PackageReference Include="IllusionModdingAPI.KKSAPI" Version="1.31.2" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
       <PackageReference Include="Sideloader.KoikatsuSunshine" Version="16.9.2" />
     </ItemGroup>
