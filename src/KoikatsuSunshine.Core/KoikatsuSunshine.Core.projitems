@@ -8,8 +8,4 @@
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>KoikatsuSunshine.Core</Import_RootNamespace>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)AnimationLoaderGameController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UsedAnimations.cs" />
-  </ItemGroup>
 </Project>
