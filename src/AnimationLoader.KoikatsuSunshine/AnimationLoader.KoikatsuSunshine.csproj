@@ -2,6 +2,8 @@
 
     <Import Project="..\AnimationLoader.Core\AnimationLoader.Core.projitems" Label="Shared" />
 
+    <Import Project="..\KoikatsuSunshine.Core\KoikatsuSunshine.Core.projitems" Label="Shared" />
+
     <Import Project="..\BuildSettings.Common.props" />
 
     <PropertyGroup>

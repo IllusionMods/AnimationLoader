@@ -2,6 +2,8 @@
 
     <Import Project="..\AnimationLoader.Core\AnimationLoader.Core.projitems" Label="Shared" />
 
+    <Import Project="..\KoikatsuSunshine.Core\KoikatsuSunshine.Core.projitems" Label="Shared" />
+
     <Import Project="..\BuildSettings.Common.props" />
 
     <PropertyGroup>
@@ -11,11 +13,11 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <DefineConstants>TRACE;DEBUG;KKS</DefineConstants>
+      <DefineConstants>TRACE;DEBUG;KKS;KKSVR</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-      <DefineConstants>TRACE;KKS</DefineConstants>
+      <DefineConstants>TRACE;KKS;KKSVR</DefineConstants>
     </PropertyGroup>
     
     <ItemGroup>
