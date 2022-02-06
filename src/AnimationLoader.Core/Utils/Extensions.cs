@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using UnityEngine;
 
 namespace AnimationLoader
@@ -20,11 +21,25 @@ namespace AnimationLoader
         /// </summary>
         public static IEnumerator CreateCoroutine(params Action[] actions)
         {
+#if DEBUG
+            var stopWatch = new Stopwatch();
+
+            stopWatch.Start();
+#endif
             foreach (var action in actions)
             {
                 action();
                 yield return null;
             }
+#if DEBUG
+            stopWatch.Stop();
+            var ts = stopWatch.Elapsed;
+
+            var elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds / 10);
+            Log.Warning($"RunTime {elapsedTime}");
+#endif
         }
 
         public static void SetRect(
