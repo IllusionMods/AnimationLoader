@@ -17,6 +17,8 @@ namespace AnimationLoader
     {
         internal partial class Hooks
         {
+            private static RuntimeAnimatorController _controller;
+
             [HarmonyPostfix]
             [HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]
             private static void LoadStudioAnims(Studio.Info __instance, ref IEnumerator __result)
@@ -54,12 +56,15 @@ namespace AnimationLoader
                                     continue;
                                 }
 
-                                var controller = AssetBundleManager.LoadAsset(
+                                if (_controller is null)
+                                {
+                                    _controller = AssetBundleManager.LoadAsset(
                                     path,
                                     ctrl,
-                                    typeof(RuntimeAnimatorController))
-                                        .GetAsset<RuntimeAnimatorController>();
-                                if (controller == null)
+                                    typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
+                                }
+
+                                if (_controller == null)
                                 {
                                     continue;
                                 }
@@ -70,7 +75,7 @@ namespace AnimationLoader
                                 var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
                                 animGrp.Add(swapAnimInfo.StudioId, animCat);
 
-                                var clips = controller.animationClips;
+                                var clips = _controller.animationClips;
                                 for (var i = 0; i < clips.Length; i++)
                                 {
                                     var newSlot = UniversalAutoResolver.GetUniqueSlotID();
