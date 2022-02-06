@@ -336,3 +336,5 @@ ASALocalRun/
 # Local configuraton
 /PostBuild.bat
 /.editorconfig
+/release.ps1
+/test.ps1
