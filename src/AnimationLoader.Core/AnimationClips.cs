@@ -3,19 +3,13 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Xml.Serialization;
-using BepInEx;
 
-using Newtonsoft.Json;
+using BepInEx;
 
 namespace AnimationLoader
 {
-    //[CollectionDataContract(Name = "Clips", ItemName = "clip")]
     [DataContract(Name = "AnimationLoader", Namespace = "https://github.com/IllusionMods/AnimationLoader")]
     public class AnimationClips
     {
@@ -34,6 +28,7 @@ namespace AnimationLoader
             Clips.Clear();
         }
 
+        /* TODO: Save this
         public void SaveNJson()
         {
             Log.Warning($"Calling Save {_fileName}.");
@@ -53,7 +48,7 @@ namespace AnimationLoader
                 var clipsJson = serializer.Deserialize(file, typeof(Dictionary<string, List<string>>));
                 this.Clips = (Dictionary<string, List<string>>)clipsJson;
             }
-        }
+        }*/
 
         public void Save()
         {
@@ -69,44 +64,6 @@ namespace AnimationLoader
             {
                 var reader = new FileStream(_fileName, FileMode.Open, FileAccess.Read);
                 var tmp = _serializer.ReadObject(reader) as AnimationClips;
-                reader.Close();
-
-                this.Clips = tmp.Clips;
-            }
-        }
-    }
-
-    [DataContract]
-    public class AnimationClips2
-    {
-        [DataMember]
-        public Dictionary<string, string> Clips { set; get; }
-
-        private static readonly string _path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
-        private static readonly string _fileName = $"{_path}/animationClips.xml";
-        private static readonly DataContractSerializer _serializer = new(typeof(AnimationClips2));
-        private static readonly FileInfo _fileInfo = new(_fileName);
-
-        public AnimationClips2()
-        {
-            Clips = new Dictionary<string, string>();
-            Clips.Clear();
-        }
-
-        public void Save()
-        {
-            _fileInfo.Directory.Create();
-            var writer = new FileStream(_fileName, FileMode.Create, FileAccess.Write);
-            _serializer.WriteObject(writer, this);
-            writer.Close();
-        }
-
-        public void Read()
-        {
-            if (_fileInfo.Exists)
-            {
-                var reader = new FileStream(_fileName, FileMode.Open, FileAccess.Read);
-                var tmp = _serializer.ReadObject(reader) as AnimationClips2;
                 reader.Close();
 
                 this.Clips = tmp.Clips;
@@ -159,6 +116,19 @@ namespace AnimationLoader
         }
     }
 
+    /// <summary>
+    /// The clip names are the same in each animation for female and male.
+    /// Every List<string> of clip names are the same by type only three
+    /// are needed.
+    /// 
+    /// 1- houshi kind Hand
+    /// 2- houshi kind Mouth
+    /// 3- houshi kind Breasts
+    /// 4- sonyu
+    /// 
+    /// In the case of houshi for Hand and Breasts the list is the same. I leave
+    /// them separate for clarity.
+    /// </summary>
     public static class SClips
     {
         public static readonly Dictionary<string, List<string>> Clips = new() {
