@@ -18,6 +18,7 @@ namespace AnimationLoader
         internal partial class Hooks
         {
             private static RuntimeAnimatorController _controller;
+            private static AnimationClips _animationClips = new();
 
             [HarmonyPostfix]
             [HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]
@@ -29,12 +30,11 @@ namespace AnimationLoader
 
                 if (_animationClips.Clips.Keys.Count > 0)
                 {
-                    //Log.Warning("Patch Cache found");
                     bCached = true;
                 }
                 else
                 {
-                    Log.Error("Cache not found!");
+                    Log.Warning("Cache not found!");
                 }
 
                 if (bCached)
@@ -195,8 +195,7 @@ namespace AnimationLoader
 
             }
 
-
-
+            // For reference
             private static void LoadStudioAnimsOriginal(Studio.Info __instance, ref IEnumerator __result)
             {
                 Log.Warning("Starting the plugin");
