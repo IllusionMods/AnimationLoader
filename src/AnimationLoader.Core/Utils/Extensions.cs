@@ -35,10 +35,10 @@ namespace AnimationLoader
             stopWatch.Stop();
             var ts = stopWatch.Elapsed;
 
-            var elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            var elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:0000}",
                 ts.Hours, ts.Minutes, ts.Seconds,
-                ts.Milliseconds / 10);
-            Log.Warning($"RunTime {elapsedTime}");
+                ts.Milliseconds);
+            Log.Warning($"LoadStudioAnims {elapsedTime}");
 #endif
         }
 
