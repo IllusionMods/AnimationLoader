@@ -11,24 +11,101 @@ using BepInEx.Logging;
 using Sideloader.AutoResolver;
 using HarmonyLib;
 
+
 namespace AnimationLoader
 {
     public partial class SwapAnim
     {
         internal partial class Hooks
         {
-            private static RuntimeAnimatorController _controller;
             private static AnimationClips _animationClips = new();
+            private static AnimationClips2 _animationClips2 = new();
+            private static AnimationClipsByType _animationClipsByType = new();
 
             [HarmonyPostfix]
             [HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]
             private static void LoadStudioAnims(Studio.Info __instance, ref IEnumerator __result)
             {
-                var bCached = false;
+                __result = __result.AppendCo(() =>
+                {
+                    foreach (var keyVal in animationDict)
+                    {
+                        CreateGroup(0);
+                        CreateGroup(1);
+
+                        void CreateGroup(byte sex)
+                        {
+                            var grp = new Info.GroupInfo { name = $"AL {(sex == 0 ? "M" : "F")} {keyVal.Key}" };
+                            var animGrp = new Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>();
+
+                            var grpKey = $"{keyVal.Key}{sex}";
+                            if (!EModeGroups.TryGetValue(grpKey, out var grpId))
+                            {
+                                return;
+                            }
+
+                            foreach (var swapAnimInfo in keyVal.Value.Where(x => x.StudioId >= 0))
+                            {
+                                var path = sex == 0 ? swapAnimInfo.PathMale : swapAnimInfo.PathFemale;
+                                var ctrl = sex == 0 ? swapAnimInfo.ControllerMale : swapAnimInfo.ControllerFemale;
+
+                                if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(ctrl))
+                                {
+                                    continue;
+                                }
+
+                                var animName = string.IsNullOrEmpty(swapAnimInfo.AnimationName) ? ctrl : swapAnimInfo.AnimationName;
+                                grp.dicCategory.Add(swapAnimInfo.StudioId, animName);
+                                var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
+                                animGrp.Add(swapAnimInfo.StudioId, animCat);
+
+                                var elementKey = (keyVal.Key == HFlag.EMode.houshi) ? $"{keyVal.Key}-{swapAnimInfo.kindHoushi}" : $"{keyVal.Key}";
+
+                                var clips = SClips.Clips[elementKey];
+
+                                for (var i = 0; i < clips.Count; i++)
+                                {
+                                    var newSlot = UniversalAutoResolver.GetUniqueSlotID();
+
+                                    UniversalAutoResolver.LoadedStudioResolutionInfo.Add(new StudioResolveInfo {
+                                        GUID = swapAnimInfo.Guid,
+                                        Slot = i,
+                                        ResolveItem = true,
+                                        LocalSlot = newSlot,
+                                        Group = grpId,
+                                        Category = swapAnimInfo.StudioId
+                                    });
+
+                                    animCat.Add(newSlot, new Info.AnimeLoadInfo {
+                                        name = clips[i],
+                                        bundlePath = path,
+                                        fileName = ctrl,
+                                        clip = clips[i],
+                                    });
+
+                                }
+                            }
+
+                            if (animGrp.Count > 0)
+                            {
+                                __instance.dicAGroupCategory.Add(grpId, grp);
+                                __instance.dicAnimeLoadInfo.Add(grpId, animGrp);
+                            }
+                        }
+                    }
+                });
+            }
+
+
+            // TODO: Modify this for testing when new animations will are added.
+            private static void LoadStudioAnimsCachedVersion(Studio.Info __instance, ref IEnumerator __result)
+            {
+                var bCached = true;
 
                 _animationClips.Read();
+                _animationClipsByType.Read();
 
-                if (_animationClips.Clips.Keys.Count > 0)
+                if ((_animationClips.Clips.Keys.Count > 0) && (_animationClips2.Clips.Keys.Count > 0))
                 {
                     bCached = true;
                 }
@@ -71,9 +148,20 @@ namespace AnimationLoader
                                     grp.dicCategory.Add(swapAnimInfo.StudioId, animName);
                                     var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
                                     animGrp.Add(swapAnimInfo.StudioId, animCat);
-                                    List<string> clipsName = new();
+                                    //List<string> clipsName = new();
+                                    var elementKey = (keyVal.Key == HFlag.EMode.houshi) ? $"{keyVal.Key}-{swapAnimInfo.kindHoushi}" : $"{keyVal.Key}";
 
-                                    var clips = _animationClips.Clips[$"{grpKey}-{ctrl}"];
+                                    //var clips = _animationClips.Clips[$"{grpKey}-{ctrl}"];
+                                    var clips = SClips.Clips[elementKey];
+
+                                    //if (clipsStatic == null)
+                                    //{
+                                    //    Log.Error($"Static Fail with null Key {elementKey} for {ctrl}");
+                                    //}
+                                    //else if (!clips.SequenceEqual(clipsStatic))
+                                    //{
+                                    //    Log.Error($"Static Fail Key does not match {elementKey} for {ctrl}");
+                                    //}
 
                                     for (var i = 0; i < clips.Count; i++)
                                     {
@@ -131,7 +219,7 @@ namespace AnimationLoader
                                 {
                                     var path = sex == 0 ? swapAnimInfo.PathMale : swapAnimInfo.PathFemale;
                                     var ctrl = sex == 0 ? swapAnimInfo.ControllerMale : swapAnimInfo.ControllerFemale;
-
+                                    
                                     if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(ctrl))
                                     {
                                         continue;
@@ -180,6 +268,27 @@ namespace AnimationLoader
                                     {
                                         _animationClips.Clips.Add($"{grpKey}-{ctrl}", clipsName);
                                     }
+
+                                    var elementKey = string.Empty;
+
+                                    if (keyVal.Key == HFlag.EMode.houshi)
+                                    {
+                                        elementKey = $"{keyVal.Key}-{swapAnimInfo.kindHoushi}";
+                                    }
+                                    else
+                                    {
+                                        elementKey = $"{keyVal.Key}";
+                                    }
+
+                                    if (!_animationClipsByType.Clips.ContainsKey(elementKey))
+                                    {
+                                        _animationClipsByType.Clips.Add(elementKey, clipsName);
+                                    }
+                
+                                    if (!_animationClipsByType.Clips[elementKey].SequenceEqual(clipsName))
+                                    {
+                                        Log.Error($"Key does not match {elementKey} for {ctrl}");
+                                    }
                                 }
 
                                 if (animGrp.Count > 0)
@@ -190,6 +299,7 @@ namespace AnimationLoader
                             }
                         }
                         _animationClips.Save();
+                        _animationClipsByType.Save();
                     });
                 }
 
@@ -232,8 +342,12 @@ namespace AnimationLoader
                                 {
                                     continue;
                                 }
+                                var controller = AssetBundleManager.LoadAsset(
+                                        path,
+                                        ctrl,
+                                        typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
 
-                                if (_controller == null)
+                                if (controller == null)
                                 {
                                     continue;
                                 }
@@ -244,7 +358,7 @@ namespace AnimationLoader
                                 var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
                                 animGrp.Add(swapAnimInfo.StudioId, animCat);
 
-                                var clips = _controller.animationClips;
+                                var clips = controller.animationClips;
                                 for (var i = 0; i < clips.Length; i++)
                                 {
                                     var newSlot = UniversalAutoResolver.GetUniqueSlotID();
