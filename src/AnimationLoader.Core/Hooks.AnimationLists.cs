@@ -140,6 +140,10 @@ namespace AnimationLoader
                             {
                                 donorInfo.paramFemale.isAnal = anim.IsAnal.Value;
                             }
+                            else
+                            {
+                                anim.IsAnal = donorInfo.paramFemale.isAnal;
+                            }
                         }
 #if KKS
                     // Update name so it shows on button text label
