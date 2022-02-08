@@ -7,6 +7,9 @@ using static AnimationLoader.SwapAnim;
 
 namespace AnimationLoader
 {
+    /// <summary>
+    /// Save use animations.
+    /// </summary>
     internal class AnimationLoaderGameController : GameCustomFunctionController
     {
         protected override void OnEndH(MonoBehaviour proc, HFlag flags, bool vr)
