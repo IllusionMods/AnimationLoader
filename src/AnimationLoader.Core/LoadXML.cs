@@ -203,7 +203,9 @@ namespace AnimationLoader
                         animation.StudioId = data.StudioId;
                         animation.Controller = string.Copy(data.ControllerFemale);
                         animation.Koikatu = string.Copy(data.AnimationName);
+                        animation.KoikatuReference = string.Copy(data.AnimationName);
                         animation.KoikatsuSunshine = string.Copy(data.AnimationName);
+                        animation.KoikatsuSunshineReference = string.Copy(data.AnimationName);
                     }
                 }
 #if KKS
@@ -279,6 +281,7 @@ namespace AnimationLoader
                 if (UserOverrides.Value)
                 {
                     animation.KoikatsuSunshine = string.Copy(overrides.AnimationName);
+                    animation.KoikatsuSunshineReference = string.Copy(overrides.AnimationName);
                 }
             }
             if (overrides.Mode >= 0)
