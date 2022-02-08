@@ -38,7 +38,7 @@ namespace AnimationLoader
             var elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:0000}",
                 ts.Hours, ts.Minutes, ts.Seconds,
                 ts.Milliseconds);
-            Log.Warning($"LoadStudioAnims {elapsedTime}");
+            Log.Warning($"Load time for LoadStudioAnims {elapsedTime}");
 #endif
         }
 
