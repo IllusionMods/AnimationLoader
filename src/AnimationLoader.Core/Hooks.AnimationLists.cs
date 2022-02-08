@@ -15,7 +15,6 @@ namespace AnimationLoader
         internal partial class Hooks
         {
             internal static bool once = false;
-
             /// <summary>
             /// Add new animations to lstAnimInfo aibu and sonyu
             /// </summary>
@@ -26,11 +25,6 @@ namespace AnimationLoader
             {
                 var hsceneTraverse = Traverse.Create(__instance);
                 var addedAnimations = new StringBuilder();
-#if KK
-                var hlist = Singleton<Game>.Instance.glSaveData.playHList;
-#elif KKS
-                var hlist = Game.globalData.playHList;
-#endif
                 var lstAnimInfo = hsceneTraverse
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
 #if DEBUG
@@ -146,8 +140,9 @@ namespace AnimationLoader
                             }
                         }
 #if KKS
-                    // Update name so it shows on button text label
-                    donorInfo.nameAnimation = anim.AnimationName;
+                        // Update name so it shows on button text label correctly
+                        donorInfo.nameAnimation = anim.AnimationName;
+                        Log.Warning($"Anal enabled {anim.IsAnal} for {anim.AnimationName}");
 #endif
                         animListInfo.Add(donorInfo);
                         swapAnimationMapping[donorInfo] = anim;
