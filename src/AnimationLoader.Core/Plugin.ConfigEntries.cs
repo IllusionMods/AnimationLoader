@@ -66,10 +66,10 @@ namespace AnimationLoader
 
             EnableAllFreeH = Config.Bind(
                 section: GeneralSection,
-                key: "Enable All in FreeH",
+                key: "All Animations in FreeH",
                 defaultValue: false,
                 configDescription: new ConfigDescription(
-                    description: "Enable all loaded animations without needing to use them " +
+                    description: "Enable all loaded animations in FreeH without needing to use them " +
                         "in story mode",
                     tags: new ConfigurationManagerAttributes { Order = 15}));
 #endif
@@ -110,19 +110,19 @@ namespace AnimationLoader
                 key: "Reposition Characters",
                 defaultValue: true,
                 configDescription: new ConfigDescription(
-                    description: "Reposition characters in the animation before it starts",
+                    description: "Some animations have information in the manifest to move the characters",
                     acceptableValues: null,
                     tags: new ConfigurationManagerAttributes { Order = 19, IsAdvanced = true }));
 
             // Save names in UserData.  These can be expanded to other fields if need be.
             UserOverrides = Config.Bind(
-                section: AdvanceSection,
+                section: GeneralSection,
                 key: "Save Names",
                 defaultValue: false,
                 configDescription: new ConfigDescription(
                     description: "Save and use names stored in UserData/AnimationLoader/Names. " +
                         "Names then can be customized and won't be overwritten by updates.",
-                    tags: new ConfigurationManagerAttributes { Order = 17, IsAdvanced = true }));
+                    tags: new ConfigurationManagerAttributes { Order = 33 }));
 
             // To generate debug information this has to be enabled
             // The majority of the Logs are in conditional compilation
