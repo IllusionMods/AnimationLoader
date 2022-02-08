@@ -47,10 +47,6 @@ namespace AnimationLoader
         public void Save()
         {
             _fileInfo.Directory.Create();
-            if (_fileInfo.Exists)
-            {
-                Log.Debug($"0018: Overwriting file {_fileName}.");
-            }
             StreamWriter writer = new(_fileName);
             _xmlSerializer.Serialize(writer.BaseStream, this);
             writer.Close();
@@ -60,7 +56,6 @@ namespace AnimationLoader
         {
             if (_fileInfo.Exists)
             {
-                Log.Debug($"0019: Reading File {_fileName}.");
                 StreamReader reader = new(_fileName);
                 var tmp = (UsedAnimations)_xmlSerializer.Deserialize(reader.BaseStream);
                 reader.Close();
