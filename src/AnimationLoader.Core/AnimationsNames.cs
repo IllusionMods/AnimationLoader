@@ -1,9 +1,11 @@
 ﻿//
-// For people who keep there own names for the animations.
+// For people who keep their own names for the animations or translate them to oder
+// language.
 //
 // Save animations names to UserData/AnimationLoader/Names so they are not overwritten by
-// updates. They can be maintained updated there.
-// TODO: add names for new animations in updates. OK.
+// updates. They can be maintained and updated there.
+//
+// Only new animations are added to the file.
 //
 using System;
 using System.Collections.Generic;
