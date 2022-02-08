@@ -134,7 +134,7 @@ namespace AnimationLoader
 #endif
                 Log.Info($"0016: Animations loaded:\n\n{logLines}");
 #else
-                Log.Level(LogLevel.Debug, $"0016: Animations loaded:\n\n{logLines}");
+                Log.Debug($"0016: Animations loaded:\n\n{logLines}");
 #endif
             }
             else
