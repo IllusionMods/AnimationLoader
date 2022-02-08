@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using UnityEngine;
+
+using BepInEx.Logging;
 
 using KKAPI.Chara;
 using KKAPI.MainGame;
@@ -74,8 +77,23 @@ namespace AnimationLoader
             //
             // Load manifests
             //
-            LoadXmls(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
 #if DEBUG
+            var stopWatch = new Stopwatch();
+
+            stopWatch.Start();
+#endif
+
+            LoadXmls(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
+
+#if DEBUG
+            stopWatch.Stop();
+            var ts = stopWatch.Elapsed;
+
+            var elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:0000}",
+                ts.Hours, ts.Minutes, ts.Seconds,
+                ts.Milliseconds);
+            Log.Level(LogLevel.Warning, $"Load time for LoadXmls {elapsedTime}");
+
             //
             // For test environment animations manifest are kept in config/AnimationLoader
             // when the plug-in starts it will load them if no zipmod with manifests found
