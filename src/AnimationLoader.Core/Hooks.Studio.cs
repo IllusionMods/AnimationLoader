@@ -19,7 +19,6 @@ namespace AnimationLoader
         internal partial class Hooks
         {
             private static AnimationClips _animationClips = new();
-            private static AnimationClips2 _animationClips2 = new();
             private static AnimationClipsByType _animationClipsByType = new();
 
             [HarmonyPostfix]
@@ -105,7 +104,7 @@ namespace AnimationLoader
                 _animationClips.Read();
                 _animationClipsByType.Read();
 
-                if ((_animationClips.Clips.Keys.Count > 0) && (_animationClips2.Clips.Keys.Count > 0))
+                if (_animationClips.Clips.Keys.Count > 0)
                 {
                     bCached = true;
                 }
