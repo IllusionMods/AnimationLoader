@@ -23,7 +23,7 @@ namespace AnimationLoader
             /// In order to expand more easily had to replicate the original function and 
             /// adjust to needs.
             /// 
-            /// TODO: Work on grid UI.
+            /// TODO: Work on grid UI this is a maybe.
             /// 
             /// </summary>
             /// <param name="__instance"></param>
@@ -41,30 +41,29 @@ namespace AnimationLoader
                 if (animationDict.Count == 0)
                 {
                     // Let game code handle this if no animations loaded
-                    // TODO: If VR continue when grid Code added if necessary
 #if DEBUG
                     Log.Warning($"0020: No animations loaded.");
 #endif
                     return;
                 }
+
                 if (buttonParent.childCount > 0)
                 {
+                    // remove buttons
                     buttonParent.Cast<Transform>().ToList().ForEach(x => Destroy(x.gameObject));
-#if DEBUG
-                    Log.Info($"0024: Destroy Buttons");
-#endif
                 }
+
                 if (_lstAnimInfo == null || _lstAnimInfo.Count == 0)
                 {
                     return;
                 }
 
-                //var buttons = _objParent.transform.Cast<Transform>().ToList();
                 var toggleGroup = _objParent.GetComponent<ToggleGroup>();
                 var animationOn = false;
                 var isALAnim = false;
 
-                // Loop through selected animations
+                // Loop through selected animations _lstAnimInfo only has the animations
+                // selected according to category, experience, etc
                 for (var index = 0; index < _lstAnimInfo.Count; ++index)
                 {
                     isALAnim = false;
@@ -125,8 +124,7 @@ namespace AnimationLoader
                     {
                         if (isALAnim)
                         {
-                            // TODO: Lookup animation key in list of used animations. Ok.
-                            // Manage new status for loaded animations.
+                            // Manage new status for loaded animations it depended 
                             if (_usedAnimations.Keys.Count > 0)
                             {
                                 newLabel.SetActive(!_usedAnimations.Keys.Contains(
@@ -149,13 +147,14 @@ namespace AnimationLoader
                             //     2:[44,23,3,12,8,19,9,47,40,1,49,42],
                             //     ..}
                             // 
-                            // Dictionary<int, HashSet<int>> playHlist = Manager.Game.globalData.playHList;
                             var playHlist = Manager.Game.globalData.playHList;
-                            // HashSet<int> intSet;
+                            
                             if (!playHlist.TryGetValue((int)animationInfoComponent.info.mode, out var intSet))
                             {
+                                // Add missing category
                                 playHlist[(int)animationInfoComponent.info.mode] = intSet = new HashSet<int>();
                             }
+                            // Show new if animation is not in used animation list.
                             newLabel.SetActive(!intSet.Contains(animationInfoComponent.info.id));
                         }
                     }
@@ -164,8 +163,7 @@ namespace AnimationLoader
                     
                     if (nowPosition is not null)
                     {
-                        // Check animation to see if it correspond to current one to show/hide
-                        // change of position icon
+                        // Check animation to see if it correspond to current catogory
                         var foundCategory = false;
                         foreach (var category in _lstAnimInfo[index].lstCategory)
                         {
@@ -175,7 +173,8 @@ namespace AnimationLoader
                                 break;
                             }
                         }
-
+                        // Turn on change category icon if animation categories
+                        // not have the current category
                         nowPosition.SetActive(!foundCategory);
                     }
 
@@ -209,7 +208,7 @@ namespace AnimationLoader
                     }
                 }
 
-                // sort all buttons by name
+                // sort buttons by name
                 if (SortPositions.Value)
                 {
                     var allButtons = buttonParent.Cast<Transform>().OrderBy(
