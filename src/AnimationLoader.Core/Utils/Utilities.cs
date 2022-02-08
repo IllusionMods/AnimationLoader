@@ -226,6 +226,13 @@ namespace AnimationLoader
                 return false;
             }
 
+            /// <summary>
+            /// Get experience needed for position
+            /// </summary>
+            /// <param name="hsceneProc"></param>
+            /// <param name="mode"></param>
+            /// <param name="id"></param>
+            /// <returns></returns>
             internal static int GetExpTaii(object hsceneProc, int mode, int id)
             {
                 var hsceneTraverse = Traverse.Create(hsceneProc);
