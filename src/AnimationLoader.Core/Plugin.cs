@@ -49,7 +49,7 @@ namespace AnimationLoader
 
         private void Awake()
         {
-            Log.SetLogSource(Logger); ;
+            Log.LogSource = Logger; ;
 
             ConfigEntries();
 
