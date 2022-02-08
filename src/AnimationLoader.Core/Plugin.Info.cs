@@ -14,7 +14,7 @@ using AnimationLoader;
 
 #endregion Assembly attributes
 
-// Log ID: 0022, 0023, 0024, 0026, 0027, 0034
+// Log ID: 0018, 0019, 0022, 0023, 0024, 0026, 0027, 0034
 
 namespace AnimationLoader
 {
