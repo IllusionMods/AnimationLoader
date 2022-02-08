@@ -1,5 +1,16 @@
 # Changelog
 
+#### <u>v1.1.0.4b1 - 2022-02-08</u>
+
+##### Added
+
+##### Changed
+
+- Optimizations to reduce the load time in Character Studio
+
+##### Fixed
+
+
 #### <u>v1.1.0.3b1 - 2022-02-05</u>
 
 Only one dll for standard and VR in KoikatsuSunshine.  It needs KKAPI 1.31.2 minimum.
