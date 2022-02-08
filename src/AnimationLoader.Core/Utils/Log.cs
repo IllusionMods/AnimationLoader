@@ -37,6 +37,17 @@ internal static class Log
         }
     }
 
+    public static ManualLogSource LogSource {
+        get 
+        { 
+            return _logSource; 
+        }
+        set 
+        { 
+            _logSource = value; 
+        }
+    }
+
     public static void SetLogSource(ManualLogSource logSource)
     {
         _logSource = logSource;
