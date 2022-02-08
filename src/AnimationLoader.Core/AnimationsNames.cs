@@ -63,7 +63,11 @@ namespace AnimationLoader
             [XmlElement]
             public string Koikatu;
             [XmlElement]
+            public string KoikatuReference;
+            [XmlElement]
             public string KoikatsuSunshine;
+            [XmlElement]
+            public string KoikatsuSunshineReference;
         }
         #endregion
 
@@ -136,7 +140,8 @@ namespace AnimationLoader
             names.name = manifest.Element(nameof(names.name)).Value;
             names.version = manifest.Element(nameof(names.version)).Value;
             names.author = manifest.Element(nameof(names.author)).Value;
-            names.description = manifest.Element(nameof(names.description)).Value;
+            //names.description = manifest.Element(nameof(names.description)).Value;
+            names.description = "Modify the items Koikatu and KoikatsuSunshine only.";
             names.website = manifest.Element(nameof(names.website)).Value;
             // add new names to dictionary
             animationNamesDict.Add(names.guid, names);
