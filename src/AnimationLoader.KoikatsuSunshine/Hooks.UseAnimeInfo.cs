@@ -18,11 +18,10 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
+
+#if DEBUG
         internal partial class Hooks
         {
-            //[HarmonyPostfix]
-            //[HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateListAnimationFileName))]
-
             private static void CreateListAnimationFileNamePostfix(
                 object __instance, bool _isAnimListCreate = true)
             {
@@ -394,5 +393,6 @@ namespace AnimationLoader
                 return false;
             }
         }
+#endif
     }
 }
