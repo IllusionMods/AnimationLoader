@@ -11,44 +11,21 @@ using BepInEx;
 namespace AnimationLoader
 {
     [DataContract(Name = "AnimationLoader", Namespace = "https://github.com/IllusionMods/AnimationLoader")]
-    public class AnimationClips
+    public class AnimationClipsCache
     {
         [DataMember]
         public Dictionary<string, List<string>> Clips { set; get; }
 
         private static readonly string _path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
         private static readonly string _fileName = $"{_path}/animationClips.cache";
-        private static readonly string _fileNameJson = $"{_path}/animationClips.json";
-        private static readonly DataContractSerializer _serializer = new(typeof(AnimationClips));
+        private static readonly DataContractSerializer _serializer = new(typeof(AnimationClipsCache));
         private static readonly FileInfo _fileInfo = new(_fileName);
 
-        public AnimationClips()
+        public AnimationClipsCache()
         {
             Clips = new Dictionary<string,List<string>>();
             Clips.Clear();
         }
-
-        /* TODO: Save this
-        public void SaveNJson()
-        {
-            Log.Warning($"Calling Save {_fileName}.");
-            _fileInfo.Directory.Create();
-
-            using var file = File.CreateText(_fileNameJson);
-            var serializer = new JsonSerializer();
-            serializer.Serialize(file, Clips);
-        }
-
-        public void ReadNJson()
-        {
-            if (_fileInfo.Exists)
-            {
-                using var file = File.OpenText(_fileNameJson);
-                var serializer = new JsonSerializer();
-                var clipsJson = serializer.Deserialize(file, typeof(Dictionary<string, List<string>>));
-                this.Clips = (Dictionary<string, List<string>>)clipsJson;
-            }
-        }*/
 
         public void Save()
         {
@@ -62,11 +39,12 @@ namespace AnimationLoader
         {
             if (_fileInfo.Exists)
             {
-                var reader = new FileStream(_fileName, FileMode.Open, FileAccess.Read);
-                var tmp = _serializer.ReadObject(reader) as AnimationClips;
-                reader.Close();
+                using FileStream fileStream = File.Open(_fileName, FileMode.Open, FileAccess.Read);
+                var tmp = _serializer.ReadObject(fileStream) as AnimationClipsCache;
+                fileStream.Close();
 
-                this.Clips = tmp.Clips;
+                Clips = tmp?.Clips;
+
             }
         }
     }
@@ -106,7 +84,7 @@ namespace AnimationLoader
                     var tmp = _serializer.ReadObject(reader) as AnimationClipsByType;
                     reader.Close();
 
-                    this.Clips = tmp.Clips;
+                    this.Clips = tmp?.Clips;
                 }
                 catch (Exception ex)
                 {
@@ -129,7 +107,7 @@ namespace AnimationLoader
     /// In the case of houshi for Hand and Breasts the list is the same. I leave
     /// them separate for clarity.
     /// </summary>
-    public static class SClips
+    public static class AnimationClips
     {
         public static readonly Dictionary<string, List<string>> Clips = new() {
             { "houshi-Hand", new List<string> {
