@@ -57,6 +57,16 @@ namespace AnimationLoader
                         postfix: new HarmonyMethod(typeof(Hooks),
                             nameof(ChangeCategoryPostfix)));
 
+
+                // This is for DEBUG tests only
+                _hookInstance.Patch(
+                    AccessTools.Method(
+                        Type.GetType("HSceneProc, Assembly-CSharp"),
+                            nameof(HSceneProc.LoadAddTaii),
+                            new Type[] { typeof(List<AddTaiiData.Param>) }),
+                        postfix: new HarmonyMethod(typeof(Hooks),
+                            nameof(LoadAddTaiiPostfix)));
+
                 /*
                  * Why this does not work...when method runs does not find stuff
                  * 
