@@ -32,9 +32,6 @@ namespace AnimationLoader
         private static XElement _animRootGS;
 
         private static bool _saveNames = false;
-#if DEBUG && KKS
-        private static bool _testMode = false;
-#endif
 
         private static void LoadTestXml()
         {
@@ -60,7 +57,9 @@ namespace AnimationLoader
             var count = 0;
             var overrideNames = false;
             var logLines = new StringBuilder();
-
+#if DEBUG && KKS
+            KatarsysAnimationNameAnalysis();
+#endif
             // Select the only manifests that AnimationLoader will process
             foreach (var manifest in manifests
                 .Select(x => x.Root)
@@ -68,7 +67,7 @@ namespace AnimationLoader
             {
                 _animRoot = manifest?.Element(ManifestRootElement);
                 // Look for game specific configuration
-                _animRootGS = manifest
+                _animRootGS = manifest?
                     .Element(ManifestRootElement)?
                     .Element(KoikatuAPI.GameProcessName);
 
@@ -76,8 +75,8 @@ namespace AnimationLoader
                 {
                     continue;
                 }
-                var guid = manifest.Element("guid").Value;
-                var version = manifest.Element("version").Value;
+                var guid = manifest?.Element("guid").Value;
+                var version = manifest?.Element("version").Value;
 
                 if (UserOverrides.Value)
                 {
@@ -106,20 +105,33 @@ namespace AnimationLoader
                     }
                     continue;
                 }
+
                 // Process game specific animations
-                foreach (var gameSpecificElement in _animRoot.Elements(ManifestGSArrayItem))
+                var _animSpecific = _animRoot?.Elements(ManifestGSArrayItem);
+
+                if (_animSpecific is not null)
                 {
-                    if (gameSpecificElement is null)
+                    Log.Error($"XXXX: Specific elements ");
+
+                    foreach (var gameSpecificElement in _animSpecific)
                     {
-                        continue;
+                        if (gameSpecificElement is null)
+                        {
+                            continue;
+                        }
+                        count += ProcessArray(
+                            gameSpecificElement,
+                            guid,
+                            version,
+                            overrideNames,
+                            ref logLines);
                     }
-                    count += ProcessArray(
-                        gameSpecificElement, 
-                        guid, 
-                        version, 
-                        overrideNames, 
-                        ref logLines);
                 }
+                else
+                {
+                    Log.Error($"XXXX: Specific elements ");
+                }
+
                 if (_saveNames)
                 {
                     SaveNames(animationNamesDict[guid], guid, true);
@@ -129,9 +141,6 @@ namespace AnimationLoader
             {
                 logLines.Append($"\n{count} animations processed from manifests.\n");
 #if DEBUG
-#if KKS
-                _testMode = TestMode.Value;
-#endif
                 Log.Info($"0016: Animations loaded:\n\n{logLines}");
 #else
                 Log.Debug($"0016: Animations loaded:\n\n{logLines}");
@@ -173,6 +182,20 @@ namespace AnimationLoader
                 data.Guid = guid;
                 reader.Close();
 
+                if (!data.SpecificFor.IsNullOrWhiteSpace())
+                {
+                    if (!data.SpecificFor.Equals(KoikatuAPI.GameProcessName))
+                    {
+#if DEBUG
+                        Log.Error($"XXXX: continue {data.AnimationName} is for {data.SpecificFor}");
+#endif
+                        continue;
+                    }
+#if DEBUG
+                    Log.Error($"XXXX: {data.AnimationName} is for {data.SpecificFor}");
+#endif
+                }
+
                 if (UserOverrides.Value)
                 {
                     if (overrideName)
@@ -197,6 +220,7 @@ namespace AnimationLoader
 #endif
                         }
                     }
+
                     if (!overrideName)
                     {
                         // new name
@@ -206,6 +230,9 @@ namespace AnimationLoader
                         animation.KoikatuReference = string.Copy(data.AnimationName);
                         animation.KoikatsuSunshine = string.Copy(data.AnimationName);
                         animation.KoikatsuSunshineReference = string.Copy(data.AnimationName);
+#if DEBUG && KKS
+                        animation.KatarsysName = KatarsysAnimationName(data);
+#endif
                     }
                 }
 #if KKS

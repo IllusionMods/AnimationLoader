@@ -78,6 +78,9 @@ namespace AnimationLoader
         [XmlElement]
         public Vector3 PositionPlayer = Vector3.zero;
 
+        [XmlElement]
+        public string SpecificFor = string.Empty;
+
         public bool IsRelease {
             get 
             {
