@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -9,7 +10,7 @@ using Illusion.Extensions;
 using HarmonyLib;
 
 using KKAPI.Utilities;
-
+using System.Xml.Serialization;
 
 namespace AnimationLoader
 {
