@@ -22,7 +22,7 @@ namespace AnimationLoader
     {
         internal const string GUID = "essuhauled.animationloader";
         internal const string PluginDisplayName = "Animation Loader";
-        internal const string Version = "1.1.1.0";
+        internal const string Version = "1.1.1.1";
 #if KK
         internal const string PluginName = "AnimationLoader.Koikatu";
 #else

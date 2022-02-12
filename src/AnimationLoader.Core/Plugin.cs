@@ -7,15 +7,14 @@ using UnityEngine;
 
 using BepInEx.Logging;
 
+using KKAPI;
 using KKAPI.Chara;
 using KKAPI.MainGame;
 
 using static HFlag;
-
-
 namespace AnimationLoader
 {
-    public partial class SwapAnim
+public partial class SwapAnim
     {
 #if KK
         private static readonly Color buttonColor = new(0.96f, 1f, 0.9f);
@@ -55,7 +54,17 @@ namespace AnimationLoader
             Log.LogSource = Logger; ;
 
             ConfigEntries();
-
+#if KKS
+            if (KoikatuAPI.GetCurrentGameMode() == GameMode.Studio)
+            {
+                if (!LoadInCharStudio.Value)
+                {
+                    Log.Level(LogLevel.Message, "0013: Animation Loader disabled in configuration.");
+                    enabled = false;
+                    return;
+                }
+            }
+#endif
             Hooks.Init();
             // Register move characters controller
             CharacterApi.RegisterExtraBehaviour<MoveController>(PInfo.GUID);
