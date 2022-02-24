@@ -156,8 +156,6 @@ namespace AnimationLoader
                 }
                 var mi = t_hsp.Field<List<MotionIK>>("lstMotionIK").Value;
 
-                Log.Warning($"MotionIk for {swapAnimationInfo.StudioId} - " +
-                    $"{swapAnimationInfo.MotionIKDonor} donor {_nextAinmInfo.id}");
                 if (swapAnimationInfo.MotionIKDonor != _nextAinmInfo.id)
                 {
                     mi.ForEach(mik => mik.Release());
@@ -171,12 +169,6 @@ namespace AnimationLoader
                         mik.SetPartners(mi);
                         mik.Reset();
                     });
-                }
-                else
-                {
-                    Log.Warning($"Testing MotionIk for {swapAnimationInfo.StudioId}-" +
-                        $"{swapAnimationInfo.AnimationName} donor " +
-                        $"{swapAnimationInfo.MotionIKDonor}");
                 }
             }
 

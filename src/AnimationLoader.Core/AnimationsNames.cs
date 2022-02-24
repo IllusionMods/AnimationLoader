@@ -91,7 +91,7 @@ namespace AnimationLoader
                 var docs = Directory.GetFiles(path, "*.xml").Select(XDocument.Load).ToList();
                 if (docs.Count > 0)
                 {
-                    Log.Debug($"0001: [{PInfo.PluginName}] Loading animations names.");
+                    Log.Debug($"0001: [{PluginName}] Loading animations names.");
                     LoadNamesXmls(docs);
                     return;
                 }
@@ -197,9 +197,7 @@ namespace AnimationLoader
 
             XmlSerializer xmlSerializer = new(typeof(Names));
             var writer = new StreamWriter($"{path}/names-{guid}.xml");
-            Log.Debug($"004A: Saving ....");
             xmlSerializer.Serialize(writer.BaseStream, names);
-            Log.Debug($"004A: Saved.");
             writer.Close();
         }
 

@@ -27,7 +27,6 @@ namespace AnimationLoader
             {
                 var total = 0;
 
-                Log.Warning($"Saving template csv");
                 // id, mode,
                 // nameAnimation (Japanese name), path, posture,
                 // numCtrl, kindHoshi,
@@ -48,7 +47,7 @@ namespace AnimationLoader
                          $" {x.numCtrl}, {x.kindHoushi}," +
                          $" {x.houshiLoopActionS}, {x.isFemaleInitiative}," +
                          $"{CategoryList(x.lstCategory, true)}," +
-#if KKS && TEST
+#if KKS
                          $" {x.paramFemale.fileSiruPaste}," +
                          $" {GetExpTaii((int)x.mode, x.id)}");
 #else
@@ -231,28 +230,14 @@ namespace AnimationLoader
                 }
                 return false;
             }
-
+#if KKS
             /// <summary>
-            /// Get experience needed for position
+            /// Returns the experience level needed for the animation to be active using cached
+            /// dictionary.  The system dictionary may be altered.
             /// </summary>
-            /// <param name="hsceneProc"></param>
             /// <param name="mode"></param>
             /// <param name="id"></param>
             /// <returns></returns>
-            internal static int GetExpTaii(object hsceneProc, int mode, int id)
-            {
-                var hsceneTraverse = Traverse.Create(hsceneProc);
-                var dicExpAddTaii = hsceneTraverse
-                    .Field<Dictionary<int, Dictionary<int, int>>>("dicExpAddTaii").Value;
-
-                if (dicExpAddTaii.ContainsKey(mode) && dicExpAddTaii[mode].ContainsKey(id)) 
-                {
-                    return dicExpAddTaii[mode][id];
-                }
-                return 0;
-            }
-
-#if DEBUG && KKS && TEST
             internal static int GetExpTaii(int mode, int id)
             {
                 if (_dicExpAddTaii != null)
@@ -261,8 +246,9 @@ namespace AnimationLoader
                     {
                         return _dicExpAddTaii[mode][id];
                     }
+                    return 0;
                 }
-                return 0;
+                return -1;
             }
 #endif
         }

@@ -41,7 +41,7 @@ namespace AnimationLoader
                 var docs = Directory.GetFiles(path, "*.xml").Select(XDocument.Load).ToList();
                 if(docs.Count > 0)
                 {
-                    Log.Level(LogLevel.Message, $"0014: [{PInfo.PluginName}] Loading test " +
+                    Log.Level(LogLevel.Message, $"0014: [{PluginName}] Loading test " +
                         $"animations");
                     LoadXmls(docs);
                     return;
@@ -111,8 +111,6 @@ namespace AnimationLoader
 
                 if (_animSpecific is not null)
                 {
-                    Log.Error($"XXXX: [LoadXmls] Specific elements ");
-
                     foreach (var gameSpecificElement in _animSpecific)
                     {
                         if (gameSpecificElement is null)
@@ -126,10 +124,6 @@ namespace AnimationLoader
                             overrideNames,
                             ref logLines);
                     }
-                }
-                else
-                {
-                    Log.Error($"XXXX: [LoadXmls] Specific elements null ");
                 }
 
                 if (_saveNames)
@@ -148,7 +142,7 @@ namespace AnimationLoader
             }
             else
             {
-                Log.Level(LogLevel.Warning, "0017: No animation manifests found.");
+                Log.Level(LogLevel.Message, "0017: No animation manifests found.");
             }
         }
 
@@ -186,14 +180,8 @@ namespace AnimationLoader
                 {
                     if (!data.SpecificFor.Equals(KoikatuAPI.GameProcessName))
                     {
-#if DEBUG
-                        Log.Warning($"XXXX: [ProcessArray] {data.AnimationName} is specific for {data.SpecificFor} skip.");
-#endif
                         continue;
                     }
-#if DEBUG
-                    Log.Warning($"XXXX: [ProcessArray] {data.AnimationName} is specific for {data.SpecificFor} continue.");
-#endif
                 }
 
                 if (UserOverrides.Value)

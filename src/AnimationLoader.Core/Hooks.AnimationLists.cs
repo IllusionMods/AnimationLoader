@@ -140,8 +140,6 @@ namespace AnimationLoader
                         {
                             if (anim.IsAnal != null)
                             {
-                                //Log.Warning($"XXXX: Is Anal has a value {anim.IsAnal.Value} for" +
-                                //    $" {anim.AnimationName} Donor set to {donorInfo.paramFemale.isAnal}");
                                 donorInfo.paramFemale.isAnal = anim.IsAnal.Value;
                             }
                             else
@@ -152,7 +150,6 @@ namespace AnimationLoader
 #if KKS
                         // Update name so it shows on button text label correctly
                         donorInfo.nameAnimation = anim.AnimationName;
-                        //Log.Warning($"Anal enabled {anim.IsAnal} for {anim.AnimationName}");
 #endif
                         animListInfo.Add(donorInfo);
                         swapAnimationMapping[donorInfo] = anim;
