@@ -16,33 +16,41 @@ namespace AnimationLoader
         public class AnimationInfo
         {
             internal SwapAnimationInfo _anim;
+            internal HSceneProc.AnimationListInfo _animGA;
             internal bool _isAnimationLoader;
 
             internal string _Guid;
             internal EMode _mode;
             internal int _id;
             internal string _controller;
+            internal string _name;
 
+            internal string Controller
+            {
+                get { return _controller; }
+            }
             public string Guid {
                 get { return _Guid; }
+            }
+            public int Id
+            {
+                get { return _id; }
+            }
+            public string Key
+            {
+                get { return $"{_Guid}-{_mode}-{_controller}-{_id:D3}"; }
             }
             public EMode Mode {
                 get { return _mode; }
             }
-            public int Id {
-                get { return _id; }
+            public string Name {
+                get { return _name; }
             }
-
-            internal string Controller {
-                get { return _controller; }
-            }
-
-            public string Key {
-                get { return $"{_Guid}-{_mode}-{_controller}-{_id:D3}"; }
-            }
-
             public SwapAnimationInfo SwapAnim {
                 get { return _anim; }
+            }
+            public HSceneProc.AnimationListInfo Animation {
+                get { return _animGA; }
             }
 
             /// <summary>
@@ -59,6 +67,7 @@ namespace AnimationLoader
                 _mode = EMode.none;
                 _controller = string.Empty;
                 _id = -1;
+                _name = string.Empty;
             }
 
             public AnimationInfo(HSceneProc.AnimationListInfo animation)
@@ -73,23 +82,51 @@ namespace AnimationLoader
                 if (anim != null)
                 {
                     // AnimationLoader animation
+                    _anim = anim;
+                    _animGA = null;
+                    _controller = anim.ControllerFemale;
                     _Guid = anim.Guid;
                     _id = anim.StudioId;
-                    _controller = anim.ControllerFemale;
-                    _anim = anim;
                     _isAnimationLoader = true;
+                    _name = anim.AnimationName;
                 }
                 else
                 {
                     // Game animation
                     _anim = null;
-                    _Guid = KoikatuAPI.GameProcessName;
+                    _animGA = animation;
                     _controller = animation.paramFemale.path.file;
+                    _Guid = KoikatuAPI.GameProcessName;
                     _id = animation.id;
                     _isAnimationLoader = false;
+                    _name = animation.nameAnimation;
                 }
             }
 
+            public void SetAnimation(object animation)
+            {
+                AnimationInfoHelper((HSceneProc.AnimationListInfo)animation);
+            }
+
+            // IsAnimationLoader no parameters refers to instance
+            public bool IsAnimationLoader()
+            {
+                return _isAnimationLoader;
+            }
+
+            public string TranslateName()
+            {
+                return Utilities.TranslateName(_name);
+            }
+
+            public object Anim()
+            {
+                if (_anim == null)
+                {
+                    return _animGA;
+                }
+                return _anim;
+            }
             /// <summary>
             /// Static function to get the key for any animation 
             /// no need for and instance of the class
@@ -133,17 +170,6 @@ namespace AnimationLoader
             {
                 return $"{animation.Guid}-{animation.Mode}-{animation.ControllerFemale}" +
                     $"-{animation.StudioId:D3}";
-            }
-
-            public void SetAnimation(object animation)
-            {
-                AnimationInfoHelper((HSceneProc.AnimationListInfo)animation);
-            }
-
-            // IsAnimationLoader no parameters refers to instance
-            public bool IsAnimationLoader()
-            {
-                return _isAnimationLoader;
             }
 
             // IsAnimationLoader static check if it parameter is an AnimationLoader animation

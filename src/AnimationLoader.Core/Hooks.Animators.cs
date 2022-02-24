@@ -32,7 +32,7 @@ namespace AnimationLoader
                 try
                 {
 #if DEBUG
-                    Log.Warning($"0007: Animator changing - " +
+                    Log.Warning($"0007: Animator changing - [{Manager.Scene.ActiveScene.name}] - " +
                         $"{AnimationInfo.TranslateName(_nextAinmInfo)}, " +
                         $"Key={AnimationInfo.GetKey(_nextAinmInfo)}, " +
                         $"SiruPaste={SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}.");
@@ -154,19 +154,30 @@ namespace AnimationLoader
                     male.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
                         male.animBody.runtimeAnimatorController, maleCtrl);
                 }
-
                 var mi = t_hsp.Field<List<MotionIK>>("lstMotionIK").Value;
-                mi.ForEach(mik => mik.Release());
-                mi.Clear();
 
-                //TODO: MotionIKData.
-                mi.Add(new MotionIK(female));
-                mi.Add(new MotionIK(male));
-                mi.ForEach(mik =>
+                Log.Warning($"MotionIk for {swapAnimationInfo.StudioId} - " +
+                    $"{swapAnimationInfo.MotionIKDonor} donor {_nextAinmInfo.id}");
+                if (swapAnimationInfo.MotionIKDonor != _nextAinmInfo.id)
                 {
-                    mik.SetPartners(mi);
-                    mik.Reset();
-                });
+                    mi.ForEach(mik => mik.Release());
+                    mi.Clear();
+
+                    //TODO: MotionIKData.
+                    mi.Add(new MotionIK(female));
+                    mi.Add(new MotionIK(male));
+                    mi.ForEach(mik =>
+                    {
+                        mik.SetPartners(mi);
+                        mik.Reset();
+                    });
+                }
+                else
+                {
+                    Log.Warning($"Testing MotionIk for {swapAnimationInfo.StudioId}-" +
+                        $"{swapAnimationInfo.AnimationName} donor " +
+                        $"{swapAnimationInfo.MotionIKDonor}");
+                }
             }
 
             /// <summary>

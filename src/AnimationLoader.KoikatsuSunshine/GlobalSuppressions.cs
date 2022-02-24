@@ -12,3 +12,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations", Justification = "KK does not have Array.Empty", Scope = "member", Target = "~F:AnimationLoader.SwapAnimationInfo.categories")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Leave for reference", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.SaveNamesXmls")]
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Leave for reference", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.ReadNames(AnimationLoader.SwapAnim.Names@,System.String)")]
+[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:AnimationLoader.SwapAnim.Hooks._animationClipsCache")]
+[assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:AnimationLoader.SwapAnim.Hooks._animationClipsByType")]

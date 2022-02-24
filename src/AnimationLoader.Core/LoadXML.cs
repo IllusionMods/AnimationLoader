@@ -111,7 +111,7 @@ namespace AnimationLoader
 
                 if (_animSpecific is not null)
                 {
-                    Log.Error($"XXXX: Specific elements ");
+                    Log.Error($"XXXX: [LoadXmls] Specific elements ");
 
                     foreach (var gameSpecificElement in _animSpecific)
                     {
@@ -129,7 +129,7 @@ namespace AnimationLoader
                 }
                 else
                 {
-                    Log.Error($"XXXX: Specific elements ");
+                    Log.Error($"XXXX: [LoadXmls] Specific elements null ");
                 }
 
                 if (_saveNames)
@@ -187,12 +187,12 @@ namespace AnimationLoader
                     if (!data.SpecificFor.Equals(KoikatuAPI.GameProcessName))
                     {
 #if DEBUG
-                        Log.Error($"XXXX: continue {data.AnimationName} is for {data.SpecificFor}");
+                        Log.Warning($"XXXX: [ProcessArray] {data.AnimationName} is specific for {data.SpecificFor} skip.");
 #endif
                         continue;
                     }
 #if DEBUG
-                    Log.Error($"XXXX: {data.AnimationName} is for {data.SpecificFor}");
+                    Log.Warning($"XXXX: [ProcessArray] {data.AnimationName} is specific for {data.SpecificFor} continue.");
 #endif
                 }
 
@@ -350,6 +350,10 @@ namespace AnimationLoader
             if (overrides.ExpTaii >= 0) 
             { 
                 data.ExpTaii = overrides.ExpTaii; 
+            }
+            if (overrides.IsAnal != null)
+            {
+                data.IsAnal = overrides.IsAnal;
             }
             if (overrides.PositionHeroine != Vector3.zero)
             {

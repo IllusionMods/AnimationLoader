@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.Koikatu", "
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "KoikatsuSunshine.Shared", "src\KoikatsuSunshine.Core\KoikatsuSunshine.Shared.shproj", "{CAB43C3E-3E96-44CE-9221-1D07B1022379}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.KoikatsuSunshine.Test", "src\AnimationLoader.KoikatsuSunshine.Test\AnimationLoader.KoikatsuSunshine.Test.csproj", "{E9764105-E68E-43D9-A78B-76E0E0812F87}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{269d192e-9499-429f-a07f-c8b7e13dc861}*SharedItemsImports = 5
@@ -29,6 +31,8 @@ Global
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{3ef70928-3925-4f6c-96e9-0ef3b9228e0d}*SharedItemsImports = 5
 		src\KoikatsuSunshine.Core\KoikatsuSunshine.Core.projitems*{cab43c3e-3e96-44ce-9221-1d07b1022379}*SharedItemsImports = 13
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{e48d1a5f-a706-4293-88bb-d82bd68cdfed}*SharedItemsImports = 13
+		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{e9764105-e68e-43d9-a78b-76e0e0812f87}*SharedItemsImports = 5
+		src\KoikatsuSunshine.Core\KoikatsuSunshine.Core.projitems*{e9764105-e68e-43d9-a78b-76e0e0812f87}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +47,10 @@ Global
 		{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9764105-E68E-43D9-A78B-76E0E0812F87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9764105-E68E-43D9-A78B-76E0E0812F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9764105-E68E-43D9-A78B-76E0E0812F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9764105-E68E-43D9-A78B-76E0E0812F87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

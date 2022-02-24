@@ -306,6 +306,7 @@ namespace AnimationLoader
             dictionary["S_Desk_DT_2"] = "Desk, Forced Deepthroat";
             dictionary["S_Wall_DT_1"] = "Wall, Forced Deepthroat";
             dictionary["S_Wall_Boobs_1"] = "Grabbed Boobs Fuck";
+            dictionary["S_Desk_Boobs_1"] = "Desk, Grabbed Boobs Fuck";
             dictionary["S_Desk_Handjob_1"] = "On Table, Handjob";
             dictionary["S_Wall_RimAndFing_1"] = "Rimjob & Fingering";
             dictionary["S_Wall_RimAndHand_1"] = "Handjob & Rimjob";
@@ -313,6 +314,7 @@ namespace AnimationLoader
             dictionary["S_Lay_69"] = "69";
             dictionary["S_Lay_YingYang_1"] = "Ying Yang";
             dictionary["S_Stand_Cunni"] = "Standing, Cunnilingus";
+            dictionary["S_Stand_Cunni_2"] = "Standing, Cunni & Masturbation";
             dictionary["S_Lay_Cunni"] = "Lying, Cunnilingus";
             dictionary["S_Lay_FaceCunni_1"] = "Lying, Face Riding Cunni";
             dictionary["S_Lay_RimJob_2"] = "Lying, Rimjob 2";
@@ -379,6 +381,7 @@ namespace AnimationLoader
             dictionary["P_Lay_Missionary_5"] = "Missionary 3";
             dictionary["P_Lay_Missionary_6"] = "Spread Eagle";
             dictionary["P_Lay_Missionary_7"] = "Missionary Interlock";
+            dictionary["P_Lay_Missionary_8"] = "Missionary, Holding Hands";
             dictionary["P_Lay_Flexion_1"] = "Flexion";
             dictionary["P_Lay_Front_1"] = "Knee Hug";
             dictionary["P_Lay_Straddle_1"] = "Straddle, Legs on Shoulders";
@@ -390,6 +393,7 @@ namespace AnimationLoader
             dictionary["P_Lay_revCowGirl_1"] = "Inverted Cowgirl 1";
             dictionary["P_Lay_revCowGirl_2"] = "Inverted Cowgirl 2";
             dictionary["P_Lay_revCowGirl_3"] = "Inverted Cowgirl 3";
+            dictionary["P_Lay_revCowGirl_4"] = "Inverted Cowgirl 4";
             dictionary["P_Lay_Spoon_1"] = "Spooning 2";
             dictionary["P_Lay_Piledriver_1"] = "Piledriver";
             dictionary["P_Lay_Piledriver_3"] = "Piledriver 2";
@@ -420,12 +424,14 @@ namespace AnimationLoader
             dictionary["P_Lay_BckCuddle_1"] = "Trust Back Cuddle";
             dictionary["P_Lay_BckArmLock_1"] = "Trust Back, Arms Lock";
             dictionary["P_Lay_LotusStack_1"] = "Lotus Stacking";
+            dictionary["P_Lay_Stack_1"] = "Stacking";
             dictionary["P_Lay_BckSplits_1"] = "Inverted Cowgirl, Splits";
             dictionary["P_Lay_Nelson_1"] = "Nelson";
             dictionary["P_Stand_Nelson_1"] = "Standing, Nelson";
             dictionary["P_Stand_Front"] = "Standing";
             dictionary["P_Stand_FrontLift"] = "Carrying";
             dictionary["P_Stand_Bridge_1"] = "Standing, Bridge";
+            dictionary["P_Stand_Back_4"] = "Standing, Behind Arms Lock";
             dictionary["P_Sit_Ride_Front"] = "Sitting, Riding";
             dictionary["P_Sit_Ride_Front_2"] = "Cowgirl, Straddle";
             dictionary["P_Sit_Ride_Back"] = "Behind";
@@ -491,7 +497,6 @@ namespace AnimationLoader
 
         public static Dictionary<string, string> AnimNameMapper_H() => new()
         {
-
             ["khh_f_60"] = "S_Lay_Footjob_1",
             ["khh_f_61"] = "S_Lay_Footjob_2",
             ["khh_f_63"] = "S_Lay_Footjob_3",
@@ -535,6 +540,7 @@ namespace AnimationLoader
             ["khh_f_100"] = "S_Desk_BJ_1",
             ["khh_f_102"] = "S_Stand_HandNipLick_1",
             ["khh_f_103"] = "S_Sit_HandNipLick_1",
+            ["khh_f_104"] = "S_Desk_Boobs_1",
             ["khs_f_59"] = "P_Wall_Front_2",
             ["khs_f_60"] = "P_Lay_revCowGirl_1",
             ["khs_f_61"] = "P_Stand_Back_1",
@@ -588,6 +594,10 @@ namespace AnimationLoader
             ["khs_f_110"] = "P_Lay_Front_1",
             ["khs_f_111"] = "P_Lay_CowGirl_6",
             ["khs_f_112"] = "P_Lay_revCowGirl_3",
+            ["khs_f_113"] = "P_Lay_revCowGirl_4",
+            ["khs_f_114"] = "P_Lay_Stack_1",
+            ["khs_f_115"] = "P_Stand_Back_4",
+            ["khs_f_116"] = "P_Lay_Missionary_8",
             ["kha_f_00"] = "T_Stand",
             ["kha_f_01"] = "T_Lay",
             ["kha_f_02"] = "T_Lay_Doggy",
@@ -705,7 +715,8 @@ namespace AnimationLoader
             ["khe_f_06"] = "S_Sit_AnalFinger_1",
             ["khe_f_07"] = "S_Lay_FaceCunni_1",
             ["khe_f_08"] = "S_Wall_RimAndFing_1",
-            ["khe_f_09"] = "S_Sit_Cunni_1"
+            ["khe_f_09"] = "S_Sit_Cunni_1",
+            ["khe_f_10"] = "S_Stand_Cunni_2",
         };
 #endif
 

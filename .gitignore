@@ -339,3 +339,4 @@ ASALocalRun/
 /release.ps1
 /test.ps1
 Hooks.Test.cs
+AnimationLoader.KoikatsuSunshine.Test/

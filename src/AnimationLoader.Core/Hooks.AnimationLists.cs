@@ -7,6 +7,7 @@ using Manager;
 
 using BepInEx.Logging;
 using HarmonyLib;
+using static ADV.Info;
 
 namespace AnimationLoader
 {
@@ -15,6 +16,9 @@ namespace AnimationLoader
         internal partial class Hooks
         {
             internal static bool once = false;
+            private static List<HSceneProc.AnimationListInfo>[] _gameAnimations = 
+                new List<HSceneProc.AnimationListInfo>[8];
+
             /// <summary>
             /// Add new animations to lstAnimInfo aibu and sonyu
             /// </summary>
@@ -28,6 +32,7 @@ namespace AnimationLoader
                 var lstAnimInfo = hsceneTraverse
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
 #if DEBUG
+                // Save game animations in csv files
                 Utilities.SaveAnimInfo(__instance, lstAnimInfo);
 #endif
                 var countGA = 0;
@@ -37,6 +42,8 @@ namespace AnimationLoader
 
                 swapAnimationMapping =
                     new Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>();
+
+                _gameAnimations = lstAnimInfo;
 
                 if (animationDict.Count > 0)
                 {
@@ -51,6 +58,7 @@ namespace AnimationLoader
                             continue;
                         }
                         var animListInfo = lstAnimInfo[(int)anim.Mode];
+
                         var donorInfo = animListInfo
                             .FirstOrDefault(x => x.id == anim.DonorPoseId)?.DeepCopy();
 
@@ -132,6 +140,8 @@ namespace AnimationLoader
                         {
                             if (anim.IsAnal != null)
                             {
+                                //Log.Warning($"XXXX: Is Anal has a value {anim.IsAnal.Value} for" +
+                                //    $" {anim.AnimationName} Donor set to {donorInfo.paramFemale.isAnal}");
                                 donorInfo.paramFemale.isAnal = anim.IsAnal.Value;
                             }
                             else
@@ -142,7 +152,7 @@ namespace AnimationLoader
 #if KKS
                         // Update name so it shows on button text label correctly
                         donorInfo.nameAnimation = anim.AnimationName;
-                        Log.Warning($"Anal enabled {anim.IsAnal} for {anim.AnimationName}");
+                        //Log.Warning($"Anal enabled {anim.IsAnal} for {anim.AnimationName}");
 #endif
                         animListInfo.Add(donorInfo);
                         swapAnimationMapping[donorInfo] = anim;
@@ -157,11 +167,11 @@ namespace AnimationLoader
                     $"standard = {countGA} " +
                     $"AnimationLoader = {countAL}\n");
 #if DEBUG
-                //if (!once)
-                //{
+                if (!once)
+                {
                     Log.Warning($"0012: Added animations:\n\n{addedAnimations}");
                     once = true;
-                //}
+                }
 #else
                 // For release log animations added
                 if (!once)
