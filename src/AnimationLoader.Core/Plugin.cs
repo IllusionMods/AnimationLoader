@@ -14,7 +14,7 @@ using KKAPI.MainGame;
 using static HFlag;
 namespace AnimationLoader
 {
-public partial class SwapAnim
+    public partial class SwapAnim
     {
 #if KK
         private static readonly Color buttonColor = new(0.96f, 1f, 0.9f);
@@ -67,12 +67,12 @@ public partial class SwapAnim
 #endif
             Hooks.Init();
             // Register move characters controller
-            CharacterApi.RegisterExtraBehaviour<MoveController>(PInfo.GUID);
+            CharacterApi.RegisterExtraBehaviour<MoveController>(GUID);
 #if KKS
             // Read used animations
             _usedAnimations.Read();
             // To save used animations on H exit
-            GameAPI.RegisterExtraBehaviour<AnimationLoaderGameController>(PInfo.GUID);
+            GameAPI.RegisterExtraBehaviour<AnimationLoaderGameController>(GUID);
 #endif
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
-//using AnimationLoader;
+
+using AnimationLoader;
 
 #region Assembly attributes
 
@@ -7,10 +8,10 @@
  * These attributes define various meta-information of the generated DLL.
  * In general, you don't need to touch these. Instead, edit the values in Info.
  */
-[assembly: AssemblyTitle(AnimationLoader.PInfo.PluginName + " (" + AnimationLoader.PInfo.GUID + ")")]
-[assembly: AssemblyProduct(AnimationLoader.PInfo.PluginName)]
-[assembly: AssemblyVersion(AnimationLoader.PInfo.Version)]
-[assembly: AssemblyFileVersion(AnimationLoader.PInfo.Version)]
+[assembly: AssemblyTitle(SwapAnim.PluginName + " (" + SwapAnim.GUID + ")")]
+[assembly: AssemblyProduct(SwapAnim.PluginName)]
+[assembly: AssemblyVersion(SwapAnim.Version)]
+[assembly: AssemblyFileVersion(SwapAnim.Version)]
 
 #endregion Assembly attributes
 
@@ -18,13 +19,11 @@
 
 namespace AnimationLoader
 {
-    public struct PInfo
+    public partial class SwapAnim
     {
         public const string GUID = "essuhauled.animationloader";
-#if TEST
-        public const string PluginDisplayName = "Animation Loader Test";
-#elif DEBUG
-        public const string PluginDisplayName = "Animation Loader Debug";
+#if DEBUG
+        public const string PluginDisplayName = "Animation Loader (Debug)";
 #else
         public const string PluginDisplayName = "Animation Loader";
 #endif
