@@ -2,6 +2,7 @@
 // Entry point for AnimationLoader.Koikatu
 //
 using BepInEx;
+
 using KKAPI;
 
 //[UnityEngine.Scripting.Preserve]
@@ -15,7 +16,7 @@ namespace AnimationLoader
     [BepInProcess(KoikatuAPI.StudioProcessName)]
     [BepInProcess(KoikatuAPI.VRProcessName)]
     [BepInProcess(KoikatuAPI.VRProcessNameSteam)]
-    [BepInPlugin(PInfo.GUID, PInfo.PluginDisplayName, PInfo.Version)]
+    [BepInPlugin(GUID, PluginDisplayName, Version)]
     public partial class SwapAnim : BaseUnityPlugin
     {
     }
