@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -9,7 +10,7 @@ using Illusion.Extensions;
 using HarmonyLib;
 
 using KKAPI.Utilities;
-
+using System.Xml.Serialization;
 
 namespace AnimationLoader
 {
@@ -26,31 +27,36 @@ namespace AnimationLoader
             {
                 var total = 0;
 
+                Log.Warning($"Saving template csv");
                 // id, mode,
-                // nameAnimation (Japanese name), posture,
+                // nameAnimation (Japanese name), path, posture,
                 // numCtrl, kindHoshi,
                 // hoshiLoopActionS, isFemaleInitiative,
                 // {category list}, fileSiruPaste
                 // dicExpTaii[mode][id]
                 for (var i = 0; i < lstAnimInfo.Length; i++)
                 {
+                    FileInfo file = new($"lst{i}.csv");
+
+                    if (file.Exists)
+                    {
+                        continue;
+                    }
+
                     var lines = lstAnimInfo[i].Select(x => $"{x.id}, {x.mode}," +
-                         $" {TranslateName(x.nameAnimation)}, {x.posture}," +
+                         $" {TranslateName(x.nameAnimation, true)}, {x.paramFemale.path.file}, {x.posture}," +
                          $" {x.numCtrl}, {x.kindHoushi}," +
                          $" {x.houshiLoopActionS}, {x.isFemaleInitiative}," +
                          $"{CategoryList(x.lstCategory, true)}," +
-#if KKS
+#if KKS && TEST
                          $" {x.paramFemale.fileSiruPaste}," +
-                         $" {GetExpTaii(hsceneProc, (int)x.mode, x.id)}");
+                         $" {GetExpTaii((int)x.mode, x.id)}");
 #else
                          $" {x.paramFemale.fileSiruPaste}");
 #endif
                     File.WriteAllLines($"lst{i}.csv", lines.ToArray());
                     total += lines.ToArray().Length;
                 }
-#if DEBUG
-                Log.Warning($"0011: Total animations {total}");
-#endif
             }
 
             internal static string Translate(string name)
@@ -245,6 +251,20 @@ namespace AnimationLoader
                 }
                 return 0;
             }
+
+#if DEBUG && KKS && TEST
+            internal static int GetExpTaii(int mode, int id)
+            {
+                if (_dicExpAddTaii != null)
+                {
+                    if (_dicExpAddTaii.ContainsKey(mode) && _dicExpAddTaii[mode].ContainsKey(id))
+                    {
+                        return _dicExpAddTaii[mode][id];
+                    }
+                }
+                return 0;
+            }
+#endif
         }
     }
 }

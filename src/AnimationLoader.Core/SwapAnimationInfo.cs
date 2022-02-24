@@ -78,6 +78,9 @@ namespace AnimationLoader
         [XmlElement]
         public Vector3 PositionPlayer = Vector3.zero;
 
+        [XmlElement]
+        public string SpecificFor = string.Empty;
+
         public bool IsRelease {
             get 
             {
@@ -178,6 +181,9 @@ namespace AnimationLoader
         StandPool = 9,
         SitDesk = 10,
         SquadDesk = 11,
+        Pool = 1004,
+        MischievousCaress = 1003,
         Ground3P = 1100,
+        AquariumCrowded = 1304,
     }
 }

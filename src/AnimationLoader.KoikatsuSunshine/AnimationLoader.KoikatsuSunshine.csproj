@@ -10,6 +10,7 @@
         <TargetFramework>net46</TargetFramework>
         <RootNamespace>AnimationLoader</RootNamespace>
         <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+        <Nullable>warnings</Nullable>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -45,9 +46,5 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
     </ItemGroup>
-    
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="IF EXIST $(SolutionDir)PostBuild.bat CALL &quot;$(SolutionDir)PostBuild.bat&quot; KKS $(TargetPath)" />
-    </Target>
 	
 </Project>

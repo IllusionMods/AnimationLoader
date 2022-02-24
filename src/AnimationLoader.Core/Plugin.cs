@@ -96,9 +96,9 @@ public partial class SwapAnim
 
 #if DEBUG
             stopWatch.Stop();
-            var ts = stopWatch.Elapsed;
+            TimeSpan ts = stopWatch.Elapsed;
 
-            var elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:0000}",
+            string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00000}",
                 ts.Hours, ts.Minutes, ts.Seconds,
                 ts.Milliseconds);
             Log.Level(LogLevel.Warning, $"Load time for LoadXmls {elapsedTime}");
@@ -111,7 +111,17 @@ public partial class SwapAnim
             //
             if (animationDict.Count < 1)
             {
+                stopWatch.Reset();
+                stopWatch.Start();
+
                 LoadTestXml();
+
+                stopWatch.Stop();
+                ts = stopWatch.Elapsed;
+                elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00000}",
+                    ts.Hours, ts.Minutes, ts.Seconds,
+                    ts.Milliseconds);
+                Log.Level(LogLevel.Warning, $"Load time for LoadXmls {elapsedTime}");
             }
 #endif
         }
@@ -121,6 +131,7 @@ public partial class SwapAnim
             if(ReloadManifests.Value.IsDown())
             {
                 LoadTestXml();
+                Log.Warning($"Scene [{SceneApi.GetAddSceneName()}]");
             }
         }
 

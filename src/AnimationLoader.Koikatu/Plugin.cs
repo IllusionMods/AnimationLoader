@@ -4,17 +4,18 @@
 using BepInEx;
 using KKAPI;
 
+//[UnityEngine.Scripting.Preserve]
+
 namespace AnimationLoader
 {
-    [UnityEngine.Scripting.Preserve]
     [BepInDependency(KoikatuAPI.GUID, KoikatuAPI.VersionConst)]
     [BepInDependency(Sideloader.Sideloader.GUID, Sideloader.Sideloader.Version)]
-    [BepInPlugin(PInfo.GUID, PInfo.PluginDisplayName, PInfo.Version)]
     [BepInProcess(KoikatuAPI.GameProcessName)]
     [BepInProcess(KoikatuAPI.GameProcessNameSteam)]
     [BepInProcess(KoikatuAPI.StudioProcessName)]
     [BepInProcess(KoikatuAPI.VRProcessName)]
     [BepInProcess(KoikatuAPI.VRProcessNameSteam)]
+    [BepInPlugin(PInfo.GUID, PInfo.PluginDisplayName, PInfo.Version)]
     public partial class SwapAnim : BaseUnityPlugin
     {
     }

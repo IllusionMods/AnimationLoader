@@ -18,9 +18,14 @@ namespace AnimationLoader
     {
         internal partial class Hooks
         {
-            private static AnimationClips _animationClips = new();
+            private static AnimationClipsCache _animationClipsCache = new();
             private static AnimationClipsByType _animationClipsByType = new();
 
+            /// <summary>
+            /// Load animation clips in Studio
+            /// </summary>
+            /// <param name="__instance"></param>
+            /// <param name="__result"></param>
             [HarmonyPostfix]
             [HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]
             private static void LoadStudioAnims(Studio.Info __instance, ref IEnumerator __result)
@@ -45,35 +50,40 @@ namespace AnimationLoader
 
                             foreach (var swapAnimInfo in keyVal.Value.Where(x => x.StudioId >= 0))
                             {
-                                var path = sex == 0 ? swapAnimInfo.PathMale : swapAnimInfo.PathFemale;
-                                var ctrl = sex == 0 ? swapAnimInfo.ControllerMale : swapAnimInfo.ControllerFemale;
+                                var path = sex == 0 
+                                    ? swapAnimInfo.PathMale : swapAnimInfo.PathFemale;
+                                var ctrl = sex == 0 
+                                    ? swapAnimInfo.ControllerMale : swapAnimInfo.ControllerFemale;
 
                                 if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(ctrl))
                                 {
                                     continue;
                                 }
 
-                                var animName = string.IsNullOrEmpty(swapAnimInfo.AnimationName) ? ctrl : swapAnimInfo.AnimationName;
+                                var animName = string.IsNullOrEmpty(swapAnimInfo.AnimationName) 
+                                    ? ctrl : swapAnimInfo.AnimationName;
                                 grp.dicCategory.Add(swapAnimInfo.StudioId, animName);
                                 var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
                                 animGrp.Add(swapAnimInfo.StudioId, animCat);
 
-                                var elementKey = (keyVal.Key == HFlag.EMode.houshi) ? $"{keyVal.Key}-{swapAnimInfo.kindHoushi}" : $"{keyVal.Key}";
+                                var elementKey = (keyVal.Key == HFlag.EMode.houshi) 
+                                    ? $"{keyVal.Key}-{swapAnimInfo.kindHoushi}" : $"{keyVal.Key}";
 
-                                var clips = SClips.Clips[elementKey];
+                                var clips = AnimationClips.Clips[elementKey];
 
                                 for (var i = 0; i < clips.Count; i++)
                                 {
                                     var newSlot = UniversalAutoResolver.GetUniqueSlotID();
 
-                                    UniversalAutoResolver.LoadedStudioResolutionInfo.Add(new StudioResolveInfo {
-                                        GUID = swapAnimInfo.Guid,
-                                        Slot = i,
-                                        ResolveItem = true,
-                                        LocalSlot = newSlot,
-                                        Group = grpId,
-                                        Category = swapAnimInfo.StudioId
-                                    });
+                                    UniversalAutoResolver.LoadedStudioResolutionInfo
+                                        .Add(new StudioResolveInfo { 
+                                            GUID = swapAnimInfo.Guid,
+                                            Slot = i,
+                                            ResolveItem = true,
+                                            LocalSlot = newSlot,
+                                            Group = grpId,
+                                            Category = swapAnimInfo.StudioId}
+                                        );
 
                                     animCat.Add(newSlot, new Info.AnimeLoadInfo {
                                         name = clips[i],
@@ -95,16 +105,17 @@ namespace AnimationLoader
                 });
             }
 
-
-            // TODO: Modify this for testing when new animations will are added.
-            private static void LoadStudioAnimsCachedVersion(Studio.Info __instance, ref IEnumerator __result)
+            // TODO: Modify this for testing when new animations are added.
+            private static void LoadStudioAnimsCachedVersion(
+                Studio.Info __instance,
+                ref IEnumerator __result)
             {
                 var bCached = true;
 
-                _animationClips.Read();
+                _animationClipsCache.Read();
                 _animationClipsByType.Read();
 
-                if (_animationClips.Clips.Keys.Count > 0)
+                if (_animationClipsCache.Clips.Keys.Count > 0)
                 {
                     bCached = true;
                 }
@@ -151,7 +162,7 @@ namespace AnimationLoader
                                     var elementKey = (keyVal.Key == HFlag.EMode.houshi) ? $"{keyVal.Key}-{swapAnimInfo.kindHoushi}" : $"{keyVal.Key}";
 
                                     //var clips = _animationClips.Clips[$"{grpKey}-{ctrl}"];
-                                    var clips = SClips.Clips[elementKey];
+                                    var clips = AnimationClips.Clips[elementKey];
 
                                     //if (clipsStatic == null)
                                     //{
@@ -205,8 +216,10 @@ namespace AnimationLoader
 
                             void CreateGroup(byte sex)
                             {
-                                var grp = new Info.GroupInfo { name = $"AL {(sex == 0 ? "M" : "F")} {keyVal.Key}" };
-                                var animGrp = new Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>();
+                                var grp = new Info.GroupInfo { 
+                                    name = $"AL {(sex == 0 ? "M" : "F")} {keyVal.Key}" };
+                                var animGrp = 
+                                    new Dictionary<int, Dictionary<int, Info.AnimeLoadInfo>>();
 
                                 var grpKey = $"{keyVal.Key}{sex}";
                                 if (!EModeGroups.TryGetValue(grpKey, out var grpId))
@@ -214,17 +227,21 @@ namespace AnimationLoader
                                     return;
                                 }
 
-                                foreach (var swapAnimInfo in keyVal.Value.Where(x => x.StudioId >= 0))
+                                foreach (
+                                    var swapAnimInfo in keyVal.Value.Where(x => x.StudioId >= 0))
                                 {
-                                    var path = sex == 0 ? swapAnimInfo.PathMale : swapAnimInfo.PathFemale;
-                                    var ctrl = sex == 0 ? swapAnimInfo.ControllerMale : swapAnimInfo.ControllerFemale;
+                                    var path = sex == 0 
+                                        ? swapAnimInfo.PathMale : swapAnimInfo.PathFemale;
+                                    var ctrl = sex == 0 
+                                        ? swapAnimInfo.ControllerMale : swapAnimInfo.ControllerFemale;
                                     
                                     if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(ctrl))
                                     {
                                         continue;
                                     }
 
-                                    var animName = string.IsNullOrEmpty(swapAnimInfo.AnimationName) ? ctrl : swapAnimInfo.AnimationName;
+                                    var animName = string.IsNullOrEmpty(swapAnimInfo.AnimationName)
+                                        ? ctrl : swapAnimInfo.AnimationName;
                                     grp.dicCategory.Add(swapAnimInfo.StudioId, animName);
                                     var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
                                     animGrp.Add(swapAnimInfo.StudioId, animCat);
@@ -233,7 +250,8 @@ namespace AnimationLoader
                                     var controller = AssetBundleManager.LoadAsset(
                                         path,
                                         ctrl,
-                                        typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
+                                        typeof(RuntimeAnimatorController))
+                                            .GetAsset<RuntimeAnimatorController>();
 
                                     var clips = controller.animationClips;
 
@@ -246,14 +264,15 @@ namespace AnimationLoader
                                     {
                                         var newSlot = UniversalAutoResolver.GetUniqueSlotID();
 
-                                        UniversalAutoResolver.LoadedStudioResolutionInfo.Add(new StudioResolveInfo {
-                                            GUID = swapAnimInfo.Guid,
-                                            Slot = i,
-                                            ResolveItem = true,
-                                            LocalSlot = newSlot,
-                                            Group = grpId,
-                                            Category = swapAnimInfo.StudioId
-                                        });
+                                        UniversalAutoResolver.LoadedStudioResolutionInfo
+                                            .Add(new StudioResolveInfo {
+                                                GUID = swapAnimInfo.Guid,
+                                                Slot = i,
+                                                ResolveItem = true,
+                                                LocalSlot = newSlot,
+                                                Group = grpId,
+                                                Category = swapAnimInfo.StudioId
+                                            });
 
                                         animCat.Add(newSlot, new Info.AnimeLoadInfo {
                                             name = clips[i].name,
@@ -263,9 +282,9 @@ namespace AnimationLoader
                                         });
                                         clipsName.Add(clips[i].name);
                                     }
-                                    if (!_animationClips.Clips.ContainsKey($"{grpKey}-{ctrl}"))
+                                    if (!_animationClipsCache.Clips.ContainsKey($"{grpKey}-{ctrl}"))
                                     {
-                                        _animationClips.Clips.Add($"{grpKey}-{ctrl}", clipsName);
+                                        _animationClipsCache.Clips.Add($"{grpKey}-{ctrl}", clipsName);
                                     }
 
                                     var elementKey = string.Empty;
@@ -284,7 +303,8 @@ namespace AnimationLoader
                                         _animationClipsByType.Clips.Add(elementKey, clipsName);
                                     }
                 
-                                    if (!_animationClipsByType.Clips[elementKey].SequenceEqual(clipsName))
+                                    if (!_animationClipsByType.Clips[elementKey]
+                                        .SequenceEqual(clipsName))
                                     {
                                         Log.Error($"Key does not match {elementKey} for {ctrl}");
                                     }
@@ -297,15 +317,22 @@ namespace AnimationLoader
                                 }
                             }
                         }
-                        _animationClips.Save();
+                        _animationClipsCache.Save();
                         _animationClipsByType.Save();
                     });
                 }
 
             }
 
-            // For reference
-            private static void LoadStudioAnimsOriginal(Studio.Info __instance, ref IEnumerator __result)
+
+            /// <summary>
+            /// For reference
+            /// </summary>
+            /// <param name="__instance"></param>
+            /// <param name="__result"></param>
+            private static void LoadStudioAnimsOriginal(
+                Studio.Info __instance,
+                ref IEnumerator __result)
             {
                 Log.Warning("Starting the plugin");
 

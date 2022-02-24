@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
+using H;
+
 using HarmonyLib;
 
 using static AnimationLoader.SwapAnim.MoveController;
@@ -42,7 +44,31 @@ namespace AnimationLoader
                             postfix: new HarmonyMethod(typeof(Hooks),
                                 nameof(ExtendList)));
                 }
-#if DEBUG && KKS
+#if DEBUG && KKS && TEST
+                // This is for DEBUG tests only and the brewing of terrible ideas.
+                // Code is not on GitHub
+                /*_hookInstance.Patch(
+                    AccessTools.Method(
+                        Type.GetType("HSceneProc, Assembly-CSharp"),
+                            nameof(HSceneProc.CreateListAnimationFileName)),
+                        prefix: new HarmonyMethod(typeof(Hooks),
+                            nameof(AddAquariumPostfix)));*/
+
+                _hookInstance.Patch(
+                    AccessTools.Method(
+                        Type.GetType("HSceneProc, Assembly-CSharp"),
+                            nameof(HSceneProc.LoadAddTaii),
+                            new Type[] { typeof(List<AddTaiiData.Param>) }),
+                        postfix: new HarmonyMethod(typeof(Hooks),
+                            nameof(LoadAddTaiiPostfix)));
+
+                _hookInstance.Patch(
+                    AccessTools.Method(
+                        Type.GetType("HSceneProc, Assembly-CSharp"),
+                            nameof(HSceneProc.CreateListAnimationFileName)),
+                        prefix: new HarmonyMethod(typeof(Hooks),
+                            nameof(AddAquariumPostfix)));
+
                 _hookInstance.Patch(
                     AccessTools.Method(
                         Type.GetType("HSceneProc, Assembly-CSharp"),
@@ -53,9 +79,25 @@ namespace AnimationLoader
                 _hookInstance.Patch(
                     AccessTools.Method(
                         Type.GetType("HSceneProc, Assembly-CSharp"),
+                            nameof(HSceneProc.CreateListAnimationFileName)),
+                        postfix: new HarmonyMethod(typeof(Hooks),
+                            nameof(PPrintUseAnimInfo)));
+
+                _hookInstance.Patch(
+                    AccessTools.Method(
+                        Type.GetType("HSceneProc, Assembly-CSharp"),
                             nameof(HSceneProc.ChangeCategory)),
                         postfix: new HarmonyMethod(typeof(Hooks),
                             nameof(ChangeCategoryPostfix)));
+
+                /*
+                 * Independent plugin testing
+                 * _hookInstance.Patch(
+                    AccessTools.Method(
+                        Type.GetType("HSceneProc, Assembly-CSharp"),
+                            nameof(HSceneProc.GetCloseCategory)),
+                        postfix: new HarmonyMethod(typeof(Hooks),
+                            nameof(GetCloseCategoryPostfix)));*/
 
                 /*
                  * Why this does not work...when method runs does not find stuff
@@ -101,7 +143,6 @@ namespace AnimationLoader
                     .Create(__instance)
                     .Field<HFlag>("flags").Value;
             }
-
 
             [HarmonyTranspiler]
             [HarmonyPatch(typeof(HSprite), nameof(HSprite.OnChangePlaySelect))]

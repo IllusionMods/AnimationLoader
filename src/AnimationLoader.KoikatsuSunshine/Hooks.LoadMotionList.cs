@@ -31,7 +31,7 @@ namespace AnimationLoader
             /// <param name="_objParent"></param>
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSprite), nameof(HSprite.LoadMotionList))]
-            private static void LoadMotionList(
+            private static void LoadMotionListPostfix(
                 HSprite __instance,
                 List<HSceneProc.AnimationListInfo> _lstAnimInfo,
                 GameObject _objParent)
@@ -46,6 +46,9 @@ namespace AnimationLoader
 #endif
                     return;
                 }
+
+                Log.Warning($"XXXX: [LoadMotionListPostfix] Scene=[{Manager.Scene.ActiveScene.name}] " +
+                    $"Categories=[{Utilities.CategoryList(__instance.lstCategory, quotes: false)}]");
 
                 if (buttonParent.childCount > 0)
                 {
@@ -97,12 +100,21 @@ namespace AnimationLoader
                         if (isALAnim)
                         {
 #if DEBUG
-                            label.text = $"{animationInfoComponent.info.nameAnimation} " +
-                                $"E({swap.ExpTaii})";
+                            var tmp = (swap is not null) ? $" E({swap.ExpTaii})" : "";
+                            label.text = $"{animationInfoComponent.info.nameAnimation}{tmp}";
 #endif
                             // Foreground color yellow for loaded animations
                             label.color = Color.yellow;
                         }
+#if DEBUG && TEST
+                        else
+                        {
+                            var tmp = Utilities.GetExpTaii((int)animationInfoComponent.info.mode, 
+                                animationInfoComponent.info.id);
+                            label.text = $"{animationInfoComponent.info.nameAnimation} E({tmp})";
+                        }
+#endif
+
                     }
 
                     var toggle = button.GetComponent<Toggle>();
@@ -188,7 +200,10 @@ namespace AnimationLoader
                     // Highlight current animation
                     if (_lstAnimInfo[index] == __instance.flags.nowAnimationInfo)
                     {
-                        toggle.isOn = true;
+                        if (toggle is not null)
+                        {
+                            toggle.isOn = true;
+                        }
                         animationOn = true;
                     }
                 }
@@ -222,14 +237,14 @@ namespace AnimationLoader
 
             internal static bool AnimationCheckOk(HSprite hsprite, SwapAnimationInfo anim)
             {
+#if DEBUG
+                if (TestMode.Value)
+                {
+                    return true;
+                }
+#endif
                 if (hsprite.flags.isFreeH)
                 {
-#if DEBUG
-                    if (TestMode.Value)
-                    {
-                        return true;
-                    }
-#endif
                     if (EnableAllFreeH.Value)
                     {
                         return true;
