@@ -340,3 +340,4 @@ ASALocalRun/
 /test.ps1
 Hooks.Test.cs
 AnimationLoader.KoikatsuSunshine.Test/
+rel/
