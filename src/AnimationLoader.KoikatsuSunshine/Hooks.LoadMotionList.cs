@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using TMPro;
@@ -15,7 +16,8 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        internal static UsedAnimations _usedAnimations = new();
+        static internal UsedAnimations _usedAnimations = new();
+        static internal Dictionary<int, Dictionary<int, int>> _dicExpAddTaii = new();
 
         internal partial class Hooks
         {
@@ -37,6 +39,7 @@ namespace AnimationLoader
                 GameObject _objParent)
             {
                 var buttonParent = _objParent.transform;
+                var hExp = __instance.flags.lstHeroine[0].hExp;
 
                 if (animationDict.Count == 0)
                 {
@@ -46,9 +49,6 @@ namespace AnimationLoader
 #endif
                     return;
                 }
-
-                Log.Warning($"XXXX: [LoadMotionListPostfix] Scene=[{Manager.Scene.ActiveScene.name}] " +
-                    $"Categories=[{Utilities.CategoryList(__instance.lstCategory, quotes: false)}]");
 
                 if (buttonParent.childCount > 0)
                 {
@@ -92,7 +92,7 @@ namespace AnimationLoader
 
                     // TextMesh of button
                     var textMesh = button.transform.FindLoop("TextMeshPro Text");
-                    
+
                     if (textMesh.TryGetComponent<TextMeshProUGUI>(out var label))
                     {
                         // Text label
@@ -100,20 +100,29 @@ namespace AnimationLoader
                         if (isALAnim)
                         {
 #if DEBUG
-                            var tmp = (swap is not null) ? $" E({swap.ExpTaii})" : "";
+                            var tmp = (swap is not null) ? $"  E({swap.ExpTaii})" : "";
                             label.text = $"{animationInfoComponent.info.nameAnimation}{tmp}";
 #endif
                             // Foreground color yellow for loaded animations
                             label.color = Color.yellow;
                         }
-#if DEBUG && TEST
                         else
                         {
-                            var tmp = Utilities.GetExpTaii((int)animationInfoComponent.info.mode, 
+                            var tmp = Utilities.GetExpTaii((int)animationInfoComponent.info.mode,
                                 animationInfoComponent.info.id);
-                            label.text = $"{animationInfoComponent.info.nameAnimation} E({tmp})";
-                        }
+#if DEBUG                           
+                            label.text = $"{Utilities.TranslateName(animationInfoComponent.info.nameAnimation)}  E({tmp})";
 #endif
+                            if ((tmp >= 50) && (hExp < tmp))
+                            {
+                                label.color = Color.cyan;
+                            }
+                            var c = animationInfoComponent.info.lstCategory;
+                            if ((c[0].category == 12) || (c[0].category >= 1000)) 
+                            {
+                                label.color = Color.green; 
+                            }
+                        }
 
                     }
 
@@ -231,6 +240,27 @@ namespace AnimationLoader
                     foreach (var t in allButtons)
                     {
                         t.SetAsLastSibling();
+                    }
+                }
+            }
+
+            [HarmonyPostfix]
+            [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.LoadAddTaii), new Type[] { typeof(List<AddTaiiData.Param>) })]
+            private static void LoadAddTaiiPostfix(object __instance, List<AddTaiiData.Param> param)
+            {
+                var hsceneTraverse = Traverse.Create(__instance);
+                var dicExpAddTaii = hsceneTraverse
+                    .Field<Dictionary<int, Dictionary<int, int>>>("dicExpAddTaii").Value;
+
+                foreach (var item in dicExpAddTaii)
+                {
+                    if (_dicExpAddTaii != null)
+                    {
+                        if (!_dicExpAddTaii.ContainsKey(item.Key))
+                        {
+                            // Save the original dictionary for testing
+                            _dicExpAddTaii.Add(item.Key, new Dictionary<int, int>(item.Value));
+                        }
                     }
                 }
             }
