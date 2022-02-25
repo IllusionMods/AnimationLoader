@@ -27,7 +27,8 @@ namespace AnimationLoader
             /// </summary>
             internal static void Init()
             {
-                _hookInstance = Harmony.CreateAndPatchAll(typeof(Hooks), nameof(Hooks));
+                //_hookInstance = Harmony.CreateAndPatchAll(typeof(Hooks), nameof(Hooks));
+                _hookInstance = Harmony.CreateAndPatchAll(typeof(Hooks));
 
                 if (VRHSceneType != null)
                 {
