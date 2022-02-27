@@ -31,10 +31,7 @@ namespace AnimationLoader
                 var addedAnimations = new StringBuilder();
                 var lstAnimInfo = hsceneTraverse
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
-#if DEBUG
-                // Save game animations in csv files
-                Utilities.SaveAnimInfo(__instance, lstAnimInfo);
-#endif
+
                 var countGA = 0;
                 var countAL = 0;
                 var strTmp = string.Empty;
