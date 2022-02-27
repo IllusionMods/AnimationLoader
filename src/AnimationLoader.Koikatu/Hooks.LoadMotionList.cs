@@ -19,7 +19,7 @@ namespace AnimationLoader
         {
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSprite), nameof(HSprite.LoadMotionList))]
-            private static void LoadMotionList(
+            static private void LoadMotionList(
                 HSprite __instance,
                 List<HSceneProc.AnimationListInfo> _lstAnimInfo,
                 GameObject _objParent)
@@ -165,7 +165,7 @@ namespace AnimationLoader
             }
         }
 
-        private static T CopyComponent<T>(T original, GameObject destination) where T : Component
+        static private T CopyComponent<T>(T original, GameObject destination) where T : Component
         {
             var type = original.GetType();
             var dst = destination.GetComponent(type) as T;
