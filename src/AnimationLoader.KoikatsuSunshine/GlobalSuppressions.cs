@@ -14,3 +14,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Leave for reference", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.ReadNames(AnimationLoader.SwapAnim.Names@,System.String)")]
 [assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:AnimationLoader.SwapAnim.Hooks._animationClipsCache")]
 [assembly: SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>", Scope = "member", Target = "~F:AnimationLoader.SwapAnim.Hooks._animationClipsByType")]
+[assembly: SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.Hooks.LoadAddTaiiPostfix(System.Object,System.Collections.Generic.List{AddTaiiData.Param})")]
