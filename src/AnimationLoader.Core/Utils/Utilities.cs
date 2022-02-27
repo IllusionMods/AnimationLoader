@@ -43,7 +43,7 @@ namespace AnimationLoader
 
             public static Color green => new Color32(0, 128, 0, _alpha);
             public static Color darkgreen => new Color32(0, 100, 0, _alpha);
-            
+            public static Color lime => new Color32(0, 255, 0, _alpha);
 
             public static Color violet => new Color32(238, 130, 238, _alpha);
             public static Color darkviolet => new Color32(148, 0, 211, _alpha);
