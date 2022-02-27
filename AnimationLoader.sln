@@ -20,14 +20,10 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "AnimationLoader.Core", "src
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimationLoader.Koikatu", "src\AnimationLoader.Koikatu\AnimationLoader.Koikatu.csproj", "{3EF70928-3925-4F6C-96E9-0EF3B9228E0D}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "KoikatsuSunshine.Shared", "src\KoikatsuSunshine.Core\KoikatsuSunshine.Shared.shproj", "{CAB43C3E-3E96-44CE-9221-1D07B1022379}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{269d192e-9499-429f-a07f-c8b7e13dc861}*SharedItemsImports = 5
-		src\KoikatsuSunshine.Core\KoikatsuSunshine.Core.projitems*{269d192e-9499-429f-a07f-c8b7e13dc861}*SharedItemsImports = 5
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{3ef70928-3925-4f6c-96e9-0ef3b9228e0d}*SharedItemsImports = 5
-		src\KoikatsuSunshine.Core\KoikatsuSunshine.Core.projitems*{cab43c3e-3e96-44ce-9221-1d07b1022379}*SharedItemsImports = 13
 		src\AnimationLoader.Core\AnimationLoader.Core.projitems*{e48d1a5f-a706-4293-88bb-d82bd68cdfed}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
