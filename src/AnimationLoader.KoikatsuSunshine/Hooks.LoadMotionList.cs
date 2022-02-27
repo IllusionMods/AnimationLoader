@@ -33,7 +33,7 @@ namespace AnimationLoader
             /// <param name="_objParent"></param>
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSprite), nameof(HSprite.LoadMotionList))]
-            private static void LoadMotionListPostfix(
+            static private void LoadMotionListPostfix(
                 HSprite __instance,
                 List<HSceneProc.AnimationListInfo> _lstAnimInfo,
                 GameObject _objParent)
@@ -261,7 +261,7 @@ namespace AnimationLoader
 
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.LoadAddTaii), new Type[] { typeof(List<AddTaiiData.Param>) })]
-            private static void LoadAddTaiiPostfix(object __instance, List<AddTaiiData.Param> param)
+            static private void LoadAddTaiiPostfix(object __instance, List<AddTaiiData.Param> param)
             {
                 var hsceneTraverse = Traverse.Create(__instance);
                 var dicExpAddTaii = hsceneTraverse
@@ -280,7 +280,7 @@ namespace AnimationLoader
                 }
             }
 
-            internal static bool AnimationCheckOk(HSprite hsprite, SwapAnimationInfo anim)
+            static internal bool AnimationCheckOk(HSprite hsprite, SwapAnimationInfo anim)
             {
 #if DEBUG
                 if (TestMode.Value)
@@ -317,7 +317,7 @@ namespace AnimationLoader
             /// </summary>
             /// <param name="anim"></param>
             /// <returns></returns>
-            internal static bool CheckExperince(HSprite hsprite, SwapAnimationInfo anim)
+            static internal bool CheckExperince(HSprite hsprite, SwapAnimationInfo anim)
             {
                 var hExp = hsprite.flags.lstHeroine[0].hExp;
 

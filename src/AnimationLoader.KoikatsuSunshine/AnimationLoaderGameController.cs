@@ -12,7 +12,7 @@ namespace AnimationLoader
     /// </summary>
     internal class AnimationLoaderGameController : GameCustomFunctionController
     {
-        protected override void OnEndH(MonoBehaviour proc, HFlag flags, bool vr)
+        override protected void OnEndH(MonoBehaviour proc, HFlag flags, bool vr)
         {
             if (flags.isFreeH)
             {
