@@ -11,6 +11,8 @@ using SceneAssist;
 
 using HarmonyLib;
 
+//using IDHIUtils;
+
 
 namespace AnimationLoader
 {
@@ -99,12 +101,23 @@ namespace AnimationLoader
                         label.text = animationInfoComponent.info.nameAnimation;
                         if (isALAnim)
                         {
+                            label.color = Utilities.yellow;
+
+                            if (swap is not null)
+                            {
 #if DEBUG
-                            var tmp = (swap is not null) ? $"  E({swap.ExpTaii})" : "";
-                            label.text = $"{animationInfoComponent.info.nameAnimation}{tmp}";
+                                var tmp = $"  E({swap.ExpTaii})";
+                                label.text = $"{animationInfoComponent.info.nameAnimation}{tmp}";
 #endif
-                            // Foreground color yellow for loaded animations
-                            label.color = Color.yellow;
+                                if (HighLight.Value)
+                                {
+                                    // Foreground color yellow for loaded animations
+                                    if ((swap.ExpTaii >= 5) && (hExp < swap.ExpTaii))
+                                    {
+                                        label.color = Utilities.orange;
+                                    }
+                                }
+                            }
                         }
                         else
                         {
@@ -113,14 +126,18 @@ namespace AnimationLoader
 #if DEBUG                           
                             label.text = $"{Utilities.TranslateName(animationInfoComponent.info.nameAnimation)}  E({tmp})";
 #endif
-                            if ((tmp >= 50) && (hExp < tmp))
+                            if (HighLight.Value)
                             {
-                                label.color = Color.cyan;
-                            }
-                            var c = animationInfoComponent.info.lstCategory;
-                            if ((c[0].category == 12) || (c[0].category >= 1000)) 
-                            {
-                                label.color = Color.green; 
+                                // Emphasize effects of the store plug-in
+                                if ((tmp >= 50) && (hExp < tmp))
+                                {
+                                    label.color = Utilities.cyan;
+                                }
+                                var c = animationInfoComponent.info.lstCategory;
+                                if ((c[0].category == 12) || (c[0].category >= 1000))
+                                {
+                                    label.color = Utilities.lime;
+                                }
                             }
                         }
 
