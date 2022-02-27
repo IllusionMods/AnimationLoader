@@ -11,8 +11,6 @@ using SceneAssist;
 
 using HarmonyLib;
 
-//using IDHIUtils;
-
 
 namespace AnimationLoader
 {
