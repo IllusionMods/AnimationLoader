@@ -30,6 +30,7 @@ namespace AnimationLoader
         internal static ConfigEntry<KeyboardShortcut> ReloadManifests { get; set; }
         internal static ConfigEntry<bool> Reposition { get; set; }
         internal static ConfigEntry<bool> SortPositions { get; set; }
+        internal static ConfigEntry<bool> HighLight { get; set; }
 
         internal const string GeneralSection = "General";
         internal const string DebugSection = "Debug";
@@ -110,9 +111,21 @@ namespace AnimationLoader
                 key: "Reposition Characters",
                 defaultValue: true,
                 configDescription: new ConfigDescription(
-                    description: "Some animations have information in the manifest to move the characters",
+                    description: "Some animations have information in the manifest to move "
+                        + "the characters",
                     acceptableValues: null,
                     tags: new ConfigurationManagerAttributes { Order = 19, IsAdvanced = true }));
+
+            // Highlight text in buttons helps identify store effects when used
+            HighLight = Config.Bind(
+                section: AdvanceSection,
+                key: "Highlight Buttons Text",
+                defaultValue: true,
+                configDescription: new ConfigDescription(
+                    description: "Uses more color to highlight the effects of the " 
+                        + "store plug-in and Free-H",
+                    acceptableValues: null,
+                    tags: new ConfigurationManagerAttributes { Order = 17, IsAdvanced = true }));
 
             // Save names in UserData.  These can be expanded to other fields if need be.
             UserOverrides = Config.Bind(
