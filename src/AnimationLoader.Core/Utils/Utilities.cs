@@ -18,6 +18,47 @@ namespace AnimationLoader
     {
         internal class Utilities
         {
+            internal static byte _alpha = 255;
+
+#pragma warning disable IDE1006 // Naming Styles
+
+            public static Color red => new Color32(255, 0, 0, _alpha);
+            public static Color darkred => new Color32(139, 0, 0, _alpha);
+
+            public static Color magenta => new Color32(255, 0, 255, _alpha);
+            public static Color darkmagenta => new Color32(139, 0, 139, _alpha);
+
+            public static Color yellow => new Color32(255, 255, 0, _alpha);
+            public static Color lightyellow => new Color32(255, 255, 224, _alpha);
+
+            public static Color blue => new Color32(0, 0, 255, _alpha);
+            public static Color darkblue => new Color32(0, 0, 139, _alpha);
+
+            public static Color cyan => new Color32(0, 255, 255, _alpha);
+            public static Color darkcyan => new Color32(0, 139, 139, _alpha);
+
+            public static Color orange => new Color32(255, 165, 0, _alpha);
+            public static Color darkorange => new Color32(255, 140, 0, _alpha);
+            
+
+            public static Color green => new Color32(0, 128, 0, _alpha);
+            public static Color darkgreen => new Color32(0, 100, 0, _alpha);
+            
+
+            public static Color violet => new Color32(238, 130, 238, _alpha);
+            public static Color darkviolet => new Color32(148, 0, 211, _alpha);
+
+            public static Color orangered => new Color32(255, 69, 0, _alpha);
+            public static Color blueviolet => new Color32(138, 43, 226, _alpha);
+            public static Color greenyellow => new Color32(173, 255, 47, _alpha);
+            public static Color yellowgreen => new Color32(154, 205, 50, _alpha);
+
+            public static Color black => new Color32(0, 0, 0, _alpha);
+            public static Color gray => new Color32(128, 128, 128, _alpha);
+            public static Color white => new Color32(255, 255, 255, _alpha);
+
+#pragma warning restore IDE1006 // Naming Styles
+
             /// <summary>
             /// Save information for template.xml
             /// </summary>
@@ -230,6 +271,8 @@ namespace AnimationLoader
                 }
                 return false;
             }
+
+
 #if KKS
             /// <summary>
             /// Returns the experience level needed for the animation to be active using cached
