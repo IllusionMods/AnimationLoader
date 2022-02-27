@@ -19,17 +19,27 @@
     </PropertyGroup>
     
     <ItemGroup>
-      <PackageReference Include="ExtensibleSaveFormat.Koikatu" Version="16.9.2" />
+      <PackageReference Include="ExtensibleSaveFormat.Koikatu" Version="17.0.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="IllusionLibs.BepInEx" Version="5.4.15" />
       <PackageReference Include="IllusionLibs.Koikatu.Assembly-CSharp" Version="2019.4.27.4" />
       <PackageReference Include="IllusionLibs.Koikatu.Assembly-CSharp-firstpass" Version="2019.4.27.4" />
       <PackageReference Include="IllusionLibs.Koikatu.TextMeshPro" Version="2019.4.27.4" />
       <PackageReference Include="IllusionLibs.Koikatu.UnityEngine" Version="5.6.2.4" />
       <PackageReference Include="IllusionLibs.Koikatu.UnityEngine.UI" Version="5.6.2.4" />
-      <PackageReference Include="IllusionModdingAPI.KKAPI" Version="1.29.0" />
+      <PackageReference Include="IllusionModdingAPI.KKAPI" Version="1.31.2" />
       <PackageReference Include="KoikatuCompatibilityAnalyzer" Version="1.0.1" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-      <PackageReference Include="Sideloader.Koikatu" Version="16.9.2" />
+      <PackageReference Include="Sideloader.Koikatu" Version="17.0.0" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Update="Microsoft.Unity.Analyzers" Version="1.12.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
     </ItemGroup>
     
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
