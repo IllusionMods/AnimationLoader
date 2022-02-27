@@ -5,7 +5,6 @@ using BepInEx;
 
 using KKAPI;
 
-//[UnityEngine.Scripting.Preserve]
 
 namespace AnimationLoader
 {
