@@ -19,8 +19,8 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        private static readonly XmlSerializer xmlNamesSerializer = new(typeof(Names));
-        private static Dictionary<string, Names> animationNamesDict = new();
+        static readonly private XmlSerializer xmlNamesSerializer = new(typeof(Names));
+        static private Dictionary<string, Names> animationNamesDict = new();
 
         #region Serializable classes
         [XmlRoot("Names")]
@@ -78,7 +78,7 @@ namespace AnimationLoader
         /// <summary>
         /// Read animations names xml files
         /// </summary>
-        private static void LoadNamesXml()
+        static private void LoadNamesXml()
         {
             if (!UserOverrides.Value)
             {
@@ -103,7 +103,7 @@ namespace AnimationLoader
         /// Add the names on the xml files to names dictionary
         /// </summary>
         /// <param name="namesDocs"></param>
-        private static void LoadNamesXmls(IEnumerable<XDocument> namesDocs)
+        static private void LoadNamesXmls(IEnumerable<XDocument> namesDocs)
         {
             if (!UserOverrides.Value)
             {
@@ -130,7 +130,7 @@ namespace AnimationLoader
         /// Setup new names for guid
         /// </summary>
         /// <param name="manifest"></param>
-        private static void NamesAddGuid(XElement manifest)
+        static private void NamesAddGuid(XElement manifest)
         {
             if (!UserOverrides.Value)
             {
@@ -154,7 +154,7 @@ namespace AnimationLoader
         /// <summary>
         /// Save all the names in the names dictionary to xml files
         /// </summary>
-        private static void SaveNamesXmls()
+        static private void SaveNamesXmls()
         {
             if (!UserOverrides.Value)
             {
@@ -173,7 +173,7 @@ namespace AnimationLoader
         /// </summary>
         /// <param name="names"></param>
         /// <param name="guid"></param>
-        private static void SaveNames(Names names, string guid, bool overwrite = false)
+        static private void SaveNames(Names names, string guid, bool overwrite = false)
         {
             if (!UserOverrides.Value)
             {
@@ -206,7 +206,7 @@ namespace AnimationLoader
         /// </summary>
         /// <param name="names"></param>
         /// <param name="guid"></param>
-        private static void ReadNames(ref Names names, string guid)
+        static private void ReadNames(ref Names names, string guid)
         {
             if (!UserOverrides.Value)
             {
@@ -230,10 +230,10 @@ namespace AnimationLoader
         }
 
 #if DEBUG
-        private static readonly Dictionary<string, string> katarsysNameMapper = AnimNameMapper_H();
-        private static readonly Dictionary<string, string> katarsysName = ButtonNames();
+        static readonly private Dictionary<string, string> katarsysNameMapper = AnimNameMapper_H();
+        static readonly private Dictionary<string, string> katarsysName = ButtonNames();
 
-        public static string KatarsysAnimationName(SwapAnimationInfo animation)
+        static public string KatarsysAnimationName(SwapAnimationInfo animation)
         {
             var name = string.Empty;
             //var controller = string.Empty;
@@ -248,7 +248,7 @@ namespace AnimationLoader
             return name;
         }
 
-        public static void KatarsysAnimationNameAnalysis()
+        static public void KatarsysAnimationNameAnalysis()
         {
             var namesSet = new HashSet<string>();
 
@@ -268,7 +268,7 @@ namespace AnimationLoader
 
         }
 
-        public static Dictionary<string, string> ButtonNames()
+        static public Dictionary<string, string> ButtonNames()
         {
             Dictionary<string, string> dictionary = new();
 
@@ -493,7 +493,7 @@ namespace AnimationLoader
             return dictionary;
         }
 
-        public static Dictionary<string, string> AnimNameMapper_H() => new()
+        static public Dictionary<string, string> AnimNameMapper_H() => new()
         {
             ["khh_f_60"] = "S_Lay_Footjob_1",
             ["khh_f_61"] = "S_Lay_Footjob_2",

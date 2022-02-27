@@ -22,18 +22,18 @@ namespace AnimationLoader
         private const string ManifestArrayItem = "Animation";
         private const string ManifestGSArrayItem = KoikatuAPI.GameProcessName;
 
-        private static readonly XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
+        static readonly private XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
         // TODO: Read game overrides when running in KK
 #if KKS
         private const string ManifestOverride = "GameSpecificOverrides";
-        private static readonly XmlSerializer xmlOverrideSerializer = new(typeof(OverrideInfo));
+        static readonly private XmlSerializer xmlOverrideSerializer = new(typeof(OverrideInfo));
 #endif
-        private static XElement _animRoot;
-        private static XElement _animRootGS;
+        static private XElement _animRoot;
+        static private XElement _animRootGS;
 
-        private static bool _saveNames = false;
+        static private bool _saveNames = false;
 
-        private static void LoadTestXml()
+        static private void LoadTestXml()
         {
             var path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
             if(Directory.Exists(path))
@@ -51,7 +51,7 @@ namespace AnimationLoader
                 "config/AnimationLoader folder to test animations");
         }
 
-        private static void LoadXmls(IEnumerable<XDocument> manifests)
+        static private void LoadXmls(IEnumerable<XDocument> manifests)
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
             var count = 0;
@@ -146,7 +146,7 @@ namespace AnimationLoader
             }
         }
 
-        private static int ProcessArray(
+        static private int ProcessArray(
             XElement root, 
             string guid, 
             string version,
@@ -264,11 +264,11 @@ namespace AnimationLoader
             return count;
         }
 
-        internal static Func<XName, string> RootText = x => x == KoikatuAPI.GameProcessName ?
+        static internal Func<XName, string> RootText = x => x == KoikatuAPI.GameProcessName ?
             $"Game specific elements of {x}" : $"Root elements of {x}";
 
 #if KKS
-        private static void DoOverrides(
+        static private void DoOverrides(
             ref SwapAnimationInfo data, 
             OverrideInfo overrides,
             ref Animation animation,

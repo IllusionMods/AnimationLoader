@@ -6,7 +6,7 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        private static AnimatorOverrideController SetupAnimatorOverrideController(
+        static private AnimatorOverrideController SetupAnimatorOverrideController(
             RuntimeAnimatorController src,
             RuntimeAnimatorController over)
         {

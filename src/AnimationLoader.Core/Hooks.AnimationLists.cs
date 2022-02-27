@@ -15,8 +15,8 @@ namespace AnimationLoader
     {
         internal partial class Hooks
         {
-            internal static bool once = false;
-            private static List<HSceneProc.AnimationListInfo>[] _gameAnimations = 
+            static internal bool once = false;
+            static private List<HSceneProc.AnimationListInfo>[] _gameAnimations = 
                 new List<HSceneProc.AnimationListInfo>[8];
 
             /// <summary>
@@ -25,7 +25,7 @@ namespace AnimationLoader
             /// <param name="__instance"></param>
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateAllAnimationList))]
-            private static void ExtendList(object __instance)
+            static private void ExtendList(object __instance)
             {
                 var hsceneTraverse = Traverse.Create(__instance);
                 var addedAnimations = new StringBuilder();

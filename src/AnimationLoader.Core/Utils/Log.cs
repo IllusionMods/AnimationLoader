@@ -8,13 +8,13 @@ using BepInEx.Logging;
 /// <summary>
 /// Show logs when enabled
 /// </summary>
-internal static class Log
+static internal class Log
 {
-    private static ManualLogSource _logSource;
-    private static bool _enabled = false;
-    private static bool _debugToConsole = false;
+    static private ManualLogSource _logSource;
+    static private bool _enabled = false;
+    static private bool _debugToConsole = false;
 
-    public static bool Enabled {
+    static public bool Enabled {
         get 
         {
             return _enabled;
@@ -26,7 +26,7 @@ internal static class Log
         }
     }
 
-    public static bool DebugToConsole {
+    static public bool DebugToConsole {
         get 
         {
             return _debugToConsole;
@@ -37,7 +37,7 @@ internal static class Log
         }
     }
 
-    public static ManualLogSource LogSource {
+    static public ManualLogSource LogSource {
         get 
         { 
             return _logSource; 
@@ -48,12 +48,12 @@ internal static class Log
         }
     }
 
-    public static void SetLogSource(ManualLogSource logSource)
+    static public void SetLogSource(ManualLogSource logSource)
     {
         _logSource = logSource;
     }
 
-    public static void Info(object data)
+    static public void Info(object data)
     {
         if (_enabled)
         {
@@ -61,7 +61,7 @@ internal static class Log
         }
     }
 
-    public static void Debug(object data)
+    static public void Debug(object data)
     {
         if (_enabled)
         {
@@ -76,7 +76,7 @@ internal static class Log
         }
     }
 
-    public static void Error(object data)
+    static public void Error(object data)
     {
         if (_enabled)
         {
@@ -84,7 +84,7 @@ internal static class Log
         }
     }
 
-    public static void Fatal(object data)
+    static public void Fatal(object data)
     {
         if (_enabled)
         {
@@ -92,7 +92,7 @@ internal static class Log
         }
     }
 
-    public static void Message(object data)
+    static public void Message(object data)
     {
         if (_enabled)
         {
@@ -100,7 +100,7 @@ internal static class Log
         }
     }
 
-    public static void Warning(object data)
+    static public void Warning(object data)
     {
         if (_enabled)
         {
@@ -113,7 +113,7 @@ internal static class Log
     /// </summary>
     /// <param name="level"></param>
     /// <param name="data"></param>
-    public static void Level(LogLevel level, object data)
+    static public void Level(LogLevel level, object data)
     {
         _logSource.Log(level, data);
     }

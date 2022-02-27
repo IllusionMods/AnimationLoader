@@ -25,7 +25,7 @@ namespace AnimationLoader
             /// Required definition.
             /// </summary>
             /// <param name="currentGameMode"></param>
-            protected override void OnCardBeingSaved(GameMode currentGameMode)
+            override protected void OnCardBeingSaved(GameMode currentGameMode)
             {
             }
 

@@ -13,19 +13,19 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        private static ChaControl _heroine;
-        private static ChaControl _heroine3P;
-        private static List<ChaControl> _lstHeroines;
-        private static ChaControl _player;
-        private static HFlag _flags;
-        private static Harmony _hookInstance;
+        static private ChaControl _heroine;
+        static private ChaControl _heroine3P;
+        static private List<ChaControl> _lstHeroines;
+        static private ChaControl _player;
+        static private HFlag _flags;
+        static private Harmony _hookInstance;
 
         internal partial class Hooks
         {
             /// <summary>
             /// Initialize the Hooks patch instance
             /// </summary>
-            internal static void Init()
+            static internal void Init()
             {
                 //_hookInstance = Harmony.CreateAndPatchAll(typeof(Hooks), nameof(Hooks));
                 _hookInstance = Harmony.CreateAndPatchAll(typeof(Hooks));
@@ -55,7 +55,7 @@ namespace AnimationLoader
             /// <param name="___male"></param>
             [HarmonyPrefix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.SetShortcutKey))]
-            private static void SetShortcutKeyPrefix(
+            static private void SetShortcutKeyPrefix(
                 object __instance,
                 List<ChaControl> ___lstFemale,
                 ChaControl ___male)
@@ -80,7 +80,7 @@ namespace AnimationLoader
 
             [HarmonyTranspiler]
             [HarmonyPatch(typeof(HSprite), nameof(HSprite.OnChangePlaySelect))]
-            private static IEnumerable<CodeInstruction> OnChangePlaySelect(
+            static private IEnumerable<CodeInstruction> OnChangePlaySelect(
                 IEnumerable<CodeInstruction> instructions)
             {
                 // Force position change even if position appears to match.

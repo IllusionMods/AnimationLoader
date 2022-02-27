@@ -15,22 +15,29 @@ namespace AnimationLoader
     public partial class SwapAnim
     {
 #if KKS
-        internal static ConfigEntry<bool> LoadInCharStudio { get; set; }
-        internal static ConfigEntry<bool> UseAnimationLevels { get; set; }
-        internal static ConfigEntry<bool> EnableAllFreeH { get; set; }
+        static internal ConfigEntry<bool> LoadInCharStudio { get; set; }
+        static internal ConfigEntry<bool> UseAnimationLevels { get; set; }
+        static internal ConfigEntry<bool> EnableAllFreeH { get; set; }
 #endif
 #if KK
-        private static ConfigEntry<bool> UseGrid { get; set; }
+        static private ConfigEntry<bool> UseGrid { get; set; }
 #endif
 #if DEBUG
-        internal static ConfigEntry<bool> TestMode { get; set; }
+        static internal ConfigEntry<bool> TestMode { get; set; }
 #endif
-        internal static ConfigEntry<bool> DebugInfo { get; set; }
+        static internal ConfigEntry<bool> DebugInfo { get; set; }
+
+/* Unmerged change from project 'AnimationLoader.Koikatu'
+Before:
         internal static ConfigEntry<bool> UserOverrides { get; set; }
-        internal static ConfigEntry<KeyboardShortcut> ReloadManifests { get; set; }
-        internal static ConfigEntry<bool> Reposition { get; set; }
-        internal static ConfigEntry<bool> SortPositions { get; set; }
-        internal static ConfigEntry<bool> HighLight { get; set; }
+After:
+        static internal ConfigEntry<bool> UserOverrides { get; set; }
+*/
+        static internal ConfigEntry<bool> UserOverrides { get; set; }
+        static internal ConfigEntry<KeyboardShortcut> ReloadManifests { get; set; }
+        static internal ConfigEntry<bool> Reposition { get; set; }
+        static internal ConfigEntry<bool> SortPositions { get; set; }
+        static internal ConfigEntry<bool> HighLight { get; set; }
 
         internal const string GeneralSection = "General";
         internal const string DebugSection = "Debug";
