@@ -2,8 +2,6 @@
 
     <Import Project="..\AnimationLoader.Core\AnimationLoader.Core.projitems" Label="Shared" />
 
-    <Import Project="..\KoikatsuSunshine.Core\KoikatsuSunshine.Core.projitems" Label="Shared" />
-
     <Import Project="..\BuildSettings.Common.props" />
 
     <PropertyGroup>
@@ -22,7 +20,7 @@
     </PropertyGroup>
     
     <ItemGroup>
-      <PackageReference Include="ExtensibleSaveFormat.KoikatsuSunshine" Version="16.9.2">
+      <PackageReference Include="ExtensibleSaveFormat.KoikatsuSunshine" Version="17.0.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
