@@ -21,42 +21,18 @@ namespace AnimationLoader
             static internal byte _alpha = 255;
 
 #pragma warning disable IDE1006 // Naming Styles
-
 #pragma warning disable IDE0025 // Use block body for properties
+
             static public Color red => new Color32(255, 0, 0, _alpha);
             static public Color darkred => new Color32(139, 0, 0, _alpha);
 
             static public Color magenta => new Color32(255, 0, 255, _alpha);
-
-/* Unmerged change from project 'AnimationLoader.Koikatu'
-Before:
-            public static Color darkmagenta => new Color32(139, 0, 139, _alpha);
-After:
-            static public Color darkmagenta => new Color32(139, 0, 139, _alpha);
-*/
             static public Color darkmagenta => new Color32(139, 0, 139, _alpha);
 
-
-/* Unmerged change from project 'AnimationLoader.Koikatu'
-Before:
-            public static Color yellow => new Color32(255, 255, 0, _alpha);
-            public static Color lightyellow => new Color32(255, 255, 224, _alpha);
-After:
-            static public Color yellow => new Color32(255, 255, 0, _alpha);
-            static public Color lightyellow => new Color32(255, 255, 224, _alpha);
-*/
             static public Color yellow => new Color32(255, 255, 0, _alpha);
             static public Color lightyellow => new Color32(255, 255, 224, _alpha);
 
 
-/* Unmerged change from project 'AnimationLoader.Koikatu'
-Before:
-            public static Color blue => new Color32(0, 0, 255, _alpha);
-            public static Color darkblue => new Color32(0, 0, 139, _alpha);
-After:
-            static public Color blue => new Color32(0, 0, 255, _alpha);
-            static public Color darkblue => new Color32(0, 0, 139, _alpha);
-*/
             static public Color blue => new Color32(0, 0, 255, _alpha);
             static public Color darkblue => new Color32(0, 0, 139, _alpha);
 
@@ -65,61 +41,19 @@ After:
 
             static public Color orange => new Color32(255, 165, 0, _alpha);
             static public Color darkorange => new Color32(255, 140, 0, _alpha);
-            
 
-/* Unmerged change from project 'AnimationLoader.Koikatu'
-Before:
-            public static Color green => new Color32(0, 128, 0, _alpha);
-            public static Color darkgreen => new Color32(0, 100, 0, _alpha);
-            public static Color lime => new Color32(0, 255, 0, _alpha);
-After:
-            static public Color green => new Color32(0, 128, 0, _alpha);
-            static public Color darkgreen => new Color32(0, 100, 0, _alpha);
-            static public Color lime => new Color32(0, 255, 0, _alpha);
-*/
             static public Color green => new Color32(0, 128, 0, _alpha);
             static public Color darkgreen => new Color32(0, 100, 0, _alpha);
             static public Color lime => new Color32(0, 255, 0, _alpha);
 
-
-/* Unmerged change from project 'AnimationLoader.Koikatu'
-Before:
-            public static Color violet => new Color32(238, 130, 238, _alpha);
-After:
-            static public Color violet => new Color32(238, 130, 238, _alpha);
-*/
             static public Color violet => new Color32(238, 130, 238, _alpha);
             static public Color darkviolet => new Color32(148, 0, 211, _alpha);
 
-
-/* Unmerged change from project 'AnimationLoader.Koikatu'
-Before:
-            public static Color orangered => new Color32(255, 69, 0, _alpha);
-            public static Color blueviolet => new Color32(138, 43, 226, _alpha);
-            public static Color greenyellow => new Color32(173, 255, 47, _alpha);
-            public static Color yellowgreen => new Color32(154, 205, 50, _alpha);
-After:
-            static public Color orangered => new Color32(255, 69, 0, _alpha);
-            static public Color blueviolet => new Color32(138, 43, 226, _alpha);
-            static public Color greenyellow => new Color32(173, 255, 47, _alpha);
-            static public Color yellowgreen => new Color32(154, 205, 50, _alpha);
-*/
             static public Color orangered => new Color32(255, 69, 0, _alpha);
             static public Color blueviolet => new Color32(138, 43, 226, _alpha);
             static public Color greenyellow => new Color32(173, 255, 47, _alpha);
             static public Color yellowgreen => new Color32(154, 205, 50, _alpha);
 
-
-/* Unmerged change from project 'AnimationLoader.Koikatu'
-Before:
-            public static Color black => new Color32(0, 0, 0, _alpha);
-            public static Color gray => new Color32(128, 128, 128, _alpha);
-            public static Color white => new Color32(255, 255, 255, _alpha);
-After:
-            static public Color black => new Color32(0, 0, 0, _alpha);
-            static public Color gray => new Color32(128, 128, 128, _alpha);
-            static public Color white => new Color32(255, 255, 255, _alpha);
-*/
             static public Color black => new Color32(0, 0, 0, _alpha);
             static public Color gray => new Color32(128, 128, 128, _alpha);
             static public Color white => new Color32(255, 255, 255, _alpha);
@@ -130,13 +64,6 @@ After:
             /// <summary>
             /// Save information for template.xml
             /// </summary>
-
-/* Unmerged change from project 'AnimationLoader.Koikatu'
-Before:
-            internal static void SaveAnimInfo(
-After:
-            static internal void SaveAnimInfo(
-*/
             static internal void SaveAnimInfo(
                 object hsceneProc, 
                 List<HSceneProc.AnimationListInfo>[] lstAnimInfo)
