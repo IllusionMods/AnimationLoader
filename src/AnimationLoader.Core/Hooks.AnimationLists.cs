@@ -20,7 +20,7 @@ namespace AnimationLoader
                 new List<HSceneProc.AnimationListInfo>[8];
 
             /// <summary>
-            /// Add new animations to lstAnimInfo aibu and sonyu
+            /// Add new animations to lstAnimInfo (list of all animations available) aibu and sonyu
             /// </summary>
             /// <param name="__instance"></param>
             [HarmonyPostfix]
