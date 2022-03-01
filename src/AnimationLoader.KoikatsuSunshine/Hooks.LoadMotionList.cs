@@ -41,15 +41,6 @@ namespace AnimationLoader
                 var buttonParent = _objParent.transform;
                 var hExp = __instance.flags.lstHeroine[0].hExp;
 
-                if (animationDict.Count == 0)
-                {
-                    // Let game code handle this if no animations loaded
-#if DEBUG
-                    Log.Warning($"0020: No animations loaded.");
-#endif
-                    return;
-                }
-
                 if (buttonParent.childCount > 0)
                 {
                     // remove buttons
