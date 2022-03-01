@@ -26,13 +26,6 @@ namespace AnimationLoader
         static internal ConfigEntry<bool> TestMode { get; set; }
 #endif
         static internal ConfigEntry<bool> DebugInfo { get; set; }
-
-/* Unmerged change from project 'AnimationLoader.Koikatu'
-Before:
-        internal static ConfigEntry<bool> UserOverrides { get; set; }
-After:
-        static internal ConfigEntry<bool> UserOverrides { get; set; }
-*/
         static internal ConfigEntry<bool> UserOverrides { get; set; }
         static internal ConfigEntry<KeyboardShortcut> ReloadManifests { get; set; }
         static internal ConfigEntry<bool> Reposition { get; set; }
