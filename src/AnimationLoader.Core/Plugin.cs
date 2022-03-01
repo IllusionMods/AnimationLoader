@@ -19,15 +19,6 @@ namespace AnimationLoader
 #if KK
         static readonly private Color buttonColor = new(0.96f, 1f, 0.9f);
 #endif
-
-/* Unmerged change from project 'AnimationLoader.Koikatu'
-Before:
-        private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
-        private static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>
-After:
-        static private Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
-        static private Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>
-*/
         static private Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
         static private Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>
             swapAnimationMapping;
