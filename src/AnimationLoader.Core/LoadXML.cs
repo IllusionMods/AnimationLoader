@@ -143,6 +143,7 @@ namespace AnimationLoader
             else
             {
                 Log.Level(LogLevel.Message, "0017: No animation manifests found.");
+                Log.Level(LogLevel.Warning, "0017: No animation manifests found.");
             }
         }
 
