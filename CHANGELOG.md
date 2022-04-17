@@ -1,5 +1,46 @@
 # Changelog
 
+#### <u>Unreleasd</u>
+
+Update libraries used.
+
+##### Added
+
+- [KKS] Highlight text of animation buttons. Helps identify effects of H Level store item.
+
+
+#### <u>v1.1.1.1 - 2022-02-12</u>
+
+##### Fixed
+
+- Fix problem in KKS when disabling the plug-in in Character Studio.
+
+#### <u>v1.1.1 - 2022-02-12</u>
+
+##### Added
+
+- [KKS] VR support
+- [KKS] New labels for added animations work as expected
+- [KKS] In Free-H if added animations are New (unused) they are not available like the standard 
+  ones.  Optional disable in configuration.
+- [KKS] Animations can be made dependent of experience like the standard ones.
+  Optional disable in configuration.
+- Animation names can be maintained by the user. Names are saved in UserData/AnimationLoader/Names.
+  There will be one file per animation bundle. Off by default.
+
+##### Changed
+
+- Optimizations to reduce the load time in Character Studio
+
+##### Fixed
+
+- [KK] Fixed button duplication in Grid
+- [@Kokaiinum] fix exception when setting NeckDonorId
+
+When posting issues one thing that may help to find a solution faster is turning on Debug Information (Advance Settings) and post the output_log.txt in [GitHub](https://github.com/IllusionMods/AnimationLoader/issues). If you post it only on Discord and don't address IDontHaveIdea I may not see it.
+
+
+
 #### <u>v1.1.0.4b1 - 2022-02-08</u>
 
 ##### Added
