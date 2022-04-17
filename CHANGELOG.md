@@ -6,8 +6,7 @@ Update libraries used.
 
 ##### Added
 
-- [KKS] Highlight text of animation buttons. Helps identify effects of H Level store item.
-
+- Really basic MotionIK support for a few cases that the donor animations more or less align
 
 #### <u>v1.1.1.1 - 2022-02-12</u>
 
