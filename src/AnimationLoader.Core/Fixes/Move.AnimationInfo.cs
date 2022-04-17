@@ -25,33 +25,14 @@ namespace AnimationLoader
             internal string _controller;
             internal string _name;
 
-            internal string Controller
-            {
-                get { return _controller; }
-            }
-            public string Guid {
-                get { return _Guid; }
-            }
-            public int Id
-            {
-                get { return _id; }
-            }
-            public string Key
-            {
-                get { return $"{_Guid}-{_mode}-{_controller}-{_id:D3}"; }
-            }
-            public EMode Mode {
-                get { return _mode; }
-            }
-            public string Name {
-                get { return _name; }
-            }
-            public SwapAnimationInfo SwapAnim {
-                get { return _anim; }
-            }
-            public HSceneProc.AnimationListInfo Animation {
-                get { return _animGA; }
-            }
+            internal string Controller => _controller;
+            public string Guid => _Guid;
+            public int Id => _id;
+            public string Key => $"{_Guid}-{_mode}-{_controller}-{_id:D3}";
+            public EMode Mode => _mode;
+            public string Name => _name;
+            public SwapAnimationInfo SwapAnim => _anim;
+            public HSceneProc.AnimationListInfo Animation => _animGA;
 
             /// <summary>
             /// These are the fields for the key
@@ -134,7 +115,7 @@ namespace AnimationLoader
             /// <param name="animation"></param>
             /// <param name="withguid"></param>
             /// <returns></returns>
-            static public string GetKey(
+            public static string GetKey(
                 HSceneProc.AnimationListInfo animation,
                 bool withguid = true)
             {
@@ -166,19 +147,19 @@ namespace AnimationLoader
             /// </summary>
             /// <param name="animation"></param>
             /// <returns></returns>
-            static public string GetKey(SwapAnimationInfo animation)
+            public static string GetKey(SwapAnimationInfo animation)
             {
                 return $"{animation.Guid}-{animation.Mode}-{animation.ControllerFemale}" +
                     $"-{animation.StudioId:D3}";
             }
 
             // IsAnimationLoader static check if it parameter is an AnimationLoader animation
-            static public bool IsAnimationLoader(SwapAnimationInfo animation)
+            public static bool IsAnimationLoader(SwapAnimationInfo animation)
             {
                 return true;
             }
 
-            static public bool IsAnimationLoader(HSceneProc.AnimationListInfo animation)
+            public static bool IsAnimationLoader(HSceneProc.AnimationListInfo animation)
             {
                 swapAnimationMapping.TryGetValue(animation, out var anim);
                 if (anim != null)
@@ -188,7 +169,7 @@ namespace AnimationLoader
                 return false;
             }
 
-            static public string TranslateName(HSceneProc.AnimationListInfo animation)
+            public static string TranslateName(HSceneProc.AnimationListInfo animation)
             {
                 swapAnimationMapping.TryGetValue(animation, out var anim);
                 if (anim != null)
