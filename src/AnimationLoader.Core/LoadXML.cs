@@ -60,15 +60,14 @@ namespace AnimationLoader
             var count = 0;
             var overrideNames = false;
             var logLines = new StringBuilder();
-#if DEBUG && KKS
-            KatarsysAnimationNameAnalysis();
-#endif
+
             // Select the only manifests that AnimationLoader will process
             foreach (var manifest in manifests
                 .Select(x => x.Root)
                 .Where(x => x?.Element(ManifestRootElement) != null))
             {
                 _animRoot = manifest?.Element(ManifestRootElement);
+
                 // Look for game specific configuration
                 _animRootGS = manifest?
                     .Element(ManifestRootElement)?
@@ -225,9 +224,6 @@ namespace AnimationLoader
                         animation.KoikatuReference = string.Copy(data.AnimationName);
                         animation.KoikatsuSunshine = string.Copy(data.AnimationName);
                         animation.KoikatsuSunshineReference = string.Copy(data.AnimationName);
-#if DEBUG && KKS
-                        animation.KatarsysName = KatarsysAnimationName(data);
-#endif
                     }
                 }
 #if KKS
