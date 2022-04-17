@@ -68,10 +68,6 @@ namespace AnimationLoader
             public string KoikatsuSunshine;
             [XmlElement]
             public string KoikatsuSunshineReference;
-#if DEBUG
-            [XmlElement]
-            public string KatarsysName;
-#endif
         }
         #endregion
 
