@@ -16,10 +16,10 @@ namespace AnimationLoader
         [DataMember]
         public Dictionary<string, List<string>> Clips { set; get; }
 
-        static readonly private string _path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
-        static readonly private string _fileName = $"{_path}/animationClips.cache";
-        static readonly private DataContractSerializer _serializer = new(typeof(AnimationClipsCache));
-        static readonly private FileInfo _fileInfo = new(_fileName);
+        private static readonly string _path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
+        private static readonly string _fileName = $"{_path}/animationClips.cache";
+        private static readonly DataContractSerializer _serializer = new(typeof(AnimationClipsCache));
+        private static readonly FileInfo _fileInfo = new(_fileName);
 
         public AnimationClipsCache()
         {
@@ -55,10 +55,10 @@ namespace AnimationLoader
         [DataMember]
         public Dictionary<string, List<string>> Clips { set; get; }
 
-        static readonly private string _path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
-        static readonly private string _fileName = $"{_path}/animationClipsByType.xml";
-        static readonly private DataContractSerializer _serializer = new(typeof(AnimationClipsByType));
-        static readonly private FileInfo _fileInfo = new(_fileName);
+        private static readonly string _path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
+        private static readonly string _fileName = $"{_path}/animationClipsByType.xml";
+        private static readonly DataContractSerializer _serializer = new(typeof(AnimationClipsByType));
+        private static readonly FileInfo _fileInfo = new(_fileName);
 
         public AnimationClipsByType()
         {
@@ -107,9 +107,9 @@ namespace AnimationLoader
     /// In the case of houshi for Hand and Breasts the list is the same. I leave
     /// them separate for clarity.
     /// </summary>
-    static public class AnimationClips
+    public static class AnimationClips
     {
-        static readonly public Dictionary<string, List<string>> Clips = new() {
+        public static readonly Dictionary<string, List<string>> Clips = new() {
             { "houshi-Hand", new List<string> {
                 "L_Idle",
                 "L_OLoop",

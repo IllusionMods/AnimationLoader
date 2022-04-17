@@ -1,7 +1,6 @@
 ﻿//
 // Hooks for Studio
 //
-
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +21,8 @@ namespace AnimationLoader
     {
         internal partial class Hooks
         {
-            static private AnimationClipsCache _animationClipsCache = new();
-            static private AnimationClipsByType _animationClipsByType = new();
+            private static AnimationClipsCache _animationClipsCache = new();
+            private static AnimationClipsByType _animationClipsByType = new();
 
             /// <summary>
             /// Load animation clips in Studio
@@ -32,7 +31,7 @@ namespace AnimationLoader
             /// <param name="__result"></param>
             [HarmonyPostfix]
             [HarmonyPatch(typeof(Studio.Info), nameof(Studio.Info.LoadExcelDataCoroutine))]
-            static private void LoadStudioAnims(Studio.Info __instance, ref IEnumerator __result)
+            private static void LoadStudioAnims(Studio.Info __instance, ref IEnumerator __result)
             {
                 __result = __result.AppendCo(() =>
                 {
@@ -110,7 +109,7 @@ namespace AnimationLoader
             }
 
             // TODO: Modify this for testing when new animations are added.
-            static private void LoadStudioAnimsCachedVersion(
+            private static void LoadStudioAnimsCachedVersion(
                 Studio.Info __instance,
                 ref IEnumerator __result)
             {
@@ -334,7 +333,7 @@ namespace AnimationLoader
             /// </summary>
             /// <param name="__instance"></param>
             /// <param name="__result"></param>
-            static private void LoadStudioAnimsOriginal(
+            private static void LoadStudioAnimsOriginal(
                 Studio.Info __instance,
                 ref IEnumerator __result)
             {

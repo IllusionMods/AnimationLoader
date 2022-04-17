@@ -18,12 +18,12 @@ namespace AnimationLoader
         [XmlElement]
         public HashSet<string> Keys = new();
 
-        static readonly private string _path = Path.Combine(UserData.Path, "save");
-        static readonly private string _fileName = $"{_path}/animations.xml";
-        static readonly private XmlSerializer _xmlSerializer = new(typeof(UsedAnimations));
-        static readonly private FileInfo _fileInfo = new(_fileName);
+        private static readonly string _path = Path.Combine(UserData.Path, "save");
+        private static readonly string _fileName = $"{_path}/animations.xml";
+        private static readonly XmlSerializer _xmlSerializer = new(typeof(UsedAnimations));
+        private static readonly FileInfo _fileInfo = new(_fileName);
 
-        override public string ToString()
+        public override string ToString()
         {
             var sb = new StringBuilder();
             var total = Keys.Count;

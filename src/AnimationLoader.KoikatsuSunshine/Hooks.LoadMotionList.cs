@@ -16,8 +16,10 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        static internal UsedAnimations _usedAnimations = new();
-        static internal Dictionary<int, Dictionary<int, int>> _dicExpAddTaii = new();
+        internal static UsedAnimations _usedAnimations = new();
+        internal static Dictionary<int, Dictionary<int, int>> _dicExpAddTaii = new();
+        internal static Dictionary<string,
+            Dictionary<int, Dictionary<string, int>>> _alDicExpAddTaii = new();
 
         internal partial class Hooks
         {
@@ -33,7 +35,7 @@ namespace AnimationLoader
             /// <param name="_objParent"></param>
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSprite), nameof(HSprite.LoadMotionList))]
-            static private void LoadMotionListPostfix(
+            private static void LoadMotionListPostfix(
                 HSprite __instance,
                 List<HSceneProc.AnimationListInfo> _lstAnimInfo,
                 GameObject _objParent)
@@ -100,10 +102,16 @@ namespace AnimationLoader
 #endif
                                 if (HighLight.Value)
                                 {
-                                    // Foreground color yellow for loaded animations
-                                    if ((swap.ExpTaii >= 5) && (hExp < swap.ExpTaii))
+                                    if (swap.MotionIKDonor > 0)
                                     {
-                                        label.color = Utilities.orange;
+                                        // MotionIK information
+                                        label.color = Utilities.gold;
+                                    }
+                                    else if((swap.ExpTaii >= 5) && (hExp < swap.ExpTaii))
+                                    {
+                                        // Foreground color yellow for loaded animations
+                                        //label.color = Utilities.orange;
+                                        label.color = Utilities.pink;
                                     }
                                 }
                             }
@@ -252,7 +260,7 @@ namespace AnimationLoader
 
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.LoadAddTaii), new Type[] { typeof(List<AddTaiiData.Param>) })]
-            static private void LoadAddTaiiPostfix(object __instance, List<AddTaiiData.Param> param)
+            private static void LoadAddTaiiPostfix(object __instance, List<AddTaiiData.Param> param)
             {
                 var hsceneTraverse = Traverse.Create(__instance);
                 var dicExpAddTaii = hsceneTraverse
@@ -271,7 +279,7 @@ namespace AnimationLoader
                 }
             }
 
-            static internal bool AnimationCheckOk(HSprite hsprite, SwapAnimationInfo anim)
+            internal static bool AnimationCheckOk(HSprite hsprite, SwapAnimationInfo anim)
             {
 #if DEBUG
                 if (TestMode.Value)
@@ -308,11 +316,25 @@ namespace AnimationLoader
             /// </summary>
             /// <param name="anim"></param>
             /// <returns></returns>
-            static internal bool CheckExperince(HSprite hsprite, SwapAnimationInfo anim)
+            internal static bool CheckExperince(HSprite hsprite, SwapAnimationInfo anim)
             {
                 var hExp = hsprite.flags.lstHeroine[0].hExp;
+                var expTaii = (double)anim.ExpTaii;
 
-                if ((double)hExp >= (double)anim.ExpTaii)
+                if(_alDicExpAddTaii.ContainsKey(anim.Guid))
+                {
+                    if (_alDicExpAddTaii[anim.Guid].ContainsKey((int)anim.Mode)
+                    && _alDicExpAddTaii[anim.Guid][(int)anim.Mode]
+                        .ContainsKey($"{anim.ControllerFemale}{anim.StudioId}"))
+                    { 
+                        expTaii = _alDicExpAddTaii[anim.Guid][(int)anim.Mode][$"{anim.ControllerFemale}{anim.StudioId}"];
+                    }
+                    else
+                    {
+                        expTaii = -1;
+                    }
+                }
+                if ((double)hExp >= expTaii)
                 {
                     return true;
                 }

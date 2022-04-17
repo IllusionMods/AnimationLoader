@@ -15,8 +15,8 @@ namespace AnimationLoader
     {
         internal partial class Hooks
         {
-            static internal bool once = false;
-            static private List<HSceneProc.AnimationListInfo>[] _gameAnimations = 
+            internal static bool once = false;
+            private static List<HSceneProc.AnimationListInfo>[] _gameAnimations = 
                 new List<HSceneProc.AnimationListInfo>[8];
 
             /// <summary>
@@ -25,7 +25,7 @@ namespace AnimationLoader
             /// <param name="__instance"></param>
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateAllAnimationList))]
-            static private void ExtendList(object __instance)
+            private static void ExtendList(object __instance)
             {
                 var hsceneTraverse = Traverse.Create(__instance);
                 var addedAnimations = new StringBuilder();
@@ -37,6 +37,9 @@ namespace AnimationLoader
                 var strTmp = string.Empty;
                 countGA = Utilities.CountAnimations(lstAnimInfo);
 
+#if DEBUG
+                Utilities.SaveAnimInfo(lstAnimInfo);
+#endif
                 swapAnimationMapping =
                     new Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>();
 
@@ -151,8 +154,10 @@ namespace AnimationLoader
                         animListInfo.Add(donorInfo);
                         swapAnimationMapping[donorInfo] = anim;
                         // Add to log
-                        addedAnimations.Append($"EMode={anim.Mode,6} Name={anim.AnimationName}, " +
-                            $"[Key={AnimationInfo.GetKey(anim)}] donor release={donorInfo.isRelease}\n");
+                        addedAnimations.Append($"EMode={anim.Mode,6} Name=" +
+                            $"{Utilities.Translate(anim.AnimationName)}, " +
+                            $"[Key={AnimationInfo.GetKey(anim)}] donor release=" +
+                            $"{donorInfo.isRelease}\n");
                         countAL++;
                     }
                 }

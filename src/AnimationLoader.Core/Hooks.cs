@@ -1,4 +1,7 @@
-﻿using System;
+﻿//
+// AnimationLoader Hooks
+//
+using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
@@ -13,19 +16,19 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        static private ChaControl _heroine;
-        static private ChaControl _heroine3P;
-        static private List<ChaControl> _lstHeroines;
-        static private ChaControl _player;
-        static private HFlag _flags;
-        static private Harmony _hookInstance;
+        private static ChaControl _heroine;
+        private static ChaControl _heroine3P;
+        private static List<ChaControl> _lstHeroines;
+        private static ChaControl _player;
+        private static HFlag _flags;
+        private static Harmony _hookInstance;
 
         internal partial class Hooks
         {
             /// <summary>
             /// Initialize the Hooks patch instance
             /// </summary>
-            static internal void Init()
+            internal static void Init()
             {
                 //_hookInstance = Harmony.CreateAndPatchAll(typeof(Hooks), nameof(Hooks));
                 _hookInstance = Harmony.CreateAndPatchAll(typeof(Hooks));
@@ -55,7 +58,7 @@ namespace AnimationLoader
             /// <param name="___male"></param>
             [HarmonyPrefix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.SetShortcutKey))]
-            static private void SetShortcutKeyPrefix(
+            private static void SetShortcutKeyPrefix(
                 object __instance,
                 List<ChaControl> ___lstFemale,
                 ChaControl ___male)
@@ -80,7 +83,7 @@ namespace AnimationLoader
 
             [HarmonyTranspiler]
             [HarmonyPatch(typeof(HSprite), nameof(HSprite.OnChangePlaySelect))]
-            static private IEnumerable<CodeInstruction> OnChangePlaySelect(
+            private static IEnumerable<CodeInstruction> OnChangePlaySelect(
                 IEnumerable<CodeInstruction> instructions)
             {
                 // Force position change even if position appears to match.

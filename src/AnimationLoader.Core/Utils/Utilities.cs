@@ -18,55 +18,52 @@ namespace AnimationLoader
     {
         internal class Utilities
         {
-            static internal byte _alpha = 255;
+            internal static byte _alpha = 255;
 
 #pragma warning disable IDE1006 // Naming Styles
-#pragma warning disable IDE0025 // Use block body for properties
 
-            static public Color red => new Color32(255, 0, 0, _alpha);
-            static public Color darkred => new Color32(139, 0, 0, _alpha);
+            public static Color red => new Color32(255, 0, 0, _alpha);
+            public static Color darkred => new Color32(139, 0, 0, _alpha);
 
-            static public Color magenta => new Color32(255, 0, 255, _alpha);
-            static public Color darkmagenta => new Color32(139, 0, 139, _alpha);
+            public static Color magenta => new Color32(255, 0, 255, _alpha);
+            public static Color darkmagenta => new Color32(139, 0, 139, _alpha);
+            public static Color pink => new Color32(255, 192, 203, _alpha);
 
-            static public Color yellow => new Color32(255, 255, 0, _alpha);
-            static public Color lightyellow => new Color32(255, 255, 224, _alpha);
+            public static Color yellow => new Color32(255, 255, 0, _alpha);
+            public static Color lightyellow => new Color32(255, 255, 224, _alpha);
 
+            public static Color blue => new Color32(0, 0, 255, _alpha);
+            public static Color darkblue => new Color32(0, 0, 139, _alpha);
 
-            static public Color blue => new Color32(0, 0, 255, _alpha);
-            static public Color darkblue => new Color32(0, 0, 139, _alpha);
+            public static Color cyan => new Color32(0, 255, 255, _alpha);
+            public static Color darkcyan => new Color32(0, 139, 139, _alpha);
 
-            static public Color cyan => new Color32(0, 255, 255, _alpha);
-            static public Color darkcyan => new Color32(0, 139, 139, _alpha);
+            public static Color orange => new Color32(255, 165, 0, _alpha);
+            public static Color darkorange => new Color32(255, 140, 0, _alpha);
+            public static Color gold => new Color32(255, 215, 0, _alpha);
 
-            static public Color orange => new Color32(255, 165, 0, _alpha);
-            static public Color darkorange => new Color32(255, 140, 0, _alpha);
+            public static Color green => new Color32(0, 128, 0, _alpha);
+            public static Color darkgreen => new Color32(0, 100, 0, _alpha);
+            public static Color lime => new Color32(0, 255, 0, _alpha);
 
-            static public Color green => new Color32(0, 128, 0, _alpha);
-            static public Color darkgreen => new Color32(0, 100, 0, _alpha);
-            static public Color lime => new Color32(0, 255, 0, _alpha);
+            public static Color violet => new Color32(238, 130, 238, _alpha);
+            public static Color darkviolet => new Color32(148, 0, 211, _alpha);
 
-            static public Color violet => new Color32(238, 130, 238, _alpha);
-            static public Color darkviolet => new Color32(148, 0, 211, _alpha);
+            public static Color orangered => new Color32(255, 69, 0, _alpha);
+            public static Color blueviolet => new Color32(138, 43, 226, _alpha);
+            public static Color greenyellow => new Color32(173, 255, 47, _alpha);
+            public static Color yellowgreen => new Color32(154, 205, 50, _alpha);
 
-            static public Color orangered => new Color32(255, 69, 0, _alpha);
-            static public Color blueviolet => new Color32(138, 43, 226, _alpha);
-            static public Color greenyellow => new Color32(173, 255, 47, _alpha);
-            static public Color yellowgreen => new Color32(154, 205, 50, _alpha);
+            public static Color black => new Color32(0, 0, 0, _alpha);
+            public static Color gray => new Color32(128, 128, 128, _alpha);
+            public static Color white => new Color32(255, 255, 255, _alpha);
 
-            static public Color black => new Color32(0, 0, 0, _alpha);
-            static public Color gray => new Color32(128, 128, 128, _alpha);
-            static public Color white => new Color32(255, 255, 255, _alpha);
-
-#pragma warning restore IDE0025 // Use block body for properties
 #pragma warning restore IDE1006 // Naming Styles
 
             /// <summary>
             /// Save information for template.xml
             /// </summary>
-            static internal void SaveAnimInfo(
-                object hsceneProc, 
-                List<HSceneProc.AnimationListInfo>[] lstAnimInfo)
+            internal static void SaveAnimInfo(List<HSceneProc.AnimationListInfo>[] lstAnimInfo)
             {
                 var total = 0;
 
@@ -101,7 +98,7 @@ namespace AnimationLoader
                 }
             }
 
-            static internal string Translate(string name)
+            internal static string Translate(string name)
             {
                 if (!TranslationHelper.TryTranslate(name, out var tmp))
                 {
@@ -111,7 +108,7 @@ namespace AnimationLoader
                 return tmp;
             }
 
-            static internal string TranslateName(string animationName, bool original = false)
+            internal static string TranslateName(string animationName, bool original = false)
             {
                 var tmp = Translate(animationName);
                 if ((tmp == animationName) || !original)
@@ -128,7 +125,7 @@ namespace AnimationLoader
             /// <param name="names"></param>
             /// <param name="quotes"></param>
             /// <returns></returns>
-            static internal string CategoryList(List<HSceneProc.Category> categories, bool names = false, bool quotes = true)
+            internal static string CategoryList(List<HSceneProc.Category> categories, bool names = false, bool quotes = true)
             {
                 var tmp = "";
                 var first = true;
@@ -169,7 +166,7 @@ namespace AnimationLoader
             /// <param name="names"></param>
             /// <param name="quotes"></param>
             /// <returns></returns>
-            static internal string CategoryList(List<int> categories, bool names = false, bool quotes = true)
+            internal static string CategoryList(List<int> categories, bool names = false, bool quotes = true)
             {
                 var tmp = "";
                 var first = true;
@@ -203,7 +200,7 @@ namespace AnimationLoader
                 return quotes ? "\" { " + tmp + " }\"" : "{ " + tmp + " }";
             }
 
-            static internal int CountAnimations(List<HSceneProc.AnimationListInfo>[] lstAnimInfo)
+            internal static int CountAnimations(List<HSceneProc.AnimationListInfo>[] lstAnimInfo)
             {
                 var count = 0;
 
@@ -214,7 +211,7 @@ namespace AnimationLoader
                 return count;
             }
 
-            static internal bool HasMovement(AnimationInfo anim)
+            internal static bool HasMovement(AnimationInfo anim)
             {
                 if (anim?.SwapAnim != null)
                 {
@@ -235,7 +232,7 @@ namespace AnimationLoader
             /// from original position saved
             /// </summary>
             /// <param name="message"></param>
-            static internal void SetOriginalPositionAll()
+            internal static void SetOriginalPositionAll()
             {
                 if (_flags == null)
                 {
@@ -261,7 +258,7 @@ namespace AnimationLoader
             /// </summary>
             /// <param name="chaControl"></param>
             /// <returns></returns>
-            static internal bool IsNewPosition(ChaControl chaControl)
+            internal static bool IsNewPosition(ChaControl chaControl)
             {
                 var controller = GetMoveController(chaControl);
                 var newPosition = chaControl.transform.position;
@@ -283,7 +280,7 @@ namespace AnimationLoader
             /// <param name="mode"></param>
             /// <param name="id"></param>
             /// <returns></returns>
-            static internal int GetExpTaii(int mode, int id)
+            internal static int GetExpTaii(int mode, int id)
             {
                 if (_dicExpAddTaii != null)
                 {
@@ -294,6 +291,35 @@ namespace AnimationLoader
                     return 0;
                 }
                 return -1;
+            }
+
+            /// <summary>
+            /// Save ExpTaii in dictionary
+            /// </summary>
+            internal static void AlDicExpAddTaii()
+            {
+                _alDicExpAddTaii.Clear();
+
+                foreach (var mode in animationDict.Keys)
+                {
+                    foreach(var anim in animationDict[mode])
+                    {
+                        if(!_alDicExpAddTaii.ContainsKey(anim.Guid))
+                        {
+                            _alDicExpAddTaii.Add(anim.Guid,
+                                new Dictionary<int, Dictionary<string, int>>());
+                            _alDicExpAddTaii[anim.Guid].Clear();
+                        }
+                        if(!_alDicExpAddTaii[anim.Guid].ContainsKey((int)anim.Mode))
+                        {
+                            _alDicExpAddTaii[anim.Guid].Add((int)anim.Mode,
+                                new Dictionary<string, int>());
+                            _alDicExpAddTaii[anim.Guid][(int)anim.Mode].Clear();
+                        }
+                        _alDicExpAddTaii[anim.Guid][(int)anim.Mode]
+                            .Add($"{anim.ControllerFemale}{anim.StudioId}", anim.ExpTaii);
+                    }
+                }
             }
 #endif
         }

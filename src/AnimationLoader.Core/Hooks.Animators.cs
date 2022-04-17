@@ -20,7 +20,7 @@ namespace AnimationLoader
             /// <param name="_nextAinmInfo"></param>
             [HarmonyPrefix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.ChangeAnimator))]
-            static private void ChangeAnimatorPrefix(
+            private static void ChangeAnimatorPrefix(
                 object __instance,
                 HSceneProc.AnimationListInfo _nextAinmInfo)
             {
@@ -101,7 +101,7 @@ namespace AnimationLoader
                 }
             }
 
-            static internal Func<string, string> SiruPaste = x => x == string.Empty ?
+            internal static Func<string, string> SiruPaste = x => x == string.Empty ?
                 $"None" : $"{x}";
 
             /// <summary>
@@ -111,7 +111,7 @@ namespace AnimationLoader
             /// <param name="_nextAinmInfo"></param>
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.ChangeAnimator))]
-            static private void SwapAnimation(
+            private static void SwapAnimation(
                 object __instance,
                 HSceneProc.AnimationListInfo _nextAinmInfo)
             {
@@ -175,7 +175,7 @@ namespace AnimationLoader
             /// <summary>
             /// Debug only method
             /// </summary>
-            static private void ChangeCategoryPostfix(HPointData _data, int _category)
+            private static void ChangeCategoryPostfix(HPointData _data, int _category)
             {
                 Log.Warning(
                     $"0021: HPoint mode={(PositionCategory)_category} " +

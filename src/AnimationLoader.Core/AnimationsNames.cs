@@ -19,8 +19,8 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        static readonly private XmlSerializer xmlNamesSerializer = new(typeof(Names));
-        static private Dictionary<string, Names> animationNamesDict = new();
+        private static readonly XmlSerializer xmlNamesSerializer = new(typeof(Names));
+        private static Dictionary<string, Names> animationNamesDict = new();
 
         #region Serializable classes
         [XmlRoot("Names")]
@@ -78,7 +78,7 @@ namespace AnimationLoader
         /// <summary>
         /// Read animations names xml files
         /// </summary>
-        static private void LoadNamesXml()
+        private static void LoadNamesXml()
         {
             if (!UserOverrides.Value)
             {
@@ -103,7 +103,7 @@ namespace AnimationLoader
         /// Add the names on the xml files to names dictionary
         /// </summary>
         /// <param name="namesDocs"></param>
-        static private void LoadNamesXmls(IEnumerable<XDocument> namesDocs)
+        private static void LoadNamesXmls(IEnumerable<XDocument> namesDocs)
         {
             if (!UserOverrides.Value)
             {
@@ -130,7 +130,7 @@ namespace AnimationLoader
         /// Setup new names for guid
         /// </summary>
         /// <param name="manifest"></param>
-        static private void NamesAddGuid(XElement manifest)
+        private static void NamesAddGuid(XElement manifest)
         {
             if (!UserOverrides.Value)
             {
@@ -154,7 +154,7 @@ namespace AnimationLoader
         /// <summary>
         /// Save all the names in the names dictionary to xml files
         /// </summary>
-        static private void SaveNamesXmls()
+        private static void SaveNamesXmls()
         {
             if (!UserOverrides.Value)
             {
@@ -173,7 +173,7 @@ namespace AnimationLoader
         /// </summary>
         /// <param name="names"></param>
         /// <param name="guid"></param>
-        static private void SaveNames(Names names, string guid, bool overwrite = false)
+        private static void SaveNames(Names names, string guid, bool overwrite = false)
         {
             if (!UserOverrides.Value)
             {
@@ -206,7 +206,7 @@ namespace AnimationLoader
         /// </summary>
         /// <param name="names"></param>
         /// <param name="guid"></param>
-        static private void ReadNames(ref Names names, string guid)
+        private static void ReadNames(ref Names names, string guid)
         {
             if (!UserOverrides.Value)
             {

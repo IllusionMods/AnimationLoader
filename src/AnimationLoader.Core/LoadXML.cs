@@ -1,4 +1,7 @@
-﻿using System;
+﻿//
+// Load XML animation information
+//
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,18 +25,18 @@ namespace AnimationLoader
         private const string ManifestArrayItem = "Animation";
         private const string ManifestGSArrayItem = KoikatuAPI.GameProcessName;
 
-        static readonly private XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
+        private static readonly XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
         // TODO: Read game overrides when running in KK
 #if KKS
         private const string ManifestOverride = "GameSpecificOverrides";
-        static readonly private XmlSerializer xmlOverrideSerializer = new(typeof(OverrideInfo));
+        private static readonly XmlSerializer xmlOverrideSerializer = new(typeof(OverrideInfo));
 #endif
-        static private XElement _animRoot;
-        static private XElement _animRootGS;
+        private static XElement _animRoot;
+        private static XElement _animRootGS;
 
-        static private bool _saveNames = false;
+        private static bool _saveNames = false;
 
-        static private void LoadTestXml()
+        private static void LoadTestXml()
         {
             var path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
             if(Directory.Exists(path))
@@ -51,7 +54,7 @@ namespace AnimationLoader
                 "config/AnimationLoader folder to test animations");
         }
 
-        static private void LoadXmls(IEnumerable<XDocument> manifests)
+        private static void LoadXmls(IEnumerable<XDocument> manifests)
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
             var count = 0;
@@ -133,6 +136,9 @@ namespace AnimationLoader
             }
             if (count > 0)
             {
+#if KKS
+                Utilities.AlDicExpAddTaii();
+#endif
                 logLines.Append($"\n{count} animations processed from manifests.\n");
 #if DEBUG
                 Log.Info($"0016: Animations loaded:\n\n{logLines}");
@@ -147,7 +153,7 @@ namespace AnimationLoader
             }
         }
 
-        static private int ProcessArray(
+        private static int ProcessArray(
             XElement root, 
             string guid, 
             string version,
@@ -245,7 +251,8 @@ namespace AnimationLoader
                     animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
                 }
                 list.Add(data);
-                logLines.Append($"{AnimationInfo.GetKey(data),-30} - {data.AnimationName}\n");
+                logLines.Append($"{AnimationInfo.GetKey(data),-30} - " +
+                    $"{Utilities.Translate(data.AnimationName)}\n");
                 count++;
                 if (UserOverrides.Value)
                 {
@@ -265,11 +272,11 @@ namespace AnimationLoader
             return count;
         }
 
-        static internal Func<XName, string> RootText = x => x == KoikatuAPI.GameProcessName ?
+        internal static Func<XName, string> RootText = x => x == KoikatuAPI.GameProcessName ?
             $"Game specific elements of {x}" : $"Root elements of {x}";
 
 #if KKS
-        static private void DoOverrides(
+        private static void DoOverrides(
             ref SwapAnimationInfo data, 
             OverrideInfo overrides,
             ref Animation animation,

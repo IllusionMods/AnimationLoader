@@ -17,15 +17,15 @@ namespace AnimationLoader
     public partial class SwapAnim
     {
 #if KK
-        static readonly private Color buttonColor = new(0.96f, 1f, 0.9f);
+        private static readonly Color buttonColor = new(0.96f, 1f, 0.9f);
 #endif
-        static private Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
-        static private Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>
+        private static Dictionary<EMode, List<SwapAnimationInfo>> animationDict;
+        private static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>
             swapAnimationMapping;
-        static readonly private Type VRHSceneType = Type.GetType("VRHScene, Assembly-CSharp");
+        private static readonly Type VRHSceneType = Type.GetType("VRHScene, Assembly-CSharp");
         
 
-        static readonly private Dictionary<string, string> SiruPasteFiles = new() {
+        private static readonly Dictionary<string, string> SiruPasteFiles = new() {
             { "", "" },
             { "butt", "siru_t_khs_n06" },
             { "facetits", "siru_t_khh_32" },
@@ -37,7 +37,7 @@ namespace AnimationLoader
             { "kksfacetits", "siru_t_khh_33" },
         };
 
-        static readonly private Dictionary<string, int> EModeGroups = new() {
+        private static readonly Dictionary<string, int> EModeGroups = new() {
             { "aibu1", 998 },
             { "houshi0", 999 },
             { "houshi1", 1000 },
@@ -140,7 +140,7 @@ namespace AnimationLoader
         /// </summary>
         /// <param name="chaControl"></param>
         /// <returns></returns>
-        static public MoveController GetMoveController(ChaControl chaControl) =>
+        public static MoveController GetMoveController(ChaControl chaControl) =>
             (chaControl == null) || (chaControl.gameObject == null)
             ? null : chaControl.GetComponent<MoveController>();
     }

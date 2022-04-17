@@ -5,12 +5,12 @@ using UnityEngine;
 
 namespace AnimationLoader
 {
-    static public class Extensions
+    public static class Extensions
     {
         /// <summary>
         /// Create a coroutine that calls each of the actions in order after base coroutine finishes
         /// </summary>
-        static public IEnumerator AppendCo(this IEnumerator baseCoroutine, params Action[] actions)
+        public static IEnumerator AppendCo(this IEnumerator baseCoroutine, params Action[] actions)
         {
             return new object[] { baseCoroutine, CreateCoroutine(actions) }.GetEnumerator();
         }
@@ -19,7 +19,7 @@ namespace AnimationLoader
         /// Create a coroutine that calls each of the action delegates on consecutive frames
         /// (yield return null is returned after each one of the actions)
         /// </summary>
-        static public IEnumerator CreateCoroutine(params Action[] actions)
+        public static IEnumerator CreateCoroutine(params Action[] actions)
         {
 #if DEBUG
             var stopWatch = new Stopwatch();
@@ -42,7 +42,7 @@ namespace AnimationLoader
 #endif
         }
 
-        static public void SetRect(
+        public static void SetRect(
             this Transform self,
             float anchorLeft = 0f,
             float anchorBottom = 0f,
