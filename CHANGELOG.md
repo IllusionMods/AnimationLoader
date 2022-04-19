@@ -1,18 +1,18 @@
 # Changelog
 
-#### <u>Unreleasd</u>
+#### <u>v1.1.1.3 - 2022-04-19</u>
 
 Update libraries used.
 
 ##### Added
 
-- Really basic MotionIK support for a few cases that the donor animations more or less align
+- [KKS] Really basic MotionIK support for a few cases that the donor animations more or less align
 
 #### <u>v1.1.1.1 - 2022-02-12</u>
 
 ##### Fixed
 
-- Fix problem in KKS when disabling the plug-in in Character Studio.
+- [KKS] Fix problem in KKS when disabling the plug-in in Character Studio.
 
 #### <u>v1.1.1 - 2022-02-12</u>
 
