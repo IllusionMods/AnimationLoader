@@ -46,7 +46,7 @@
     </ItemGroup>
     
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="IF EXIST $(SolutionDir)PostBuild.bat CALL &quot;$(SolutionDir)PostBuild.bat&quot; KKS $(TargetPath)" />
+      <Exec Command="IF EXIST $(SolutionDir)PostBuild.bat CALL &quot;$(SolutionDir)PostBuild.bat&quot; KKSLIB $(TargetPath)" />
     </Target>
 	
 </Project>
