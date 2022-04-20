@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-
-using UnityEngine;
 
 using BepInEx.Logging;
 
@@ -11,7 +8,13 @@ using KKAPI;
 using KKAPI.Chara;
 using KKAPI.MainGame;
 
+#if KK
+using UnityEngine;
+#endif
+
 using static HFlag;
+
+
 namespace AnimationLoader
 {
     public partial class SwapAnim
