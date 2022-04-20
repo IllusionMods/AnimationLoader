@@ -163,7 +163,7 @@ namespace AnimationLoader
                             if (_usedAnimations.Keys.Count > 0)
                             {
                                 newLabel.SetActive(!_usedAnimations.Keys.Contains(
-                                    AnimationInfo.GetKey(animationInfoComponent.info)));
+                                    GetAnimationKey(animationInfoComponent.info)));
                             }
                             if (__instance.flags.isFreeH && EnableAllFreeH.Value)
                             {
@@ -298,7 +298,7 @@ namespace AnimationLoader
                     {
                         return false;
                     }
-                    if (!_usedAnimations.Keys.Contains(AnimationInfo.GetKey(anim)))
+                    if (!_usedAnimations.Keys.Contains(GetAnimationKey(anim)))
                     {
                         return false;
                     }

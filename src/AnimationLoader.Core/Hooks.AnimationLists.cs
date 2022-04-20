@@ -156,7 +156,7 @@ namespace AnimationLoader
                         // Add to log
                         addedAnimations.Append($"EMode={anim.Mode,6} Name=" +
                             $"{Utilities.Translate(anim.AnimationName)}, " +
-                            $"[Key={AnimationInfo.GetKey(anim)}] donor release=" +
+                            $"[Key={GetAnimationKey(anim)}] donor release=" +
                             $"{donorInfo.isRelease}\n");
                         countAL++;
                     }

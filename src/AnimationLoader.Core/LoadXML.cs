@@ -247,7 +247,7 @@ namespace AnimationLoader
                     animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
                 }
                 list.Add(data);
-                logLines.Append($"{AnimationInfo.GetKey(data),-30} - " +
+                logLines.Append($"{GetAnimationKey(data), -30} - " +
                     $"{Utilities.Translate(data.AnimationName)}\n");
                 count++;
                 if (UserOverrides.Value)
