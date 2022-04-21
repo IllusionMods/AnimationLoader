@@ -26,7 +26,6 @@ namespace AnimationLoader
         private static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>
             swapAnimationMapping;
         private static readonly Type VRHSceneType = Type.GetType("VRHScene, Assembly-CSharp");
-        
 
         private static readonly Dictionary<string, string> SiruPasteFiles = new() {
             { "", "" },
