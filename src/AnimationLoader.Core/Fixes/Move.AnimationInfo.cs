@@ -122,20 +122,22 @@ namespace AnimationLoader
             int id;
             string controller;
 
+            Guid = "com.illusion";
             mode = animation.mode;
-            swapAnimationMapping.TryGetValue(animation, out var anim);
-            if(anim != null)
+            id = animation.id;
+            controller = animation.paramFemale.path.file;
+
+            if (swapAnimationMapping != null)
             {
-                Guid = anim.Guid;
-                id = anim.StudioId;
-                controller = anim.ControllerFemale;
+                swapAnimationMapping.TryGetValue(animation, out var anim);
+                if (anim != null)
+                {
+                    Guid = anim.Guid;
+                    id = anim.StudioId;
+                    controller = anim.ControllerFemale;
+                }
             }
-            else
-            {
-                Guid = "com.illusion";
-                id = animation.id;
-                controller = animation.paramFemale.path.file;
-            }
+
             return withguid ?
                 $"{Guid}-{mode}-{controller}-{id:D3}" : $"{mode}-{controller}-{id:D3}";
         }
