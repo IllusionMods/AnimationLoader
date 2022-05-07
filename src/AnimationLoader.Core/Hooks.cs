@@ -22,6 +22,7 @@ namespace AnimationLoader
         private static ChaControl _player;
         private static HFlag _flags;
         private static Harmony _hookInstance;
+        private static bool _specialAnimation = false;
 
         internal partial class Hooks
         {
@@ -30,7 +31,6 @@ namespace AnimationLoader
             /// </summary>
             internal static void Init()
             {
-                //_hookInstance = Harmony.CreateAndPatchAll(typeof(Hooks), nameof(Hooks));
                 _hookInstance = Harmony.CreateAndPatchAll(typeof(Hooks));
 
                 if (VRHSceneType != null)
@@ -63,6 +63,9 @@ namespace AnimationLoader
                 List<ChaControl> ___lstFemale,
                 ChaControl ___male)
             {
+#if DEBUG
+                Log.Warning("[SetSortcutKeyPrefix] TRIGERED");
+#endif
                 _lstHeroines = ___lstFemale;
                 _heroine = _lstHeroines[0];
                 GetMoveController(_heroine).Init(CharacterType.Heroine);
@@ -76,8 +79,11 @@ namespace AnimationLoader
                 _player = ___male;
                 GetMoveController(_player).Init(CharacterType.Player);
 
-                _flags = Traverse
-                    .Create(__instance)
+                var hsceneTraverse = Traverse.Create(__instance);
+                var categorys = hsceneTraverse.Field<List<int>>("categorys").Value;
+                _specialAnimation = (categorys[0] is 12 or > 1000);
+
+                _flags = hsceneTraverse
                     .Field<HFlag>("flags").Value;
             }
 
