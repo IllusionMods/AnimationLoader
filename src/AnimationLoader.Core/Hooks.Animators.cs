@@ -33,16 +33,14 @@ namespace AnimationLoader
                 {
 #if DEBUG
                     Log.Warning($"0007: Animator changing - [{Manager.Scene.ActiveScene.name}] - " +
-                        $"{AnimationInfo.TranslateName(_nextAinmInfo)}, " +
-                        $"Key={AnimationInfo.GetKey(_nextAinmInfo)}, " +
+                        $"{Utilities.TranslateName(_nextAinmInfo.nameAnimation)}, " +
+                        $"Key={GetAnimationKey(_nextAinmInfo)}, " +
                         $"SiruPaste={SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}.");
 #endif
                     // Reposition characters before animation starts
                     if (Reposition.Value)
-                    {                        
-                        var flags = Traverse
-                            .Create(__instance)
-                            .Field<HFlag>("flags").Value;
+                    {
+                        var flags = Traverse.Create(__instance).Field<HFlag>("flags").Value;
                         Utilities.SetOriginalPositionAll();
                         var nowAnimationInfo = flags.nowAnimationInfo;
                         var nowAnim = new AnimationInfo(nowAnimationInfo);
@@ -155,6 +153,15 @@ namespace AnimationLoader
                         male.animBody.runtimeAnimatorController, maleCtrl);
                 }
                 var mi = t_hsp.Field<List<MotionIK>>("lstMotionIK").Value;
+
+#if DEBUG
+                var path = _nextAinmInfo.paramFemale.path;
+                var ikData = GlobalMethod.LoadAllFolderInOneFile<TextAsset>("h/list/", path.file);
+                if (ikData != null)
+                {
+                    Log.Warning($"\n{path.file} IK {ikData.text}\n");
+                }
+#endif
 
                 if (swapAnimationInfo.MotionIKDonor != _nextAinmInfo.id)
                 {
