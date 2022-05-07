@@ -50,12 +50,21 @@ namespace AnimationLoader
         
         [XmlElement]
         public int DonorPoseId;
-        
+
+        [XmlElement]
+        public int DonorPoseIdMale;
+
         [XmlElement]
         public int NeckDonorId = -1;
-        
+
+        [XmlElement]
+        public int NeckDonorIdMale = -1;
+
         [XmlElement]
         public string FileMotionNeck;
+
+        [XmlElement]
+        public string FileMotionNeckMale;
 
         [XmlElement]
         public bool? IsFemaleInitiative;
@@ -67,10 +76,10 @@ namespace AnimationLoader
         public int MotionIKDonor = -1;
 
         [XmlElement]
-        public int ExpTaii = -1;
+        public int MotionIKDonorMale = -1;
 
         [XmlElement]
-        public bool? IsAnal;
+        public int ExpTaii = -1;
 
         [XmlElement]
         public Vector3 PositionHeroine = Vector3.zero;
@@ -132,10 +141,19 @@ namespace AnimationLoader
         public int DonorPoseId = -1;
 
         [XmlElement]
+        public int DonorPoseIdMale = -1;
+
+        [XmlElement]
         public int NeckDonorId = -1;
 
         [XmlElement]
+        public int NeckDonorIdMale = -1;
+
+        [XmlElement]
         public string FileMotionNeck;
+
+        [XmlElement]
+        public string FileMotionNeckMale;
 
         [XmlElement]
         public bool? IsFemaleInitiative;
@@ -147,10 +165,10 @@ namespace AnimationLoader
         public int MotionIKDonor = -1;
 
         [XmlElement]
-        public int ExpTaii = -1;
+        public int MotionIKDonorMale = -1;
 
         [XmlElement]
-        public bool? IsAnal;
+        public int ExpTaii = -1;
 
         [XmlElement]
         public Vector3 PositionHeroine = Vector3.zero;
@@ -164,7 +182,7 @@ namespace AnimationLoader
         Hand = 0,
         Mouth = 1,
         Breasts = 2,
-        none = -1,
+        none = -1
     }
 
     public enum PositionCategory
@@ -184,6 +202,6 @@ namespace AnimationLoader
         Pool = 1004,
         MischievousCaress = 1003,
         Ground3P = 1100,
-        AquariumCrowded = 1304,
+        AquariumCrowded = 1304
     }
 }

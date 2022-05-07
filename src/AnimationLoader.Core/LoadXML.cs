@@ -147,8 +147,7 @@ namespace AnimationLoader
             }
             else
             {
-                Log.Level(LogLevel.Message, "0017: No animation manifests found.");
-                Log.Level(LogLevel.Warning, "0017: No animation manifests found.");
+                Log.Level(LogLevel.Message | LogLevel.Debug, "0017: No animation manifests found.");
             }
         }
 
@@ -319,13 +318,25 @@ namespace AnimationLoader
             {
                 data.DonorPoseId = overrides.DonorPoseId;
             }
+            if (overrides.DonorPoseIdMale >= 0)
+            {
+                data.DonorPoseIdMale = overrides.DonorPoseIdMale;
+            }
             if (overrides.NeckDonorId >= 0)
             {
                 data.NeckDonorId = overrides.NeckDonorId;
             }
+            if (overrides.NeckDonorIdMale >= 0)
+            {
+                data.NeckDonorIdMale = overrides.NeckDonorIdMale;
+            }
             if (overrides.FileMotionNeck != null)
             {
                 data.FileMotionNeck = string.Copy(overrides.FileMotionNeck);
+            }
+            if (overrides.FileMotionNeckMale != null)
+            {
+                data.FileMotionNeckMale = string.Copy(overrides.FileMotionNeckMale);
             }
             if (overrides.IsFemaleInitiative != null)
             {
@@ -339,13 +350,13 @@ namespace AnimationLoader
             {
                 data.MotionIKDonor = overrides.MotionIKDonor;
             }
+            if (overrides.MotionIKDonorMale >= 0)
+            {
+                data.MotionIKDonorMale = overrides.MotionIKDonorMale;
+            }
             if (overrides.ExpTaii >= 0) 
             { 
                 data.ExpTaii = overrides.ExpTaii; 
-            }
-            if (overrides.IsAnal != null)
-            {
-                data.IsAnal = overrides.IsAnal;
             }
             if (overrides.PositionHeroine != Vector3.zero)
             {

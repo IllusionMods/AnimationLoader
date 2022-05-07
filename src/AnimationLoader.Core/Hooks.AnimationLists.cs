@@ -69,6 +69,12 @@ namespace AnimationLoader
                             continue;
                         }
 
+                        // Thre are cases where one Id works for the female but not the male and
+                        // viceversa
+                        // Use current NeckDonorID for Female and specify another for the male
+
+
+                        // Female donor
                         if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
                         {
                             // PR #23 Change to Log.Level to always show log, update log ID's
@@ -99,10 +105,42 @@ namespace AnimationLoader
                                 }
                             }
                         }
+
+                        // Male donor
+                        if (anim.NeckDonorIdMale >= 0 && anim.NeckDonorIdMale != anim.DonorPoseId)
+                        {
+                            var newNeckDonor = animListInfo
+                                .FirstOrDefault(x => x.id == anim.NeckDonorIdMale);
+                            if (newNeckDonor == null)
+                            {
+                                strTmp = $"0029B: Invalid or missing " +
+                                    $"NeckDonorIdMale: mode={anim.Mode} NeckDonorIdMale={anim.NeckDonorIdMale}";
+                                Log.Level(LogLevel.Warning, strTmp);
+                                addedAnimations.Append(strTmp);
+                            }
+                            else
+                            {
+                                var newMotionNeck = newNeckDonor?.paramMale?.fileMotionNeck;
+                                if (newMotionNeck == null)
+                                {
+                                    strTmp = $"0030B: NeckDonorIdMale didn't point to" +
+                                        $" a usable fileMotionNeck: " +
+                                        $"mode={anim.Mode} NeckDonorIdMale={anim.NeckDonorId}";
+                                    Log.Level(LogLevel.Warning, strTmp);
+                                    addedAnimations.Append(strTmp);
+                                }
+                                else
+                                {
+                                    donorInfo.paramMale.fileMotionNeck = newMotionNeck;
+                                }
+                            }
+                        }
+
                         if (anim.FileMotionNeck != null)
                         {
                             donorInfo.paramFemale.fileMotionNeck = anim.FileMotionNeck;
                         }
+
                         if (anim.IsFemaleInitiative != null)
                         {
                             donorInfo.isFemaleInitiative = anim.IsFemaleInitiative.Value;
@@ -135,17 +173,6 @@ namespace AnimationLoader
                         if (anim.Mode == HFlag.EMode.houshi)
                         {
                             donorInfo.kindHoushi = (int)anim.kindHoushi;
-                        }
-                        if (anim.Mode == HFlag.EMode.sonyu)
-                        {
-                            if (anim.IsAnal != null)
-                            {
-                                donorInfo.paramFemale.isAnal = anim.IsAnal.Value;
-                            }
-                            else
-                            {
-                                anim.IsAnal = donorInfo.paramFemale.isAnal;
-                            }
                         }
 #if KKS
                         // Update name so it shows on button text label correctly
