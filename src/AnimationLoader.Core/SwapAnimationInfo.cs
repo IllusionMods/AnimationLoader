@@ -28,7 +28,13 @@ namespace AnimationLoader
 
         [XmlElement]
         public string ControllerFemale;
-        
+
+        [XmlElement]
+        public string PathFemale1;
+
+        [XmlElement]
+        public string ControllerFemale1;
+
         [XmlElement]
         public string PathMale;
 
@@ -119,6 +125,12 @@ namespace AnimationLoader
         public string ControllerFemale;
 
         [XmlElement]
+        public string PathFemale1;
+
+        [XmlElement]
+        public string ControllerFemale1;
+
+        [XmlElement]
         public string PathMale;
 
         [XmlElement]
@@ -202,6 +214,8 @@ namespace AnimationLoader
         Pool = 1004,
         MischievousCaress = 1003,
         Ground3P = 1100,
-        AquariumCrowded = 1304
+        AquariumCrowded = 1304,
+        Houshi3PLieDown = 3000,
+        Houshi3PSitChair = 3001
     }
 }
