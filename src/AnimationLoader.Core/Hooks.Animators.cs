@@ -119,7 +119,9 @@ namespace AnimationLoader
                 }
 
                 RuntimeAnimatorController femaleCtrl = null;
+                RuntimeAnimatorController female1Ctrl = null;
                 RuntimeAnimatorController maleCtrl = null;
+
                 if (!string.IsNullOrEmpty(swapAnimationInfo.PathFemale)
                     || !string.IsNullOrEmpty(swapAnimationInfo.ControllerFemale))
                 {
@@ -128,6 +130,17 @@ namespace AnimationLoader
                         swapAnimationInfo.ControllerFemale,
                         typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
                 }
+
+                // Third wheel
+                if (!string.IsNullOrEmpty(swapAnimationInfo.PathFemale1)
+                    || !string.IsNullOrEmpty(swapAnimationInfo.ControllerFemale1))
+                {
+                    female1Ctrl = AssetBundleManager.LoadAsset(
+                        swapAnimationInfo.PathFemale1,
+                        swapAnimationInfo.ControllerFemale1,
+                        typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
+                }
+
                 if (!string.IsNullOrEmpty(swapAnimationInfo.PathMale)
                     || !string.IsNullOrEmpty(swapAnimationInfo.ControllerMale))
                 {
@@ -137,15 +150,24 @@ namespace AnimationLoader
                         typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
                 }
                 var t_hsp = Traverse.Create(__instance);
-                var female = t_hsp.Field<List<ChaControl>>("lstFemale").Value[0];
+                var lstFemale = t_hsp.Field<List<ChaControl>>("lstFemale").Value;
+                var female = lstFemale[0];
+                var female1 = ((lstFemale.Count > 1) ? lstFemale[1] : null);
                 var male = t_hsp.Field<ChaControl>("male").Value;
-                ////TODO: lstFemale[1], male1
+                ////TODO: male1
 
                 if (femaleCtrl != null)
                 {
                     female.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
                         female.animBody.runtimeAnimatorController,
                         femaleCtrl);
+                }
+                if ((female1Ctrl != null)
+                    && female1 != null)
+                {
+                    female1.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
+                        female1.animBody.runtimeAnimatorController,
+                        female1Ctrl);
                 }
                 if (maleCtrl != null)
                 {
@@ -159,7 +181,7 @@ namespace AnimationLoader
                 var ikData = GlobalMethod.LoadAllFolderInOneFile<TextAsset>("h/list/", path.file);
                 if (ikData != null)
                 {
-                    Log.Warning($"\n{path.file} IK {ikData.text}\n");
+                    Log.Warning($"\n{path.file} IK {ikData.bytes}\n");
                 }
 #endif
 
