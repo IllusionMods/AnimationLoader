@@ -24,8 +24,10 @@ namespace AnimationLoader
             internal int _id;
             internal string _controller;
             internal string _name;
+            internal int _donor;
 
             internal string Controller => _controller;
+            public int Donor => _donor;
             public string Guid => _Guid;
             public int Id => _id;
             public string Key => $"{_Guid}-{_mode}-{_controller}-{_id:D3}";
@@ -50,6 +52,7 @@ namespace AnimationLoader
                 _controller = string.Empty;
                 _id = -1;
                 _name = string.Empty;
+                _donor = -1;
             }
 
             public AnimationInfo(HSceneProc.AnimationListInfo animation)
@@ -71,6 +74,7 @@ namespace AnimationLoader
                     _id = anim.StudioId;
                     _isAnimationLoader = true;
                     _name = anim.AnimationName;
+                    _donor = anim.DonorPoseId;
                 }
                 else
                 {
@@ -82,6 +86,7 @@ namespace AnimationLoader
                     _id = animation.id;
                     _isAnimationLoader = false;
                     _name = animation.nameAnimation;
+                    _donor = -1;
                 }
             }
 
