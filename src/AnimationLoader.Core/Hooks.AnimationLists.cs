@@ -36,7 +36,6 @@ namespace AnimationLoader
                 var countAL = 0;
                 var strTmp = string.Empty;
                 countGA = Utilities.CountAnimations(lstAnimInfo);
-
 #if DEBUG
                 Utilities.SaveAnimInfo(lstAnimInfo);
 #endif
@@ -105,6 +104,38 @@ namespace AnimationLoader
                                 }
                             }
                         }
+
+                        // Female donor
+                        /*if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
+                        {
+                            // PR #23 Change to Log.Level to always show log, update log ID's
+                            // use temp variable to add log to log list
+                            var newNeckDonor = animListInfo
+                                .FirstOrDefault(x => x.id == anim.NeckDonorId);
+                            if (newNeckDonor == null)
+                            {
+                                strTmp = $"0029: Invalid or missing " +
+                                    $"NeckDonorId: mode={anim.Mode} NeckDonorId={anim.NeckDonorId}";
+                                Log.Level(LogLevel.Warning, strTmp);
+                                addedAnimations.Append(strTmp);
+                            }
+                            else
+                            {
+                                var newMotionNeck = newNeckDonor?.paramFemale1?.fileMotionNeck;
+                                if (newMotionNeck == null)
+                                {
+                                    strTmp = $"0030: NeckDonorId didn't point to" +
+                                        $" a usable fileMotionNeck: " +
+                                        $"mode={anim.Mode} NeckDonorId={anim.NeckDonorId}";
+                                    Log.Level(LogLevel.Warning, strTmp);
+                                    addedAnimations.Append(strTmp);
+                                }
+                                else
+                                {
+                                    donorInfo.paramFemale1.fileMotionNeck = newMotionNeck;
+                                }
+                            }
+                        }*/
 
                         // Male donor
                         if (anim.NeckDonorIdMale >= 0 && anim.NeckDonorIdMale != anim.DonorPoseId)
