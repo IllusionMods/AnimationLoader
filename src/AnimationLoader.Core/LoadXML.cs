@@ -271,6 +271,15 @@ namespace AnimationLoader
             $"Game specific elements of {x}" : $"Root elements of {x}";
 
 #if KKS
+        private static void Override(ref string lhs, string rhs)
+        {
+            if (rhs != null)
+            {
+                //lhs = string.Copy(rhs);
+                lhs = rhs;
+            }
+        }
+
         private static void DoOverrides(
             ref SwapAnimationInfo data, 
             OverrideInfo overrides,
@@ -285,6 +294,10 @@ namespace AnimationLoader
             {
                 data.ControllerFemale = string.Copy(overrides.ControllerFemale);
             }
+
+            Override(ref data.PathFemale1, overrides.PathFemale1);
+            Override(ref data.ControllerFemale1, overrides.ControllerFemale1);
+
             if (overrides.PathMale != null)
             {
                 data.PathMale = string.Copy(overrides.PathMale);
