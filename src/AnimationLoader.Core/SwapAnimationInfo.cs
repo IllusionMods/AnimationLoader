@@ -55,13 +55,11 @@ namespace AnimationLoader
         public PositionCategory[] categories = new PositionCategory[0];
         
         [XmlElement]
-        public int DonorPoseId;
+        public int DonorPoseId = -1;
 
+        // NeckDonorId set to -2 so it can be overwritten in manifest when needed
         [XmlElement]
-        public int DonorPoseIdMale;
-
-        [XmlElement]
-        public int NeckDonorId = -1;
+        public int NeckDonorId = -2;
 
         [XmlElement]
         public int NeckDonorIdFemale = -1;
@@ -158,11 +156,9 @@ namespace AnimationLoader
         [XmlElement]
         public int DonorPoseId = -1;
 
+        // NeckDonorId set to -2 so it can be overwritten in manifest when needed
         [XmlElement]
-        public int DonorPoseIdMale = -1;
-
-        [XmlElement]
-        public int NeckDonorId = -1;
+        public int NeckDonorId = -2;
 
         [XmlElement]
         public int NeckDonorIdFemale = -1;
