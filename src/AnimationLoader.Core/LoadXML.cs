@@ -275,7 +275,14 @@ namespace AnimationLoader
         {
             if (rhs != null)
             {
-                //lhs = string.Copy(rhs);
+                lhs = rhs;
+            }
+        }
+
+        private static void Override(ref int lhs, int rhs)
+        {
+            if (rhs >= 0)
+            {
                 lhs = rhs;
             }
         }
@@ -331,18 +338,20 @@ namespace AnimationLoader
             {
                 data.DonorPoseId = overrides.DonorPoseId;
             }
-            if (overrides.DonorPoseIdMale >= 0)
-            {
-                data.DonorPoseIdMale = overrides.DonorPoseIdMale;
-            }
-            if (overrides.NeckDonorId >= 0)
+
+            if (overrides.NeckDonorId >= -1)
             {
                 data.NeckDonorId = overrides.NeckDonorId;
             }
+
+            Override(ref data.NeckDonorIdFemale, overrides.NeckDonorIdFemale);
+            Override(ref data.NeckDonorIdFemale1, overrides.NeckDonorIdFemale1);
+
             if (overrides.NeckDonorIdMale >= 0)
             {
                 data.NeckDonorIdMale = overrides.NeckDonorIdMale;
             }
+
             if (overrides.FileMotionNeck != null)
             {
                 data.FileMotionNeck = string.Copy(overrides.FileMotionNeck);
