@@ -74,6 +74,10 @@ namespace AnimationLoader
 
 
                         // Female donor
+                        var neckDonor = anim.NeckDonorIdFemale >= 0 ? anim.NeckDonorIdFemale : anim.NeckDonorId;
+                        Log.Warning($"NeckDonor = {neckDonor} from Female donor={anim.NeckDonorIdFemale} " +
+                            $"Global donor={anim.NeckDonorId} Animation={anim.AnimationName}");
+
                         if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
                         {
                             // PR #23 Change to Log.Level to always show log, update log ID's
@@ -106,38 +110,48 @@ namespace AnimationLoader
                         }
 
                         // Female donor
-                        /*if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
+                        if (anim.ControllerFemale1 != null)
                         {
-                            // PR #23 Change to Log.Level to always show log, update log ID's
-                            // use temp variable to add log to log list
-                            var newNeckDonor = animListInfo
-                                .FirstOrDefault(x => x.id == anim.NeckDonorId);
-                            if (newNeckDonor == null)
+                            neckDonor = anim.NeckDonorIdFemale1 >= 0 ? anim.NeckDonorIdFemale1 : anim.NeckDonorId;
+                            Log.Warning($"NeckDonor = {neckDonor} from Female1 donor={anim.NeckDonorIdFemale1} " +
+                                $"Global donor={anim.NeckDonorId}  Animation={anim.AnimationName}");
+                            /*if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
                             {
-                                strTmp = $"0029: Invalid or missing " +
-                                    $"NeckDonorId: mode={anim.Mode} NeckDonorId={anim.NeckDonorId}";
-                                Log.Level(LogLevel.Warning, strTmp);
-                                addedAnimations.Append(strTmp);
-                            }
-                            else
-                            {
-                                var newMotionNeck = newNeckDonor?.paramFemale1?.fileMotionNeck;
-                                if (newMotionNeck == null)
+                                // PR #23 Change to Log.Level to always show log, update log ID's
+                                // use temp variable to add log to log list
+                                var newNeckDonor = animListInfo
+                                    .FirstOrDefault(x => x.id == anim.NeckDonorId);
+                                if (newNeckDonor == null)
                                 {
-                                    strTmp = $"0030: NeckDonorId didn't point to" +
-                                        $" a usable fileMotionNeck: " +
-                                        $"mode={anim.Mode} NeckDonorId={anim.NeckDonorId}";
+                                    strTmp = $"0029: Invalid or missing " +
+                                        $"NeckDonorId: mode={anim.Mode} NeckDonorId={anim.NeckDonorId}";
                                     Log.Level(LogLevel.Warning, strTmp);
                                     addedAnimations.Append(strTmp);
                                 }
                                 else
                                 {
-                                    donorInfo.paramFemale1.fileMotionNeck = newMotionNeck;
+                                    var newMotionNeck = newNeckDonor?.paramFemale1?.fileMotionNeck;
+                                    if (newMotionNeck == null)
+                                    {
+                                        strTmp = $"0030: NeckDonorId didn't point to" +
+                                            $" a usable fileMotionNeck: " +
+                                            $"mode={anim.Mode} NeckDonorId={anim.NeckDonorId}";
+                                        Log.Level(LogLevel.Warning, strTmp);
+                                        addedAnimations.Append(strTmp);
+                                    }
+                                    else
+                                    {
+                                        donorInfo.paramFemale1.fileMotionNeck = newMotionNeck;
+                                    }
                                 }
-                            }
-                        }*/
+                            }*/
+                        }
 
                         // Male donor
+                        neckDonor = anim.NeckDonorIdMale >= 0 ? anim.NeckDonorIdMale : anim.NeckDonorId;
+                        Log.Warning($"NeckDonor = {neckDonor} from Male donor={anim.NeckDonorIdMale} " +
+                            $"Global donor={anim.NeckDonorId}  Animation={anim.AnimationName}");
+
                         if (anim.NeckDonorIdMale >= 0 && anim.NeckDonorIdMale != anim.DonorPoseId)
                         {
                             var newNeckDonor = animListInfo
