@@ -64,6 +64,12 @@ namespace AnimationLoader
         public int NeckDonorId = -1;
 
         [XmlElement]
+        public int NeckDonorIdFemale = -1;
+
+        [XmlElement]
+        public int NeckDonorIdFemale1 = -1;
+
+        [XmlElement]
         public int NeckDonorIdMale = -1;
 
         [XmlElement]
@@ -159,6 +165,12 @@ namespace AnimationLoader
         public int NeckDonorId = -1;
 
         [XmlElement]
+        public int NeckDonorIdFemale = -1;
+
+        [XmlElement]
+        public int NeckDonorIdFemale1 = -1;
+
+        [XmlElement]
         public int NeckDonorIdMale = -1;
 
         [XmlElement]
@@ -215,7 +227,7 @@ namespace AnimationLoader
         MischievousCaress = 1003,
         Ground3P = 1100,
         AquariumCrowded = 1304,
-        Houshi3PLieDown = 3000,
-        Houshi3PSitChair = 3001
+        LieDown3P = 3000,
+        SitChair3P = 3001
     }
 }
