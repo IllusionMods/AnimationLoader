@@ -221,7 +221,9 @@ namespace AnimationLoader
         SquadDesk = 11,
         Pool = 1004,
         MischievousCaress = 1003,
-        Ground3P = 1100,
+        LieDownLesbian = 1100,
+        SitChairLesbian = 1101,
+        StandLesbian = 1102,
         AquariumCrowded = 1304,
         LieDown3P = 3000,
         SitChair3P = 3001
