@@ -5,6 +5,9 @@ using UnityEngine;
 
 using H;
 
+#if DEBUG
+using BepInEx.Logging;
+#endif
 using HarmonyLib;
 
 
@@ -181,7 +184,11 @@ namespace AnimationLoader
                 var ikData = GlobalMethod.LoadAllFolderInOneFile<TextAsset>("h/list/", path.file);
                 if (ikData != null)
                 {
-                    Log.Warning($"\n{path.file} IK {ikData.bytes}\n");
+                    Log.Level(LogLevel.Warning, $"[SwapAnimation]\n{path.file} IK {ikData.bytes.ToString()}\n");
+                }
+                else
+                {
+                    Log.Level(LogLevel.Warning, $"[SwapAnimation]\n{path.file} cannot load MotionIK Data\n");
                 }
 #endif
 
