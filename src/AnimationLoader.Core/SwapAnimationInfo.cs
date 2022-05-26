@@ -82,8 +82,15 @@ namespace AnimationLoader
         [XmlElement]
         public string FileSiruPaste;
 
+        // MotionIKDonor set to -2 so it can be overwritten in manifest when needed
         [XmlElement]
-        public int MotionIKDonor = -1;
+        public int MotionIKDonor = -2;
+
+        [XmlElement]
+        public int MotionIKDonorFemale = -1;
+
+        [XmlElement]
+        public int MotionIKDonorFemale1 = -1;
 
         [XmlElement]
         public int MotionIKDonorMale = -1;
@@ -181,8 +188,15 @@ namespace AnimationLoader
         [XmlElement]
         public string FileSiruPaste;
 
+        // MotionIKDonor set to -2 so it can be overwritten in manifest when needed
         [XmlElement]
-        public int MotionIKDonor = -1;
+        public int MotionIKDonor = -2;
+
+        [XmlElement]
+        public int MotionIKDonorFemale = -1;
+
+        [XmlElement]
+        public int MotionIKDonorFemale1 = -1;
 
         [XmlElement]
         public int MotionIKDonorMale = -1;
@@ -224,6 +238,7 @@ namespace AnimationLoader
         LieDownLesbian = 1100,
         SitChairLesbian = 1101,
         StandLesbian = 1102,
+        ALLesbian50 = 1150,
         AquariumCrowded = 1304,
         LieDown3P = 3000,
         SitChair3P = 3001
