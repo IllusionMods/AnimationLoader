@@ -68,15 +68,15 @@ namespace AnimationLoader
                             continue;
                         }
 
-                        // Thre are cases where one Id works for the female but not the male and
-                        // viceversa
-                        // Use current NeckDonorID for Female and specify another for the male
+                        // There are cases where one Id works for the female but not the male and
+                        // vice-versa
 
 
                         // Female donor
                         int neckDonor;
 #if KK
-                        // Don't touch KK for now
+                        // Don't touch KK for now treat NeckDonorId like previous version
+                        // only apply it to the female
                         if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
 #else
 #if DEBUG
@@ -123,7 +123,7 @@ namespace AnimationLoader
                             }
                         }
 
-                        // Female donor
+                        // Female1 donor
                         if (anim.ControllerFemale1 != null)
                         {
 #if DEBUG
@@ -131,7 +131,6 @@ namespace AnimationLoader
                             Log.Warning($"NeckDonor = {neckDonor} from Female1 donor={anim.NeckDonorIdFemale1} " +
                                 $"Global donor={anim.NeckDonorId}  Animation={anim.AnimationName}");
 #endif
-
                             if (anim.NeckDonorIdFemale1 >= 0 && anim.NeckDonorIdFemale1 != anim.DonorPoseId)
                             {
                                 var newNeckDonor = animListInfo
@@ -173,10 +172,11 @@ namespace AnimationLoader
                         // Male donor did not have NeckDonor applied to it
                         // TODO: Treat NeckDonorId as global and apply it to everyone when there
                         // no specific one must remove from manifest
+#if DEBUG
                         neckDonor = anim.NeckDonorIdMale >= 0 ? anim.NeckDonorIdMale : anim.NeckDonorId;
                         Log.Warning($"NeckDonor = {neckDonor} from Male donor={anim.NeckDonorIdMale} " +
                             $"Global donor={anim.NeckDonorId}  Animation={anim.AnimationName}");
-
+#endif
                         if (anim.NeckDonorIdMale >= 0 && anim.NeckDonorIdMale != anim.DonorPoseId)
                         {
                             var newNeckDonor = animListInfo
