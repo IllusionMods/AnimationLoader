@@ -118,9 +118,7 @@ namespace AnimationLoader
         /// <param name="animation"></param>
         /// <param name="withguid"></param>
         /// <returns></returns>
-        public static string GetAnimationKey(
-            HSceneProc.AnimationListInfo animation,
-            bool withguid = true)
+        public static string GetAnimationKey(HSceneProc.AnimationListInfo animation)
         {
             string Guid;
             EMode mode;
@@ -143,8 +141,7 @@ namespace AnimationLoader
                 }
             }
 
-            return withguid ?
-                $"{Guid}-{mode}-{controller}-{id:D3}" : $"{mode}-{controller}-{id:D3}";
+            return $"{Guid}-{mode}-{controller}-{id:D3}";
         }
 
         /// <summary>
