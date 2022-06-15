@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#if DEBUG
+using System.Diagnostics;
+#endif
 
 using BepInEx.Logging;
 
@@ -51,6 +54,22 @@ namespace AnimationLoader
             { "lesbian1", 1006 },
         };
 
+        /// <summary>
+        /// Make information available for other plugins
+        /// </summary>
+        public static Dictionary<EMode, List<SwapAnimationInfo>> AnimationsDict {
+            get { return animationDict; }
+            private set { animationDict = value; }
+        }
+
+        /// <summary>
+        /// Make information available for other plugins
+        /// </summary>
+        public static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo> SwapAnimationMapping {
+            get { return swapAnimationMapping; }
+            private set { swapAnimationMapping = value; }
+        }
+
         private void Awake()
         {
             Log.LogSource = Logger; ;
@@ -98,9 +117,9 @@ namespace AnimationLoader
 
 #if DEBUG
             stopWatch.Stop();
-            TimeSpan ts = stopWatch.Elapsed;
+            var ts = stopWatch.Elapsed;
 
-            string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00000}",
+            var elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00000}",
                 ts.Hours, ts.Minutes, ts.Seconds,
                 ts.Milliseconds);
             Log.Level(LogLevel.Warning, $"Load time for LoadXmls {elapsedTime}");

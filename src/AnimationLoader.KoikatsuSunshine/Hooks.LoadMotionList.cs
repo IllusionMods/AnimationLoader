@@ -26,7 +26,17 @@ namespace AnimationLoader
             /// <summary>
             /// In order to expand more easily had to replicate the original function and 
             /// adjust to needs.
-            /// 
+            ///
+            /// Colors:
+            ///     Enough experience
+            ///         White - game animation
+            ///         Yellow - additional animation
+            ///     Not enough experiece
+            ///         Cyan - game animation
+            ///         Ping - additional animation
+            ///         
+            ///     Green - HPoint animations accessed by asking for sex
+            ///     
             /// TODO: Work on grid UI this is a maybe.
             /// 
             /// </summary>
@@ -92,13 +102,14 @@ namespace AnimationLoader
                         label.text = animationInfoComponent.info.nameAnimation;
                         if (isALAnim)
                         {
+                            // Animations added to the game
                             label.color = Utilities.yellow;
 
                             if (swap is not null)
                             {
 #if DEBUG
-                                var tmp = $"  E({swap.ExpTaii})";
-                                label.text = $"{animationInfoComponent.info.nameAnimation}{tmp}";
+                                // var tmp = $"  E({swap.ExpTaii})";
+                                // label.text = $"{animationInfoComponent.info.nameAnimation}{tmp}";
 #endif
                                 if (HighLight.Value)
                                 {
@@ -118,10 +129,11 @@ namespace AnimationLoader
                         }
                         else
                         {
+                            // game animations
                             var tmp = Utilities.GetExpTaii((int)animationInfoComponent.info.mode,
                                 animationInfoComponent.info.id);
 #if DEBUG                           
-                            label.text = $"{Utilities.TranslateName(animationInfoComponent.info.nameAnimation)}  E({tmp})";
+                            // label.text = $"{Utilities.TranslateName(animationInfoComponent.info.nameAnimation)}  E({tmp})";
 #endif
                             if (HighLight.Value)
                             {
@@ -131,13 +143,12 @@ namespace AnimationLoader
                                     label.color = Utilities.cyan;
                                 }
                                 var c = animationInfoComponent.info.lstCategory;
-                                if ((c[0].category == 12) || (c[0].category >= 1000))
+                                if (!_specialAnimation && (c[0].category is 12 or > 1000))
                                 {
                                     label.color = Utilities.lime;
                                 }
                             }
                         }
-
                     }
 
                     var toggle = button.GetComponent<Toggle>();
