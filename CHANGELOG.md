@@ -1,5 +1,17 @@
 # Changelog
 
+#### <u>v1.4.0.0 - 2022-06-15</u>
+
+##### Added
+
+- 3P support
+- Manifest will have the minimum version needed of AnimationLoader
+  - If the version needed is higher a warning massage will be logged
+
+##### Changed
+
+- NeckDonorId option in manifest can be configured per character in the animation
+
 #### <u>v1.1.1.3 - 2022-04-19</u>
 
 Update libraries used.
