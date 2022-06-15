@@ -147,8 +147,7 @@ namespace AnimationLoader
             }
             else
             {
-                Log.Level(LogLevel.Message, "0017: No animation manifests found.");
-                Log.Level(LogLevel.Warning, "0017: No animation manifests found.");
+                Log.Level(LogLevel.Message | LogLevel.Debug, "0017: No animation manifests found.");
             }
         }
 
@@ -272,6 +271,22 @@ namespace AnimationLoader
             $"Game specific elements of {x}" : $"Root elements of {x}";
 
 #if KKS
+        private static void Override(ref string lhs, string rhs)
+        {
+            if (rhs != null)
+            {
+                lhs = rhs;
+            }
+        }
+
+        private static void Override(ref int lhs, int rhs)
+        {
+            if (rhs >= 0)
+            {
+                lhs = rhs;
+            }
+        }
+
         private static void DoOverrides(
             ref SwapAnimationInfo data, 
             OverrideInfo overrides,
@@ -286,6 +301,10 @@ namespace AnimationLoader
             {
                 data.ControllerFemale = string.Copy(overrides.ControllerFemale);
             }
+
+            Override(ref data.PathFemale1, overrides.PathFemale1);
+            Override(ref data.ControllerFemale1, overrides.ControllerFemale1);
+
             if (overrides.PathMale != null)
             {
                 data.PathMale = string.Copy(overrides.PathMale);
@@ -319,13 +338,27 @@ namespace AnimationLoader
             {
                 data.DonorPoseId = overrides.DonorPoseId;
             }
-            if (overrides.NeckDonorId >= 0)
+
+            if (overrides.NeckDonorId >= -1)
             {
                 data.NeckDonorId = overrides.NeckDonorId;
             }
+
+            Override(ref data.NeckDonorIdFemale, overrides.NeckDonorIdFemale);
+            Override(ref data.NeckDonorIdFemale1, overrides.NeckDonorIdFemale1);
+
+            if (overrides.NeckDonorIdMale >= 0)
+            {
+                data.NeckDonorIdMale = overrides.NeckDonorIdMale;
+            }
+
             if (overrides.FileMotionNeck != null)
             {
                 data.FileMotionNeck = string.Copy(overrides.FileMotionNeck);
+            }
+            if (overrides.FileMotionNeckMale != null)
+            {
+                data.FileMotionNeckMale = string.Copy(overrides.FileMotionNeckMale);
             }
             if (overrides.IsFemaleInitiative != null)
             {
@@ -339,13 +372,13 @@ namespace AnimationLoader
             {
                 data.MotionIKDonor = overrides.MotionIKDonor;
             }
+            if (overrides.MotionIKDonorMale >= 0)
+            {
+                data.MotionIKDonorMale = overrides.MotionIKDonorMale;
+            }
             if (overrides.ExpTaii >= 0) 
             { 
                 data.ExpTaii = overrides.ExpTaii; 
-            }
-            if (overrides.IsAnal != null)
-            {
-                data.IsAnal = overrides.IsAnal;
             }
             if (overrides.PositionHeroine != Vector3.zero)
             {

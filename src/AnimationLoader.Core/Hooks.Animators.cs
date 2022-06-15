@@ -5,6 +5,9 @@ using UnityEngine;
 
 using H;
 
+#if DEBUG
+using BepInEx.Logging;
+#endif
 using HarmonyLib;
 
 
@@ -33,16 +36,14 @@ namespace AnimationLoader
                 {
 #if DEBUG
                     Log.Warning($"0007: Animator changing - [{Manager.Scene.ActiveScene.name}] - " +
-                        $"{AnimationInfo.TranslateName(_nextAinmInfo)}, " +
-                        $"Key={AnimationInfo.GetKey(_nextAinmInfo)}, " +
+                        $"{Utilities.TranslateName(_nextAinmInfo.nameAnimation)}, " +
+                        $"Key={GetAnimationKey(_nextAinmInfo)}, " +
                         $"SiruPaste={SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}.");
 #endif
                     // Reposition characters before animation starts
                     if (Reposition.Value)
-                    {                        
-                        var flags = Traverse
-                            .Create(__instance)
-                            .Field<HFlag>("flags").Value;
+                    {
+                        var flags = Traverse.Create(__instance).Field<HFlag>("flags").Value;
                         Utilities.SetOriginalPositionAll();
                         var nowAnimationInfo = flags.nowAnimationInfo;
                         var nowAnim = new AnimationInfo(nowAnimationInfo);
@@ -121,7 +122,9 @@ namespace AnimationLoader
                 }
 
                 RuntimeAnimatorController femaleCtrl = null;
+                RuntimeAnimatorController female1Ctrl = null;
                 RuntimeAnimatorController maleCtrl = null;
+
                 if (!string.IsNullOrEmpty(swapAnimationInfo.PathFemale)
                     || !string.IsNullOrEmpty(swapAnimationInfo.ControllerFemale))
                 {
@@ -130,6 +133,17 @@ namespace AnimationLoader
                         swapAnimationInfo.ControllerFemale,
                         typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
                 }
+
+                // Third wheel
+                if (!string.IsNullOrEmpty(swapAnimationInfo.PathFemale1)
+                    || !string.IsNullOrEmpty(swapAnimationInfo.ControllerFemale1))
+                {
+                    female1Ctrl = AssetBundleManager.LoadAsset(
+                        swapAnimationInfo.PathFemale1,
+                        swapAnimationInfo.ControllerFemale1,
+                        typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
+                }
+
                 if (!string.IsNullOrEmpty(swapAnimationInfo.PathMale)
                     || !string.IsNullOrEmpty(swapAnimationInfo.ControllerMale))
                 {
@@ -139,9 +153,11 @@ namespace AnimationLoader
                         typeof(RuntimeAnimatorController)).GetAsset<RuntimeAnimatorController>();
                 }
                 var t_hsp = Traverse.Create(__instance);
-                var female = t_hsp.Field<List<ChaControl>>("lstFemale").Value[0];
+                var lstFemale = t_hsp.Field<List<ChaControl>>("lstFemale").Value;
+                var female = lstFemale[0];
+                var female1 = ((lstFemale.Count > 1) ? lstFemale[1] : null);
                 var male = t_hsp.Field<ChaControl>("male").Value;
-                ////TODO: lstFemale[1], male1
+                ////TODO: male1
 
                 if (femaleCtrl != null)
                 {
@@ -149,12 +165,32 @@ namespace AnimationLoader
                         female.animBody.runtimeAnimatorController,
                         femaleCtrl);
                 }
+                if ((female1Ctrl != null)
+                    && female1 != null)
+                {
+                    female1.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
+                        female1.animBody.runtimeAnimatorController,
+                        female1Ctrl);
+                }
                 if (maleCtrl != null)
                 {
                     male.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
                         male.animBody.runtimeAnimatorController, maleCtrl);
                 }
                 var mi = t_hsp.Field<List<MotionIK>>("lstMotionIK").Value;
+
+#if DEBUG
+                var path = _nextAinmInfo.paramFemale.path;
+                var ikData = GlobalMethod.LoadAllFolderInOneFile<TextAsset>("h/list/", path.file);
+                if (ikData != null)
+                {
+                    Log.Level(LogLevel.Warning, $"[SwapAnimation]\n{path.file} IK {ikData.bytes.ToString()}\n");
+                }
+                else
+                {
+                    Log.Level(LogLevel.Warning, $"[SwapAnimation]\n{path.file} cannot load MotionIK Data\n");
+                }
+#endif
 
                 if (swapAnimationInfo.MotionIKDonor != _nextAinmInfo.id)
                 {

@@ -28,7 +28,13 @@ namespace AnimationLoader
 
         [XmlElement]
         public string ControllerFemale;
-        
+
+        [XmlElement]
+        public string PathFemale1;
+
+        [XmlElement]
+        public string ControllerFemale1;
+
         [XmlElement]
         public string PathMale;
 
@@ -49,13 +55,26 @@ namespace AnimationLoader
         public PositionCategory[] categories = new PositionCategory[0];
         
         [XmlElement]
-        public int DonorPoseId;
-        
+        public int DonorPoseId = -1;
+
+        // NeckDonorId set to -2 so it can be overwritten in manifest when needed
         [XmlElement]
-        public int NeckDonorId = -1;
-        
+        public int NeckDonorId = -2;
+
+        [XmlElement]
+        public int NeckDonorIdFemale = -1;
+
+        [XmlElement]
+        public int NeckDonorIdFemale1 = -1;
+
+        [XmlElement]
+        public int NeckDonorIdMale = -1;
+
         [XmlElement]
         public string FileMotionNeck;
+
+        [XmlElement]
+        public string FileMotionNeckMale;
 
         [XmlElement]
         public bool? IsFemaleInitiative;
@@ -63,14 +82,21 @@ namespace AnimationLoader
         [XmlElement]
         public string FileSiruPaste;
 
+        // MotionIKDonor set to -2 so it can be overwritten in manifest when needed
         [XmlElement]
-        public int MotionIKDonor = -1;
+        public int MotionIKDonor = -2;
+
+        [XmlElement]
+        public int MotionIKDonorFemale = -1;
+
+        [XmlElement]
+        public int MotionIKDonorFemale1 = -1;
+
+        [XmlElement]
+        public int MotionIKDonorMale = -1;
 
         [XmlElement]
         public int ExpTaii = -1;
-
-        [XmlElement]
-        public bool? IsAnal;
 
         [XmlElement]
         public Vector3 PositionHeroine = Vector3.zero;
@@ -110,6 +136,12 @@ namespace AnimationLoader
         public string ControllerFemale;
 
         [XmlElement]
+        public string PathFemale1;
+
+        [XmlElement]
+        public string ControllerFemale1;
+
+        [XmlElement]
         public string PathMale;
 
         [XmlElement]
@@ -131,11 +163,24 @@ namespace AnimationLoader
         [XmlElement]
         public int DonorPoseId = -1;
 
+        // NeckDonorId set to -2 so it can be overwritten in manifest when needed
         [XmlElement]
-        public int NeckDonorId = -1;
+        public int NeckDonorId = -2;
+
+        [XmlElement]
+        public int NeckDonorIdFemale = -1;
+
+        [XmlElement]
+        public int NeckDonorIdFemale1 = -1;
+
+        [XmlElement]
+        public int NeckDonorIdMale = -1;
 
         [XmlElement]
         public string FileMotionNeck;
+
+        [XmlElement]
+        public string FileMotionNeckMale;
 
         [XmlElement]
         public bool? IsFemaleInitiative;
@@ -143,14 +188,21 @@ namespace AnimationLoader
         [XmlElement]
         public string FileSiruPaste;
 
+        // MotionIKDonor set to -2 so it can be overwritten in manifest when needed
         [XmlElement]
-        public int MotionIKDonor = -1;
+        public int MotionIKDonor = -2;
+
+        [XmlElement]
+        public int MotionIKDonorFemale = -1;
+
+        [XmlElement]
+        public int MotionIKDonorFemale1 = -1;
+
+        [XmlElement]
+        public int MotionIKDonorMale = -1;
 
         [XmlElement]
         public int ExpTaii = -1;
-
-        [XmlElement]
-        public bool? IsAnal;
 
         [XmlElement]
         public Vector3 PositionHeroine = Vector3.zero;
@@ -164,7 +216,7 @@ namespace AnimationLoader
         Hand = 0,
         Mouth = 1,
         Breasts = 2,
-        none = -1,
+        none = -1
     }
 
     public enum PositionCategory
@@ -183,7 +235,12 @@ namespace AnimationLoader
         SquadDesk = 11,
         Pool = 1004,
         MischievousCaress = 1003,
-        Ground3P = 1100,
+        LieDownLesbian = 1100,
+        SitChairLesbian = 1101,
+        StandLesbian = 1102,
+        ALLesbian50 = 1150,
         AquariumCrowded = 1304,
+        LieDown3P = 3000,
+        SitChair3P = 3001
     }
 }
