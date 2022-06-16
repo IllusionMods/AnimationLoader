@@ -62,19 +62,26 @@ to have more control on how AnimationLoader will load the animations.
 
 ```
 
+## Changes
+
+1- The NeckDonorId was been applied was been only applied to the female character. From version 1.1.2 it will be applied to both male and female and there are definitions for the character individually. This permits to assign different values to each character
+
+   - NeckDonorIdFemale
+   - NeckDonorIdFemale1
+   - NeckDonorIdMale
 ## Extensions:
 
 1- **PositionHeroine** and **PositionPlayer** - vectors that represent:
-- x axis if left and right movement (red axis)
-- y axis up and down (green axis)
-- z axis forward and backwards (blue axis)
+   - x axis if left and right movement (red axis)
+   - y axis up and down (green axis)
+   - z axis forward and backwards (blue axis)
 
-The values represent a factor or fraction of one unit of movement. For example:
-- to move one unit use 1 
-- to move one and half units 1.5.
-- to move one fifth of a unit use 0.2
+   The values represent a factor or fraction of one unit of movement. For example:
+   - to move one unit use 1 
+   - to move one and half units 1.5.
+   - to move one fifth of a unit use 0.2
 
-The scale may be around a meter.
+   The scale may be around a meter.
 
 2- **GameSpecificOverrides** - Since the manifest.xml is the same for KK and KKS taking as a base that
 the definitions are for KK to make any adjustment for KKS a node can be added for KKS 
@@ -229,3 +236,10 @@ configuration for both characters.
 
 Here it shows move the Heroine 0.04 fraction of a unit backwards.
 
+### Example 3
+
+```xml
+  <NeckDonorIdFemale>12</NeckDonorIdFemale>
+  <NeckDonorIdMale>2</NeckDonorIdMale>
+```
+Applay NeckDonor 12 for the female character and 2 for the male.

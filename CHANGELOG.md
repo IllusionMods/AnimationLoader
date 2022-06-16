@@ -1,6 +1,6 @@
 # Changelog
 
-#### <u>v1.4.0.0 - 2022-06-15</u>
+#### <u>v1.4.0.0 - 2022-06-16</u>
 
 ##### Added
 
@@ -11,6 +11,7 @@
 ##### Changed
 
 - NeckDonorId option in manifest can be configured per character in the animation
+  - The NeckDonorId does not have to be the same for every character. For certain animations different NeckDonorId's works better
 
 #### <u>v1.1.1.3 - 2022-04-19</u>
 
