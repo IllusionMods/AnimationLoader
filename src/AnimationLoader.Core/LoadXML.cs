@@ -79,6 +79,24 @@ namespace AnimationLoader
                 }
                 var guid = manifest?.Element("guid").Value;
                 var version = manifest?.Element("version").Value;
+                var strAlVersion = manifest?.Element("AnimationLoaderVersion").Value;
+
+                if (strAlVersion is not null)
+                {
+                    var alVersion = new Version(strAlVersion);
+                    var pVersion = new Version(Version);
+                    if (pVersion.CompareTo(alVersion) < 0)
+                    {
+                        Log.Level(LogLevel.Warning | LogLevel.Debug, $"0011: Manifest" +
+                        $" minimum version={alVersion} AnimationLoader version={pVersion}" +
+                        $" some features may not work.");
+                    }
+                    else
+                    {
+                        Log.Level(LogLevel.Info | LogLevel.Debug, $"0011: Manifest" +
+                            $" minimum version={alVersion} AnimationLoader version={pVersion}");
+                    }
+                }
 
                 if (UserOverrides.Value)
                 {
