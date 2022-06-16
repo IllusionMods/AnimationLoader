@@ -73,7 +73,6 @@ namespace AnimationLoader
 
 
                         // Female donor
-                        int neckDonor;
 #if KK
                         // Don't touch KK for now treat NeckDonorId like previous version
                         // only apply it to the female
