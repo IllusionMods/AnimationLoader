@@ -33,6 +33,7 @@ namespace AnimationLoader
 #endif
         private static XElement _animRoot;
         private static XElement _animRootGS;
+        private static XElement _animationLoaderVersion;
 
         private static bool _saveNames = false;
 
@@ -68,7 +69,6 @@ namespace AnimationLoader
             {
                 _animRoot = manifest?.Element(ManifestRootElement);
 
-                // Look for game specific configuration
                 _animRootGS = manifest?
                     .Element(ManifestRootElement)?
                     .Element(KoikatuAPI.GameProcessName);
@@ -79,25 +79,28 @@ namespace AnimationLoader
                 }
                 var guid = manifest?.Element("guid").Value;
                 var version = manifest?.Element("version").Value;
-                var strAlVersion = manifest?.Element("AnimationLoaderVersion").Value;
+                var author = manifest?.Element("author");
 
-                if (strAlVersion is not null)
+                _animationLoaderVersion = manifest?.Element("AnimationLoaderVersion");
+
+                if (_animationLoaderVersion is not null)
                 {
-                    var alVersion = new Version(strAlVersion);
+                    var alVersion = new Version(_animationLoaderVersion.Value);
                     var pVersion = new Version(Version);
                     if (pVersion.CompareTo(alVersion) < 0)
                     {
-                        Log.Level(LogLevel.Warning | LogLevel.Debug, $"0011: Manifest" +
-                        $" minimum version={alVersion} AnimationLoader version={pVersion}" +
-                        $" some features may not work.");
+                        Log.Level(LogLevel.Warning | LogLevel.Debug, $"0011: Manifest " +
+                            $"guid={guid} version={version} author=[{author.Value}] " +
+                            $"minimum version={alVersion} AnimationLoader version={pVersion} " +
+                            $"some features may not work.");
                     }
                     else
                     {
-                        Log.Level(LogLevel.Info | LogLevel.Debug, $"0011: Manifest" +
-                            $" minimum version={alVersion} AnimationLoader version={pVersion}");
+                        Log.Level(LogLevel.Info | LogLevel.Debug, $"0011: Manifest guid={guid} " +
+                            $"version={version} author=[{author.Value}] " +
+                            $"minimum version={alVersion} AnimationLoader version={pVersion}");
                     }
                 }
-
                 if (UserOverrides.Value)
                 {
                     // setup for names
