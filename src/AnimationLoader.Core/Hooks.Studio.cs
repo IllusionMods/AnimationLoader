@@ -72,6 +72,10 @@ namespace AnimationLoader
                                 var elementKey = (keyVal.Key == HFlag.EMode.houshi) 
                                     ? $"{keyVal.Key}-{swapAnimInfo.kindHoushi}" : $"{keyVal.Key}";
 
+                                if (!AnimationClips.Clips.ContainsKey(elementKey))
+                                {
+                                    continue;
+                                }
                                 var clips = AnimationClips.Clips[elementKey];
 
                                 for (var i = 0; i < clips.Count; i++)
