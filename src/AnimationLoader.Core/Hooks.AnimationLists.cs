@@ -72,19 +72,48 @@ namespace AnimationLoader
                         // vice-versa
 
 
-                        // Female donor
-#if KK
-                        // Don't touch KK for now treat NeckDonorId like previous version
-                        // only apply it to the female
-                        if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
-#else
+// Female donor
 #if DEBUG
+                        int neckDonor;
                         neckDonor = anim.NeckDonorIdFemale >= 0 ? anim.NeckDonorIdFemale : anim.NeckDonorId;
                         Log.Warning($"NeckDonor = {neckDonor} from Female donor={anim.NeckDonorIdFemale} " +
                             $"Global donor={anim.NeckDonorId} Animation={anim.AnimationName}");
 #endif
+#if KK
+                        // Don't touch KK for now treat NeckDonorId like previous version
+                        // only apply it to the female
+                        if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
+                        {
+                            // PR #23 Change to Log.Level to always show log, update log ID's
+                            // use temp variable to add log to log list
+                            var newNeckDonor = animListInfo
+                                .FirstOrDefault(x => x.id == anim.NeckDonorId);
+                            if (newNeckDonor == null)
+                            {
+                                strTmp = $"0029: Invalid or missing " +
+                                    $"NeckDonorId: mode={anim.Mode} NeckDonorId={anim.NeckDonorId}";
+                                Log.Level(LogLevel.Warning, strTmp);
+                                addedAnimations.Append(strTmp);
+                            }
+                            else
+                            {
+                                var newMotionNeck = newNeckDonor?.paramFemale?.fileMotionNeck;
+                                if (newMotionNeck == null)
+                                {
+                                    strTmp = $"0030: NeckDonorId didn't point to" +
+                                        $" a usable fileMotionNeck: " +
+                                        $"mode={anim.Mode} NeckDonorId={anim.NeckDonorId}";
+                                    Log.Level(LogLevel.Warning, strTmp);
+                                    addedAnimations.Append(strTmp);
+                                }
+                                else
+                                {
+                                    donorInfo.paramFemale.fileMotionNeck = newMotionNeck;
+                                }
+                            }
+                        }
+#else
                         if (anim.NeckDonorIdFemale >= 0 && anim.NeckDonorIdFemale != anim.DonorPoseId)
-#endif
                         {
                             // PR #23 Change to Log.Level to always show log, update log ID's
                             // use temp variable to add log to log list
@@ -121,7 +150,7 @@ namespace AnimationLoader
                                 }
                             }
                         }
-
+#endif
                         // Female1 donor
                         if (anim.ControllerFemale1 != null)
                         {
