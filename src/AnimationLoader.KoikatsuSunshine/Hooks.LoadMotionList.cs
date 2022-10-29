@@ -314,7 +314,8 @@ namespace AnimationLoader
                         return false;
                     }
                 }
-                else if (UseAnimationLevels.Value && !CheckExperince(hsprite, anim))
+
+                if (UseAnimationLevels.Value && !CheckExperince(hsprite, anim))
                 {
                     // Not enough experience
                     return false;
