@@ -83,7 +83,8 @@ namespace AnimationLoader
                     }
 
                     var lines = lstAnimInfo[i].Select(x => $"{x.id}, {x.mode}," +
-                         $" {TranslateName(x.nameAnimation, true)}, {x.paramFemale.path.file}, {x.posture}," +
+                         $" {TranslateName(x.nameAnimation, true)}, {x.paramFemale.path.file}," +
+                         $" {x.paramFemale.fileMotionNeck}, {x.posture}," +
                          $" {x.numCtrl}, {x.kindHoushi}," +
                          $" {x.houshiLoopActionS}, {x.isFemaleInitiative}," +
                          $"{CategoryList(x.lstCategory, true)}," +
