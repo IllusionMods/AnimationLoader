@@ -76,8 +76,8 @@ namespace AnimationLoader
 #if DEBUG
                         int neckDonor;
                         neckDonor = anim.NeckDonorIdFemale >= 0 ? anim.NeckDonorIdFemale : anim.NeckDonorId;
-                        Log.Warning($"NeckDonor = {neckDonor} from Female donor={anim.NeckDonorIdFemale} " +
-                            $"Global donor={anim.NeckDonorId} Animation={anim.AnimationName}");
+                        //Log.Warning($"NeckDonor = {neckDonor} from Female donor={anim.NeckDonorIdFemale} " +
+                        //    $"Global donor={anim.NeckDonorId} Animation={anim.AnimationName}");
 #endif
 #if KK
                         // Don't touch KK for now treat NeckDonorId like previous version
@@ -143,8 +143,8 @@ namespace AnimationLoader
                                 else
                                 {
 #if DEBUG
-                                    Log.Warning($"Setting Female fileMotionNeck={newMotionNeck} " +
-                                        $"Animation={anim.AnimationName}");
+                                    //Log.Warning($"Setting Female fileMotionNeck={newMotionNeck} " +
+                                    //    $"Animation={anim.AnimationName}");
 #endif
                                     donorInfo.paramFemale.fileMotionNeck = newMotionNeck;
                                 }
@@ -156,8 +156,8 @@ namespace AnimationLoader
                         {
 #if DEBUG
                             neckDonor = anim.NeckDonorIdFemale1 >= 0 ? anim.NeckDonorIdFemale1 : anim.NeckDonorId;
-                            Log.Warning($"NeckDonor = {neckDonor} from Female1 donor={anim.NeckDonorIdFemale1} " +
-                                $"Global donor={anim.NeckDonorId}  Animation={anim.AnimationName}");
+                            //Log.Warning($"NeckDonor = {neckDonor} from Female1 donor={anim.NeckDonorIdFemale1} " +
+                            //    $"Global donor={anim.NeckDonorId}  Animation={anim.AnimationName}");
 #endif
                             if (anim.NeckDonorIdFemale1 >= 0 && anim.NeckDonorIdFemale1 != anim.DonorPoseId)
                             {
@@ -188,8 +188,8 @@ namespace AnimationLoader
                                     else
                                     {
 #if DEBUG
-                                        Log.Warning($"Setting Female1 fileMotionNeck={newMotionNeck} " +
-                                            $"Animation={anim.AnimationName}");
+                                        //Log.Warning($"Setting Female1 fileMotionNeck={newMotionNeck} " +
+                                        //    $"Animation={anim.AnimationName}");
 #endif
                                         donorInfo.paramFemale1.fileMotionNeck = newMotionNeck;
                                     }
@@ -202,8 +202,8 @@ namespace AnimationLoader
                         // no specific one must remove from manifest
 #if DEBUG
                         neckDonor = anim.NeckDonorIdMale >= 0 ? anim.NeckDonorIdMale : anim.NeckDonorId;
-                        Log.Warning($"NeckDonor = {neckDonor} from Male donor={anim.NeckDonorIdMale} " +
-                            $"Global donor={anim.NeckDonorId}  Animation={anim.AnimationName}");
+                        //Log.Warning($"NeckDonor = {neckDonor} from Male donor={anim.NeckDonorIdMale} " +
+                        //    $"Global donor={anim.NeckDonorId}  Animation={anim.AnimationName}");
 #endif
                         if (anim.NeckDonorIdMale >= 0 && anim.NeckDonorIdMale != anim.DonorPoseId)
                         {
@@ -233,8 +233,8 @@ namespace AnimationLoader
                                 else
                                 {
 #if DEBUG
-                                    Log.Warning($"Setting Male fileMotionNeck={newMotionNeck} " +
-                                        $"Animation={anim.AnimationName}");
+                                    //Log.Warning($"Setting Male fileMotionNeck={newMotionNeck} " +
+                                    //    $"Animation={anim.AnimationName}");
 #endif
                                     donorInfo.paramMale.fileMotionNeck = newMotionNeck;
                                 }
@@ -291,10 +291,10 @@ namespace AnimationLoader
                         animListInfo.Add(donorInfo);
                         swapAnimationMapping[donorInfo] = anim;
                         // Add to log
-                        addedAnimations.Append($"EMode={anim.Mode,6} Name=" +
-                            $"{Utilities.Translate(anim.AnimationName)}, " +
-                            $"[Key={GetAnimationKey(anim)}] donor release=" +
-                            $"{donorInfo.isRelease}\n");
+                        // addedAnimations.Append($"EMode={anim.Mode,6} Name=" +
+                        //    $"{Utilities.Translate(anim.AnimationName)}, " +
+                        //    $"[Key={GetAnimationKey(anim)}] donor release=" +
+                        //    $"{donorInfo.isRelease}\n");
                         countAL++;
                     }
                 }
