@@ -89,15 +89,17 @@ namespace AnimationLoader
                     var pVersion = new Version(Version);
                     if (pVersion.CompareTo(alVersion) < 0)
                     {
+                        var tmp = author is not null ? author.Value : "N/A";
                         Log.Level(LogLevel.Warning | LogLevel.Debug, $"0011: Manifest " +
-                            $"guid={guid} version={version} author=[{author.Value}] " +
+                            $"guid={guid} version={version} author=[{tmp}] " +
                             $"minimum version={alVersion} AnimationLoader version={pVersion} " +
                             $"some features may not work.");
                     }
                     else
                     {
+                        var tmp = author is not null ? author.Value : "N/A";
                         Log.Level(LogLevel.Info | LogLevel.Debug, $"0011: Manifest guid={guid} " +
-                            $"version={version} author=[{author.Value}] " +
+                            $"version={version} author=[{tmp}] " +
                             $"minimum version={alVersion} AnimationLoader version={pVersion}");
                     }
                 }
