@@ -56,15 +56,11 @@ namespace AnimationLoader
             {
                 try
                 {
-#if DEBUG
-                    Log.Warning($"0031: Adjusting character position for {_chaType}.");
-#else
-                    Log.Debug($"0031: Adjusting character position for {_chaType}.");
-#endif
                     //if (_originalPosition == Vector3.zero)
                     //{
                     //    originalPosition = character.transform.position;
                     //}
+                    var original = ChaControl.transform.position;
                     var xAxis = ChaControl.transform.right * move.x;
                     var yAxis = new Vector3(0, move.y, 0);
                     var zAxis = ChaControl.transform.forward * move.z;
@@ -73,6 +69,21 @@ namespace AnimationLoader
                     ChaControl.transform.position += yAxis;
                     ChaControl.transform.position += zAxis;
                     _lastMovePosition = ChaControl.transform.position;
+#if DEBUG
+                    Log.Level(BepInEx.Logging.LogLevel.Warning,
+                        $"0031: Adjusting character position for {_chaType}\n" +
+                        $"   move={move.ToString("F3")}\n" +
+                        $"  right={ChaControl.transform.right.ToString("F7")}\n" +
+                        $"forward={ChaControl.transform.right.ToString("F7")}\n" +
+                        $"      x={yAxis.ToString("F7")}\n" +
+                        $"      y={yAxis.ToString("F7")}\n" +
+                        $"      z={zAxis.ToString("F7")}\n" +
+                        $"   From={original.ToString("F7")}\n" +
+                        $"     to={_lastMovePosition.ToString("F7")}." +
+                        $"");
+#else
+                    Log.Debug($"0031: Adjusting character position for {_chaType}.");
+#endif
                 }
                 catch (Exception e)
                 {
