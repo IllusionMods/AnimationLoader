@@ -1,6 +1,10 @@
 ﻿//
 // Class to help identify the animations
 //
+using System.Collections.Generic;
+
+using UnityEngine;
+
 using KKAPI;
 
 using static HFlag;
@@ -113,7 +117,6 @@ namespace AnimationLoader
 
         /// <summary>
         /// Static function to get the key for any animation 
-        /// no need for and instance of the class
         /// </summary>
         /// <param name="animation"></param>
         /// <param name="withguid"></param>
@@ -154,5 +157,28 @@ namespace AnimationLoader
             return $"{animation.Guid}-{animation.Mode}-{animation.ControllerFemale}" +
                 $"-{animation.StudioId:D3}";
         }
+
+        /// <summary>
+        /// Get a list with the positions adjustment in the manifest. If it is a regular
+        /// animation it will return zero vectors
+        /// </summary>
+        /// <param name="animation">animation to search</param>
+        /// <returns></returns>
+        public static List<Vector3> GetAnimationMovement(HSceneProc.AnimationListInfo animation)
+        {
+            List<Vector3> result = new() { new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
+
+            if (swapAnimationMapping != null)
+            {
+                swapAnimationMapping.TryGetValue(animation, out var anim);
+                if (anim != null)
+                {
+                    result[0] = anim.PositionPlayer;
+                    result[1] = anim.PositionHeroine;
+                }
+            }
+            return result;
+        }
+
     }
 }
