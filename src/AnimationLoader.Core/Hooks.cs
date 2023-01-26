@@ -63,9 +63,6 @@ namespace AnimationLoader
                 List<ChaControl> ___lstFemale,
                 ChaControl ___male)
             {
-#if DEBUG
-                Log.Warning("[SetSortcutKeyPrefix] TRIGERED");
-#endif
                 _lstHeroines = ___lstFemale;
                 _heroine = _lstHeroines[0];
                 GetMoveController(_heroine).Init(CharacterType.Heroine);
