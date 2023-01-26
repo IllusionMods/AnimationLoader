@@ -3,11 +3,9 @@ using System.Linq;
 using System.Text;
 
 using Illusion.Extensions;
-using Manager;
 
 using BepInEx.Logging;
 using HarmonyLib;
-using static ADV.Info;
 
 namespace AnimationLoader
 {
@@ -72,13 +70,7 @@ namespace AnimationLoader
                         // vice-versa
 
 
-// Female donor
-#if DEBUG
-                        int neckDonor;
-                        neckDonor = anim.NeckDonorIdFemale >= 0 ? anim.NeckDonorIdFemale : anim.NeckDonorId;
-                        //Log.Warning($"NeckDonor = {neckDonor} from Female donor={anim.NeckDonorIdFemale} " +
-                        //    $"Global donor={anim.NeckDonorId} Animation={anim.AnimationName}");
-#endif
+                        // Female donor
 #if KK
                         // Don't touch KK for now treat NeckDonorId like previous version
                         // only apply it to the female
@@ -142,10 +134,6 @@ namespace AnimationLoader
                                 }
                                 else
                                 {
-#if DEBUG
-                                    //Log.Warning($"Setting Female fileMotionNeck={newMotionNeck} " +
-                                    //    $"Animation={anim.AnimationName}");
-#endif
                                     donorInfo.paramFemale.fileMotionNeck = newMotionNeck;
                                 }
                             }
@@ -154,11 +142,6 @@ namespace AnimationLoader
                         // Female1 donor
                         if (anim.ControllerFemale1 != null)
                         {
-#if DEBUG
-                            neckDonor = anim.NeckDonorIdFemale1 >= 0 ? anim.NeckDonorIdFemale1 : anim.NeckDonorId;
-                            //Log.Warning($"NeckDonor = {neckDonor} from Female1 donor={anim.NeckDonorIdFemale1} " +
-                            //    $"Global donor={anim.NeckDonorId}  Animation={anim.AnimationName}");
-#endif
                             if (anim.NeckDonorIdFemale1 >= 0 && anim.NeckDonorIdFemale1 != anim.DonorPoseId)
                             {
                                 var newNeckDonor = animListInfo
@@ -187,10 +170,6 @@ namespace AnimationLoader
                                     }
                                     else
                                     {
-#if DEBUG
-                                        //Log.Warning($"Setting Female1 fileMotionNeck={newMotionNeck} " +
-                                        //    $"Animation={anim.AnimationName}");
-#endif
                                         donorInfo.paramFemale1.fileMotionNeck = newMotionNeck;
                                     }
                                 }
@@ -200,11 +179,6 @@ namespace AnimationLoader
                         // Male donor did not have NeckDonor applied to it
                         // TODO: Treat NeckDonorId as global and apply it to everyone when there
                         // no specific one must remove from manifest
-#if DEBUG
-                        neckDonor = anim.NeckDonorIdMale >= 0 ? anim.NeckDonorIdMale : anim.NeckDonorId;
-                        //Log.Warning($"NeckDonor = {neckDonor} from Male donor={anim.NeckDonorIdMale} " +
-                        //    $"Global donor={anim.NeckDonorId}  Animation={anim.AnimationName}");
-#endif
                         if (anim.NeckDonorIdMale >= 0 && anim.NeckDonorIdMale != anim.DonorPoseId)
                         {
                             var newNeckDonor = animListInfo
@@ -232,21 +206,10 @@ namespace AnimationLoader
                                 }
                                 else
                                 {
-#if DEBUG
-                                    //Log.Warning($"Setting Male fileMotionNeck={newMotionNeck} " +
-                                    //    $"Animation={anim.AnimationName}");
-#endif
                                     donorInfo.paramMale.fileMotionNeck = newMotionNeck;
                                 }
                             }
                         }
-
-                        // Looks like same effect as NeckDonorId affect same field not used in
-                        // manifest
-                        //if (anim.FileMotionNeck != null)
-                        //{
-                        //    donorInfo.paramFemale.fileMotionNeck = anim.FileMotionNeck;
-                        //}
 
                         if (anim.IsFemaleInitiative != null)
                         {
@@ -290,11 +253,6 @@ namespace AnimationLoader
 #endif
                         animListInfo.Add(donorInfo);
                         swapAnimationMapping[donorInfo] = anim;
-                        // Add to log
-                        // addedAnimations.Append($"EMode={anim.Mode,6} Name=" +
-                        //    $"{Utilities.Translate(anim.AnimationName)}, " +
-                        //    $"[Key={GetAnimationKey(anim)}] donor release=" +
-                        //    $"{donorInfo.isRelease}\n");
                         countAL++;
                     }
                 }
