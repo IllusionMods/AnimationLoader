@@ -35,7 +35,7 @@ namespace AnimationLoader
                 try
                 {
 #if DEBUG
-                    Log.Warning($"0007: Animator changing - [{Manager.Scene.ActiveScene.name}] - " +
+                    Log.Warning($"0007: [ChangeAnimatorPrefix] Animator changing - [{Manager.Scene.ActiveScene.name}] - " +
                         $"{Utilities.TranslateName(_nextAinmInfo.nameAnimation)}, " +
                         $"Key={GetAnimationKey(_nextAinmInfo)}, " +
                         $"SiruPaste={SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}.");
@@ -177,47 +177,7 @@ namespace AnimationLoader
                     male.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
                         male.animBody.runtimeAnimatorController, maleCtrl);
                 }
-                var mi = t_hsp.Field<List<MotionIK>>("lstMotionIK").Value;
-
-#if DEBUG
-                var path = _nextAinmInfo.paramFemale.path;
-                var ikData = GlobalMethod.LoadAllFolderInOneFile<TextAsset>("h/list/", path.file);
-                if (ikData != null)
-                {
-                    Log.Level(LogLevel.Warning, $"[SwapAnimation]\n{path.file} IK {ikData.bytes.ToString()}\n");
-                }
-                else
-                {
-                    Log.Level(LogLevel.Warning, $"[SwapAnimation]\n{path.file} cannot load MotionIK Data\n");
-                }
-#endif
-
-                if (swapAnimationInfo.MotionIKDonor != _nextAinmInfo.id)
-                {
-                    mi.ForEach(mik => mik.Release());
-                    mi.Clear();
-
-                    //TODO: MotionIKData.
-                    mi.Add(new MotionIK(female));
-                    mi.Add(new MotionIK(male));
-                    mi.ForEach(mik =>
-                    {
-                        mik.SetPartners(mi);
-                        mik.Reset();
-                    });
-                }
-            }
-
-            /// <summary>
-            /// Debug only method
-            /// </summary>
-            private static void ChangeCategoryPostfix(HPointData _data, int _category)
-            {
-                Log.Warning(
-                    $"0021: HPoint mode={(PositionCategory)_category} " +
-                    $"name={_data.name} " +
-                    $"Experience={_data.Experience} " +
-                    $"position {_data.transform.position}");
+                SetupMotionIK(__instance, swapAnimationInfo, _nextAinmInfo);
             }
         }
     }
