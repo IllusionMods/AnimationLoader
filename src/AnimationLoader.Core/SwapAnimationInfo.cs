@@ -82,18 +82,17 @@ namespace AnimationLoader
         [XmlElement]
         public string FileSiruPaste;
 
-        // MotionIKDonor set to -2 so it can be overwritten in manifest when needed
         [XmlElement]
-        public int MotionIKDonor = -2;
+        public string MotionIKDonor;
 
         [XmlElement]
-        public int MotionIKDonorFemale = -1;
+        public string MotionIKDonorFemale;
 
         [XmlElement]
-        public int MotionIKDonorFemale1 = -1;
+        public string MotionIKDonorFemale1;
 
         [XmlElement]
-        public int MotionIKDonorMale = -1;
+        public string MotionIKDonorMale;
 
         [XmlElement]
         public int ExpTaii = -1;
@@ -188,18 +187,17 @@ namespace AnimationLoader
         [XmlElement]
         public string FileSiruPaste;
 
-        // MotionIKDonor set to -2 so it can be overwritten in manifest when needed
         [XmlElement]
-        public int MotionIKDonor = -2;
+        public string MotionIKDonor;
 
         [XmlElement]
-        public int MotionIKDonorFemale = -1;
+        public string MotionIKDonorFemale;
 
         [XmlElement]
-        public int MotionIKDonorFemale1 = -1;
+        public string MotionIKDonorFemale1;
 
         [XmlElement]
-        public int MotionIKDonorMale = -1;
+        public string MotionIKDonorMale;
 
         [XmlElement]
         public int ExpTaii = -1;

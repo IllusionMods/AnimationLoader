@@ -391,11 +391,19 @@ namespace AnimationLoader
             {
                 data.FileSiruPaste = string.Copy(overrides.FileSiruPaste);
             }
-            if (overrides.MotionIKDonor >= 0)
+            if (overrides.MotionIKDonor != null)
             {
                 data.MotionIKDonor = overrides.MotionIKDonor;
             }
-            if (overrides.MotionIKDonorMale >= 0)
+            if (overrides.MotionIKDonorFemale != null)
+            {
+                data.MotionIKDonorFemale = overrides.MotionIKDonorFemale;
+            }
+            if (overrides.MotionIKDonorFemale1 != null)
+            {
+                data.MotionIKDonorFemale1 = overrides.MotionIKDonorFemale1;
+            }
+            if (overrides.MotionIKDonorMale != null)
             {
                 data.MotionIKDonorMale = overrides.MotionIKDonorMale;
             }
