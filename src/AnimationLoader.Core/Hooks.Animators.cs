@@ -34,19 +34,33 @@ namespace AnimationLoader
 
                 try
                 {
+                    var hspTraverse = Traverse.Create(__instance);
+                    var flags = hspTraverse.Field<HFlag>("flags").Value;
+                    var position = hspTraverse
+                        .Field<Vector3>("nowHpointDataPos").Value;
 #if DEBUG
-                    Log.Warning($"0007: [ChangeAnimatorPrefix] Animator changing - [{Manager.Scene.ActiveScene.name}] - " +
-                        $"{Utilities.TranslateName(_nextAinmInfo.nameAnimation)}, " +
-                        $"Key={GetAnimationKey(_nextAinmInfo)}, " +
-                        $"SiruPaste={SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}.");
+                    var nowAnimName = "None";
+                    if (flags.nowAnimationInfo != null)
+                    {
+                        nowAnimName = Utilities
+                            .TranslateName(flags.nowAnimationInfo.nameAnimation);
+                    }
+
+                    Log.Warning($"0007: [ChangeAnimatorPrefix] Animator changing - " +
+                        $"[{Manager.Scene.ActiveScene.name}]\n" +
+                        $"Now Animation {nowAnimName} " +
+                        $"Animation {Utilities.TranslateName(_nextAinmInfo.nameAnimation)} " +
+                        $"Key={GetAnimationKey(_nextAinmInfo)}  " +
+                        $"SiruPaste={SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}\n" +
+                        $"nowHpointDataPos={position.FormatVector()}");
 #endif
                     // Reposition characters before animation starts
                     if (Reposition.Value)
                     {
-                        var flags = Traverse.Create(__instance).Field<HFlag>("flags").Value;
-                        Utilities.SetOriginalPositionAll();
-                        var nowAnimationInfo = flags.nowAnimationInfo;
-                        var nowAnim = new AnimationInfo(nowAnimationInfo);
+                        //var nowAnimationInfo = flags.nowAnimationInfo;
+                        var nowAnim = new AnimationInfo(flags.nowAnimationInfo);
+                        var heroinePos = GetMoveController(_heroine).ChaControl.transform.position;
+
                         if (nowAnim != null)
                         {
                             // If there is a position adjustment
@@ -69,12 +83,19 @@ namespace AnimationLoader
                                 }
                             }
                         }
+
                         var nextAnim = new AnimationInfo(_nextAinmInfo);
                         if (nextAnim != null)
                         {
                             // Move characters
                             if (Utilities.HasMovement(nextAnim))
                             {
+                                // The position of characters as set by the current
+                                // animation pose
+                                position = hspTraverse
+                                    .Field<Vector3>("nowHpointDataPos").Value;
+
+                                Utilities.SetOriginalPositionAll(position);
                                 if (nextAnim.SwapAnim.PositionHeroine != Vector3.zero)
                                 {
                                     GetMoveController(_heroine)
