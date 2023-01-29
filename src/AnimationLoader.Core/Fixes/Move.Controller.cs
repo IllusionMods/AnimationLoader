@@ -4,7 +4,7 @@ using UnityEngine;
 
 using KKAPI;
 using KKAPI.Chara;
-
+using BepInEx.Logging;
 
 namespace AnimationLoader
 {
@@ -32,14 +32,15 @@ namespace AnimationLoader
             internal void Init(CharacterType chaType)
             {
                 _chaType = chaType;
-                SetOriginalPosition();
             }
 
             /// <summary>
             /// Save original position
             /// </summary>
-            internal void SetOriginalPosition() =>
-                _originalPosition = ChaControl.transform.position;
+            internal void SetOriginalPosition(Vector3 position)
+            {
+                _originalPosition = position;
+            }
 
             /// <summary>
             /// Restore original position
@@ -48,7 +49,8 @@ namespace AnimationLoader
             {
                 ChaControl.transform.position = _originalPosition;
 #if DEBUG
-                Log.Warning($"0032: Resetting character position for {_chaType}.");
+                Log.Warning($"0032: Resetting character position for {_chaType}" +
+                    $"to position={ChaControl.transform.position.FormatVector()}.");
 #endif
             }
 
@@ -61,33 +63,43 @@ namespace AnimationLoader
                     //    originalPosition = character.transform.position;
                     //}
                     var original = ChaControl.transform.position;
-                    var xAxis = ChaControl.transform.right * move.x;
-                    var yAxis = new Vector3(0, move.y, 0);
-                    var zAxis = ChaControl.transform.forward * move.z;
+                    var rightZAxis = ChaControl.transform.right * move.x;
+                    var upYAxis = ChaControl.transform.up * move.y;
+                    var upXAxis = ChaControl.transform.forward * move.z;
 
-                    ChaControl.transform.position += xAxis;
-                    ChaControl.transform.position += yAxis;
-                    ChaControl.transform.position += zAxis;
+                    // In manifest x is right z is forward
+                    // in game transform x is forward z is right
+                    Vector3 gameMove = new(move.z, move.y, move.x);
+                    var newPosition = original + gameMove;
+                    var gameMove2 = move.MovementTransform(ChaControl.transform);
+
+                    ChaControl.transform.position += upXAxis;
+                    ChaControl.transform.position += upYAxis;
+                    ChaControl.transform.position += rightZAxis;
                     _lastMovePosition = ChaControl.transform.position;
 #if DEBUG
-                    Log.Level(BepInEx.Logging.LogLevel.Warning,
-                        $"0031: Adjusting character position for {_chaType}\n" +
-                        $"   move={move.ToString("F3")}\n" +
-                        $"  right={ChaControl.transform.right.ToString("F7")}\n" +
-                        $"forward={ChaControl.transform.right.ToString("F7")}\n" +
-                        $"      x={yAxis.ToString("F7")}\n" +
-                        $"      y={yAxis.ToString("F7")}\n" +
-                        $"      z={zAxis.ToString("F7")}\n" +
-                        $"   From={original.ToString("F7")}\n" +
-                        $"     to={_lastMovePosition.ToString("F7")}." +
-                        $"");
+                    Log.Level(LogLevel.Warning,
+                        $"[Move] Adjusting character position for {_chaType}\n" +
+                        $"       move={gameMove.FormatVector()}\n" +
+                        $" trans move={gameMove2.FormatVector()}\n" +
+                        $"         up={ChaControl.transform.up.FormatVector()}\n" +
+                        $"      right={ChaControl.transform.right.FormatVector()}\n" +
+                        $"    forward={ChaControl.transform.forward.FormatVector()}\n" +
+                        $"      y(up)={upYAxis.FormatVector()}\n" +
+                        $"   z(right)={rightZAxis.FormatVector()}\n" +
+                        $" x(forward)={upXAxis.FormatVector()}\n" +
+                        $"       From={original.FormatVector()}\n" +
+                        $"         to={_lastMovePosition.FormatVector()}\n" +
+                        $"    vector+={newPosition.FormatVector()}.");
 #else
-                    Log.Debug($"0031: Adjusting character position for {_chaType}.");
+                    Log.Debug($"0031: Adjusting character position for {_chaType} to " +
+                        $"position={_lastMovePosition.FormatVector()}.");
 #endif
                 }
                 catch (Exception e)
                 {
-                    Log.Error($"0010: Cannot adjust {_chaType} - {ChaControl.name} - {e}.");
+                    Log.Level(LogLevel.Error, $"0010: Cannot adjust {_chaType} - " +
+                        $"{ChaControl.name} - {e}.");
                 }
             }
         }
