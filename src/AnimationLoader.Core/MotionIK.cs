@@ -186,7 +186,8 @@ namespace AnimationLoader
                     }
 
                     mi.Where((MotionIK motionIK) => motionIK.ik != null)
-                        .ToList().ForEach(delegate (MotionIK motionIK) { motionIK.Calc("Idle"); }
+                        .ToList()
+                        .ForEach(delegate (MotionIK motionIK) { motionIK.Calc("Idle"); }
                         );
 
                     /*mi.ForEach(mik =>
