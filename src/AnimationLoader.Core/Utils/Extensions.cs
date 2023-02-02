@@ -63,11 +63,21 @@ namespace AnimationLoader
         /// <summary>
         /// String format Vector3 variables for easier logging
         /// </summary>
-        /// <param name="self"></param>
+        /// <param name="self">Vector3 object</param>
+        /// <param name="decimals">decimal places in string format "F3" for example</param>
+        /// <param name="spaces">number of spaces left justified</param>
         /// <returns></returns>
-        public static string FormatVector(this Vector3 self)
+        public static string FormatVector(
+            this Vector3 self,
+            string decimals = default,
+            int spaces = default)
         {
-            var formatString = $"( {self.x, 11:F6} , {self.y, 11:F6}, {self.z, 11:F6} )";
+            string formatString;
+
+            formatString = $"( " +
+                $"{String.Format($"{{0,{spaces}:{decimals}}}", self.x)}, " +
+                $"{String.Format($"{{0,{spaces}:{decimals}}}", self.y)}, " +
+                $"{String.Format($"{{0,{spaces}:{decimals}}}", self.z)} )";
 
             return formatString;
         }
