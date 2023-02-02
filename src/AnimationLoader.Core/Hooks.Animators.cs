@@ -32,12 +32,19 @@ namespace AnimationLoader
                     return;
                 }
 
+                if (_heroine == null)
+                {
+                    return;
+                }
+
                 try
                 {
                     var hspTraverse = Traverse.Create(__instance);
                     var flags = hspTraverse.Field<HFlag>("flags").Value;
                     var position = hspTraverse
                         .Field<Vector3>("nowHpointDataPos").Value;
+                    var lstFemales = hspTraverse
+                        .Field<List<ChaControl>>("lstFemale").Value;
 #if DEBUG
                     var nowAnimName = "None";
                     if (flags.nowAnimationInfo != null)
@@ -57,9 +64,12 @@ namespace AnimationLoader
                     // Reposition characters before animation starts
                     if (Reposition.Value)
                     {
-                        //var nowAnimationInfo = flags.nowAnimationInfo;
+                        var nowAnimationInfo = flags.nowAnimationInfo;
                         var nowAnim = new AnimationInfo(flags.nowAnimationInfo);
-                        var heroinePos = GetMoveController(_heroine).ChaControl.transform.position;
+                        // var heroinePos = GetMoveController(_heroine).ChaControl.transform.position;
+                        // Cannot use _heroine this call is prior to HSceneProc.SetShortcut
+                        // _heroine is still null
+                        var heroinePos = lstFemales[0].transform.position;
 
                         if (nowAnim != null)
                         {
