@@ -2,9 +2,11 @@
 
 using UnityEngine;
 
+using BepInEx.Logging;
+
 using KKAPI;
 using KKAPI.Chara;
-using BepInEx.Logging;
+
 
 namespace AnimationLoader
 {
@@ -93,7 +95,7 @@ namespace AnimationLoader
                         $"    vector+={newPosition.FormatVector()}.");
 #else
                     Log.Debug($"0031: Adjusting character position for {_chaType} to " +
-                        $"position={_lastMovePosition.FormatVector()}.");
+                        $"position={_lastMovePosition.Format()}.");
 #endif
                 }
                 catch (Exception e)

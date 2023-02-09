@@ -67,7 +67,7 @@ namespace AnimationLoader
         /// <param name="decimals">decimal places in string format "F3" for example</param>
         /// <param name="spaces">number of spaces left justified</param>
         /// <returns></returns>
-        public static string FormatVector(
+        public static string Format(
             this Vector3 self,
             string decimals = default,
             int spaces = default)
@@ -75,9 +75,9 @@ namespace AnimationLoader
             string formatString;
 
             formatString = $"( " +
-                $"{String.Format($"{{0,{spaces}:{decimals}}}", self.x)}, " +
-                $"{String.Format($"{{0,{spaces}:{decimals}}}", self.y)}, " +
-                $"{String.Format($"{{0,{spaces}:{decimals}}}", self.z)} )";
+                $"{string.Format($"{{0,{spaces}:{decimals}}}", self.x)}, " +
+                $"{string.Format($"{{0,{spaces}:{decimals}}}", self.y)}, " +
+                $"{string.Format($"{{0,{spaces}:{decimals}}}", self.z)} )";
 
             return formatString;
         }

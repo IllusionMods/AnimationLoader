@@ -54,7 +54,6 @@ namespace AnimationLoader
         /// 
         /// Add motion IK for animations that have another animation that works as
         /// a model. In some cases a 24 state animation can be expanded to 48 states.
-        /// Dealing with sonyu only.
         ///
         /// MotionIKDonor controls the loading of the motion IK model.
         ///
@@ -69,7 +68,7 @@ namespace AnimationLoader
         /// 
         /// </summary>
         /// <param name="hSceneProcInstance">HSceneProc object instance</param>
-        /// <param name="swapAnimationInfo">current loaded from zipmod animation</param>
+        /// <param name="swapAnimationInfo">current animation loaded from zipmod</param>
         /// <param name="nextAinmInfo">game animation been loaded</param>
         private static void SetupMotionIK(object hSceneProcInstance,
             SwapAnimationInfo swapAnimationInfo,
