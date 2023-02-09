@@ -83,7 +83,8 @@ namespace AnimationLoader
                     }
 
                     var lines = lstAnimInfo[i].Select(x => $"{x.id}, {x.mode}," +
-                         $" {TranslateName(x.nameAnimation, true)}, {x.paramFemale.path.file}, {x.posture}," +
+                         $" {TranslateName(x.nameAnimation, true)}, {x.paramFemale.path.file}," +
+                         $" {x.paramFemale.fileMotionNeck}, {x.posture}," +
                          $" {x.numCtrl}, {x.kindHoushi}," +
                          $" {x.houshiLoopActionS}, {x.isFemaleInitiative}," +
                          $"{CategoryList(x.lstCategory, true)}," +
@@ -232,7 +233,7 @@ namespace AnimationLoader
             /// from original position saved
             /// </summary>
             /// <param name="message"></param>
-            internal static void SetOriginalPositionAll()
+            internal static void SetOriginalPositionAll(Vector3 position)
             {
                 if (_flags == null)
                 {
@@ -244,12 +245,12 @@ namespace AnimationLoader
                 {
                     if (IsNewPosition(heroines[i].chaCtrl))
                     {
-                        GetMoveController(heroines[i].chaCtrl).SetOriginalPosition();
+                        GetMoveController(heroines[i].chaCtrl).SetOriginalPosition(position);
                     }
                 }
                 if (IsNewPosition(_flags.player.chaCtrl))
                 {
-                    GetMoveController(_flags.player.chaCtrl).SetOriginalPosition();
+                    GetMoveController(_flags.player.chaCtrl).SetOriginalPosition(position);
                 }
             }
 

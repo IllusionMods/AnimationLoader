@@ -32,21 +32,45 @@ namespace AnimationLoader
                     return;
                 }
 
+                if (_heroine == null)
+                {
+                    return;
+                }
+
                 try
                 {
+                    var hspTraverse = Traverse.Create(__instance);
+                    var flags = hspTraverse.Field<HFlag>("flags").Value;
+                    var position = hspTraverse
+                        .Field<Vector3>("nowHpointDataPos").Value;
+                    var lstFemales = hspTraverse
+                        .Field<List<ChaControl>>("lstFemale").Value;
 #if DEBUG
-                    Log.Warning($"0007: Animator changing - [{Manager.Scene.ActiveScene.name}] - " +
-                        $"{Utilities.TranslateName(_nextAinmInfo.nameAnimation)}, " +
-                        $"Key={GetAnimationKey(_nextAinmInfo)}, " +
-                        $"SiruPaste={SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}.");
+                    var nowAnimName = "None";
+                    if (flags.nowAnimationInfo != null)
+                    {
+                        nowAnimName = Utilities
+                            .TranslateName(flags.nowAnimationInfo.nameAnimation);
+                    }
+
+                    Log.Warning($"0007: [ChangeAnimatorPrefix] Animator changing - " +
+                        $"[{Manager.Scene.ActiveScene.name}]\n" +
+                        $"Now Animation {nowAnimName} " +
+                        $"Animation {Utilities.TranslateName(_nextAinmInfo.nameAnimation)} " +
+                        $"Key={GetAnimationKey(_nextAinmInfo)}  " +
+                        $"SiruPaste={SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}\n" +
+                        $"nowHpointDataPos={position.FormatVector()}");
 #endif
                     // Reposition characters before animation starts
                     if (Reposition.Value)
                     {
-                        var flags = Traverse.Create(__instance).Field<HFlag>("flags").Value;
-                        Utilities.SetOriginalPositionAll();
                         var nowAnimationInfo = flags.nowAnimationInfo;
-                        var nowAnim = new AnimationInfo(nowAnimationInfo);
+                        var nowAnim = new AnimationInfo(flags.nowAnimationInfo);
+                        // var heroinePos = GetMoveController(_heroine).ChaControl.transform.position;
+                        // Cannot use _heroine this call is prior to HSceneProc.SetShortcut
+                        // _heroine is still null
+                        var heroinePos = lstFemales[0].transform.position;
+
                         if (nowAnim != null)
                         {
                             // If there is a position adjustment
@@ -69,12 +93,19 @@ namespace AnimationLoader
                                 }
                             }
                         }
+
                         var nextAnim = new AnimationInfo(_nextAinmInfo);
                         if (nextAnim != null)
                         {
                             // Move characters
                             if (Utilities.HasMovement(nextAnim))
                             {
+                                // The position of characters as set by the current
+                                // animation pose
+                                position = hspTraverse
+                                    .Field<Vector3>("nowHpointDataPos").Value;
+
+                                Utilities.SetOriginalPositionAll(position);
                                 if (nextAnim.SwapAnim.PositionHeroine != Vector3.zero)
                                 {
                                     GetMoveController(_heroine)
@@ -177,47 +208,7 @@ namespace AnimationLoader
                     male.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
                         male.animBody.runtimeAnimatorController, maleCtrl);
                 }
-                var mi = t_hsp.Field<List<MotionIK>>("lstMotionIK").Value;
-
-#if DEBUG
-                var path = _nextAinmInfo.paramFemale.path;
-                var ikData = GlobalMethod.LoadAllFolderInOneFile<TextAsset>("h/list/", path.file);
-                if (ikData != null)
-                {
-                    Log.Level(LogLevel.Warning, $"[SwapAnimation]\n{path.file} IK {ikData.bytes.ToString()}\n");
-                }
-                else
-                {
-                    Log.Level(LogLevel.Warning, $"[SwapAnimation]\n{path.file} cannot load MotionIK Data\n");
-                }
-#endif
-
-                if (swapAnimationInfo.MotionIKDonor != _nextAinmInfo.id)
-                {
-                    mi.ForEach(mik => mik.Release());
-                    mi.Clear();
-
-                    //TODO: MotionIKData.
-                    mi.Add(new MotionIK(female));
-                    mi.Add(new MotionIK(male));
-                    mi.ForEach(mik =>
-                    {
-                        mik.SetPartners(mi);
-                        mik.Reset();
-                    });
-                }
-            }
-
-            /// <summary>
-            /// Debug only method
-            /// </summary>
-            private static void ChangeCategoryPostfix(HPointData _data, int _category)
-            {
-                Log.Warning(
-                    $"0021: HPoint mode={(PositionCategory)_category} " +
-                    $"name={_data.name} " +
-                    $"Experience={_data.Experience} " +
-                    $"position {_data.transform.position}");
+                SetupMotionIK(__instance, swapAnimationInfo, _nextAinmInfo);
             }
         }
     }

@@ -32,6 +32,7 @@ namespace AnimationLoader
         internal static ConfigEntry<bool> Reposition { get; set; }
         internal static ConfigEntry<bool> SortPositions { get; set; }
         internal static ConfigEntry<bool> HighLight { get; set; }
+        internal static ConfigEntry<bool> MotionIK { get; set; }
 
         internal const string GeneralSection = "General";
         internal const string DebugSection = "Debug";
@@ -64,7 +65,7 @@ namespace AnimationLoader
                 defaultValue: true,
                 configDescription: new ConfigDescription(
                     description: "Apply experience levels to animations",
-                    tags: new ConfigurationManagerAttributes { Order = 17}));
+                    tags: new ConfigurationManagerAttributes { Order = 16}));
 
             EnableAllFreeH = Config.Bind(
                 section: GeneralSection,
@@ -126,7 +127,19 @@ namespace AnimationLoader
                     description: "Uses more color to highlight the effects of the " 
                         + "store plug-in and Free-H",
                     acceptableValues: null,
+                    tags: new ConfigurationManagerAttributes { Order = 18, IsAdvanced = true }));
+
+            // Reposition characters in the animations it can help with clipping
+            MotionIK = Config.Bind(
+                section: AdvanceSection,
+                key: "Setup Motion IK",
+                defaultValue: true,
+                configDescription: new ConfigDescription(
+                    description: "Some animations have motion IK configurations if color" +
+                        " is used they can be identified by a darker yellow color",
+                    acceptableValues: null,
                     tags: new ConfigurationManagerAttributes { Order = 17, IsAdvanced = true }));
+
 
             // Save names in UserData.  These can be expanded to other fields if need be.
             UserOverrides = Config.Bind(

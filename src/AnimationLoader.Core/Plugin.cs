@@ -100,7 +100,7 @@ namespace AnimationLoader
         private void Start()
         {
             //
-            // Save names for animations for users who update them and not overwrite with updates
+            // Save names for animations for users who update them and not overwritten with updates
             //
             LoadNamesXml();
 

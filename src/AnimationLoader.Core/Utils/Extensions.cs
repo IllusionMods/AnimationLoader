@@ -59,5 +59,45 @@ namespace AnimationLoader
             rt.offsetMin = new Vector2(offsetLeft, offsetBottom);
             rt.offsetMax = new Vector2(offsetRight, offsetTop);
         }
+
+        /// <summary>
+        /// String format Vector3 variables for easier logging
+        /// </summary>
+        /// <param name="self">Vector3 object</param>
+        /// <param name="decimals">decimal places in string format "F3" for example</param>
+        /// <param name="spaces">number of spaces left justified</param>
+        /// <returns></returns>
+        public static string Format(
+            this Vector3 self,
+            string decimals = default,
+            int spaces = default)
+        {
+            string formatString;
+
+            formatString = $"( " +
+                $"{string.Format($"{{0,{spaces}:{decimals}}}", self.x)}, " +
+                $"{string.Format($"{{0,{spaces}:{decimals}}}", self.y)}, " +
+                $"{string.Format($"{{0,{spaces}:{decimals}}}", self.z)} )";
+
+            return formatString;
+        }
+
+        /// <summary>
+        /// Adjust move vector to transform vector in Unity when using transform it looks
+        /// that moving forward sometimes is in the X axis (Why?)
+        /// </summary>
+        /// <param name="self">object self reference</param>
+        /// <param name="transform">character transform</param>
+        /// <returns></returns>
+        public static Vector3 MovementTransform(this Vector3 self, Transform transform)
+        {
+            var result = new Vector3(0, 0, 0);
+
+            result += transform.right * self.x;
+            result += transform.up * self.y;
+            result += transform.forward * self.z;
+
+            return result;
+        }
     }
 }

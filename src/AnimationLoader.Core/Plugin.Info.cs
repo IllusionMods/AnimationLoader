@@ -15,7 +15,6 @@ using AnimationLoader;
 
 #endregion Assembly attributes
 
-// Log ID: 0019, 0022, 0023, 0024, 0026, 0027, 0034
 
 namespace AnimationLoader
 {
@@ -27,7 +26,7 @@ namespace AnimationLoader
 #else
         public const string PluginDisplayName = "Animation Loader";
 #endif
-        public const string Version = "1.1.2.2";
+        public const string Version = "1.1.3.0";
 #if KK
         public const string PluginName = "AnimationLoader.Koikatu";
 #else

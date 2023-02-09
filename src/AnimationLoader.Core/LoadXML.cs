@@ -89,16 +89,18 @@ namespace AnimationLoader
                     var pVersion = new Version(Version);
                     if (pVersion.CompareTo(alVersion) < 0)
                     {
+                        var tmp = author is not null ? author.Value : "N/A";
                         Log.Level(LogLevel.Warning | LogLevel.Debug, $"0011: Manifest " +
-                            $"guid={guid} version={version} author=[{author.Value}] " +
-                            $"minimum version={alVersion} AnimationLoader version={pVersion} " +
+                            $"guid={guid} version={version} author=[{tmp}] minimum " +
+                            $"version={alVersion} AnimationLoader version={pVersion} " +
                             $"some features may not work.");
                     }
                     else
                     {
-                        Log.Level(LogLevel.Info | LogLevel.Debug, $"0011: Manifest guid={guid} " +
-                            $"version={version} author=[{author.Value}] " +
-                            $"minimum version={alVersion} AnimationLoader version={pVersion}");
+                        var tmp = author is not null ? author.Value : "N/A";
+                        Log.Level(LogLevel.Info | LogLevel.Debug, $"0011: Manifest " +
+                            $"guid={guid} version={version} author=[{tmp}] minimum " +
+                            $"version={alVersion} AnimationLoader version={pVersion}");
                     }
                 }
                 if (UserOverrides.Value)
@@ -119,7 +121,8 @@ namespace AnimationLoader
                 }
 
                 // Process elements valid for any game
-                count += ProcessArray(_animRoot, guid, version, overrideNames, ref logLines);
+                count += ProcessArray(
+                    _animRoot, guid, version, overrideNames, ref logLines);
                 if (_animRootGS is null)
                 {
                     if (_saveNames)
@@ -168,7 +171,9 @@ namespace AnimationLoader
             }
             else
             {
-                Log.Level(LogLevel.Message | LogLevel.Debug, "0017: No animation manifests found.");
+                Log.Level(
+                    LogLevel.Message | LogLevel.Debug,
+                    "0017: No animation manifests found.");
             }
         }
 
@@ -183,7 +188,8 @@ namespace AnimationLoader
 
             if (Sideloader.Sideloader.ZipArchives.TryGetValue(guid, out var zipFileName))
             {
-                logLines.Append($"From {zipFileName} {guid}-{version}: {RootText(root.Name)}\n");
+                logLines.Append($"From {zipFileName} {guid}-{version}: " +
+                    $"{RootText(root.Name)}\n");
             }
             else
             {
@@ -218,7 +224,8 @@ namespace AnimationLoader
                         // Temp to continue testing
                         animation = animationNamesDict[guid].Anim
                             .Where(x => (x.StudioId == data.StudioId) &&
-                                        (x.Controller == data.ControllerFemale)).FirstOrDefault();
+                                        (x.Controller == data.ControllerFemale))
+                            .FirstOrDefault();
                         if (animation == null)
                         {
                             overrideName = false;
@@ -243,12 +250,13 @@ namespace AnimationLoader
                         animation.Koikatu = string.Copy(data.AnimationName);
                         animation.KoikatuReference = string.Copy(data.AnimationName);
                         animation.KoikatsuSunshine = string.Copy(data.AnimationName);
-                        animation.KoikatsuSunshineReference = string.Copy(data.AnimationName);
+                        animation.KoikatsuSunshineReference = string
+                            .Copy(data.AnimationName);
                     }
                 }
 #if KKS
-                // Assuming configuration is for KK like originally is and the overrides are for
-                // KKS only no the other way around.
+                // Assuming configuration is for KK like originally is and the
+                // overrides are for KKS only no the other way around.
                 // TODO: Changing it so it can be the other way around also.
                 var overrideRoot = animElem?
                     .Element(ManifestOverride)?
@@ -288,7 +296,8 @@ namespace AnimationLoader
             return count;
         }
 
-        internal static Func<XName, string> RootText = x => x == KoikatuAPI.GameProcessName ?
+        internal static Func<XName, string>
+            RootText = x => x == KoikatuAPI.GameProcessName ?
             $"Game specific elements of {x}" : $"Root elements of {x}";
 
 #if KKS
@@ -340,7 +349,8 @@ namespace AnimationLoader
                 if (UserOverrides.Value)
                 {
                     animation.KoikatsuSunshine = string.Copy(overrides.AnimationName);
-                    animation.KoikatsuSunshineReference = string.Copy(overrides.AnimationName);
+                    animation.KoikatsuSunshineReference = string
+                        .Copy(overrides.AnimationName);
                 }
             }
             if (overrides.Mode >= 0)
@@ -389,11 +399,19 @@ namespace AnimationLoader
             {
                 data.FileSiruPaste = string.Copy(overrides.FileSiruPaste);
             }
-            if (overrides.MotionIKDonor >= 0)
+            if (overrides.MotionIKDonor != null)
             {
                 data.MotionIKDonor = overrides.MotionIKDonor;
             }
-            if (overrides.MotionIKDonorMale >= 0)
+            if (overrides.MotionIKDonorFemale != null)
+            {
+                data.MotionIKDonorFemale = overrides.MotionIKDonorFemale;
+            }
+            if (overrides.MotionIKDonorFemale1 != null)
+            {
+                data.MotionIKDonorFemale1 = overrides.MotionIKDonorFemale1;
+            }
+            if (overrides.MotionIKDonorMale != null)
             {
                 data.MotionIKDonorMale = overrides.MotionIKDonorMale;
             }

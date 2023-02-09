@@ -74,6 +74,9 @@ namespace AnimationLoader
 
                                 if (!AnimationClips.Clips.ContainsKey(elementKey))
                                 {
+#if DEBUG
+                                    Log.Warning($"[LoadStudioAnims] Key=[{elementKey}] not found.");
+#endif
                                     continue;
                                 }
                                 var clips = AnimationClips.Clips[elementKey];

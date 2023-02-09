@@ -107,13 +107,9 @@ namespace AnimationLoader
 
                             if (swap is not null)
                             {
-#if DEBUG
-                                // var tmp = $"  E({swap.ExpTaii})";
-                                // label.text = $"{animationInfoComponent.info.nameAnimation}{tmp}";
-#endif
                                 if (HighLight.Value)
                                 {
-                                    if (swap.MotionIKDonor > 0)
+                                    if (swap.MotionIKDonor != null)
                                     {
                                         // MotionIK information
                                         label.color = Utilities.gold;
@@ -132,9 +128,6 @@ namespace AnimationLoader
                             // game animations
                             var tmp = Utilities.GetExpTaii((int)animationInfoComponent.info.mode,
                                 animationInfoComponent.info.id);
-#if DEBUG                           
-                            // label.text = $"{Utilities.TranslateName(animationInfoComponent.info.nameAnimation)}  E({tmp})";
-#endif
                             if (HighLight.Value)
                             {
                                 // Emphasize effects of the store plug-in
@@ -195,13 +188,16 @@ namespace AnimationLoader
                             // 
                             var playHlist = Manager.Game.globalData.playHList;
                             
-                            if (!playHlist.TryGetValue((int)animationInfoComponent.info.mode, out var intSet))
+                            if (!playHlist.TryGetValue(
+                                (int)animationInfoComponent.info.mode, out var intSet))
                             {
                                 // Add missing category
-                                playHlist[(int)animationInfoComponent.info.mode] = intSet = new HashSet<int>();
+                                playHlist[(int)animationInfoComponent.info.mode] =
+                                    intSet = new HashSet<int>();
                             }
                             // Show new if animation is not in used animation list.
-                            newLabel.SetActive(!intSet.Contains(animationInfoComponent.info.id));
+                            newLabel.SetActive(
+                                !intSet.Contains(animationInfoComponent.info.id));
                         }
                     }
 
@@ -270,8 +266,12 @@ namespace AnimationLoader
             }
 
             [HarmonyPostfix]
-            [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.LoadAddTaii), new Type[] { typeof(List<AddTaiiData.Param>) })]
-            private static void LoadAddTaiiPostfix(object __instance, List<AddTaiiData.Param> param)
+            [HarmonyPatch(
+                typeof(HSceneProc),
+                nameof(HSceneProc.LoadAddTaii),
+                new Type[] { typeof(List<AddTaiiData.Param>) })]
+            private static void LoadAddTaiiPostfix(
+                object __instance, List<AddTaiiData.Param> param)
             {
                 var hsceneTraverse = Traverse.Create(__instance);
                 var dicExpAddTaii = hsceneTraverse
@@ -284,7 +284,8 @@ namespace AnimationLoader
                         if (!_dicExpAddTaii.ContainsKey(item.Key))
                         {
                             // Save the original dictionary for testing
-                            _dicExpAddTaii.Add(item.Key, new Dictionary<int, int>(item.Value));
+                            _dicExpAddTaii.Add(
+                                item.Key, new Dictionary<int, int>(item.Value));
                         }
                     }
                 }
@@ -314,7 +315,8 @@ namespace AnimationLoader
                         return false;
                     }
                 }
-                else if (UseAnimationLevels.Value && !CheckExperince(hsprite, anim))
+
+                if (UseAnimationLevels.Value && !CheckExperince(hsprite, anim))
                 {
                     // Not enough experience
                     return false;
