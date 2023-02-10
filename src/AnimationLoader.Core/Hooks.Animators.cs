@@ -59,7 +59,7 @@ namespace AnimationLoader
                         $"Animation {Utilities.TranslateName(_nextAinmInfo.nameAnimation)} " +
                         $"Key={GetAnimationKey(_nextAinmInfo)}  " +
                         $"SiruPaste={SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}\n" +
-                        $"nowHpointDataPos={position.FormatVector()}");
+                        $"nowHpointDataPos={position.Format()}");
 #endif
                     // Reposition characters before animation starts
                     if (Reposition.Value)

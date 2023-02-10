@@ -52,7 +52,7 @@ namespace AnimationLoader
                 ChaControl.transform.position = _originalPosition;
 #if DEBUG
                 Log.Warning($"0032: Resetting character position for {_chaType}" +
-                    $"to position={ChaControl.transform.position.FormatVector()}.");
+                    $"to position={ChaControl.transform.position.Format()}.");
 #endif
             }
 
@@ -82,17 +82,17 @@ namespace AnimationLoader
 #if DEBUG
                     Log.Level(LogLevel.Warning,
                         $"[Move] Adjusting character position for {_chaType}\n" +
-                        $"       move={gameMove.FormatVector()}\n" +
-                        $" trans move={gameMove2.FormatVector()}\n" +
-                        $"         up={ChaControl.transform.up.FormatVector()}\n" +
-                        $"      right={ChaControl.transform.right.FormatVector()}\n" +
-                        $"    forward={ChaControl.transform.forward.FormatVector()}\n" +
-                        $"      y(up)={upYAxis.FormatVector()}\n" +
-                        $"   z(right)={rightZAxis.FormatVector()}\n" +
-                        $" x(forward)={upXAxis.FormatVector()}\n" +
-                        $"       From={original.FormatVector()}\n" +
-                        $"         to={_lastMovePosition.FormatVector()}\n" +
-                        $"    vector+={newPosition.FormatVector()}.");
+                        $"       move={gameMove.Format()}\n" +
+                        $" trans move={gameMove2.Format()}\n" +
+                        $"         up={ChaControl.transform.up.Format()}\n" +
+                        $"      right={ChaControl.transform.right.Format()}\n" +
+                        $"    forward={ChaControl.transform.forward.Format()}\n" +
+                        $"      y(up)={upYAxis.Format()}\n" +
+                        $"   z(right)={rightZAxis.Format()}\n" +
+                        $" x(forward)={upXAxis.Format()}\n" +
+                        $"       From={original.Format()}\n" +
+                        $"         to={_lastMovePosition.Format()}\n" +
+                        $"    vector+={newPosition.Format()}.");
 #else
                     Log.Debug($"0031: Adjusting character position for {_chaType} to " +
                         $"position={_lastMovePosition.Format()}.");
