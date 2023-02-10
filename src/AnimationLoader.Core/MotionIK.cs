@@ -84,6 +84,7 @@ namespace AnimationLoader
             var female1 = ((lstFemale.Count > 1) ? lstFemale[1] : null);
             var male = hspTraverse.Field<ChaControl>("male").Value;
             var mi = hspTraverse.Field<List<MotionIK>>("lstMotionIK").Value;
+            var flags = hspTraverse.Field<HFlag>("flags").Value;
 
             var motionIKDonor = -2;
             var clearMotionIK = true;
@@ -97,7 +98,7 @@ namespace AnimationLoader
                 }
             }
 
-            if (MotionIK.Value)
+            if ((flags.mode == HFlag.EMode.sonyu) && MotionIK.Value)
             {
                 // This are set when MotionIKDataDonor is not equal to DonorPoseId
                 if (motionIKFemale != null || motionIKMale != null)
@@ -206,6 +207,9 @@ namespace AnimationLoader
                 // DonorPoseId
                 if (motionIKDonor != nextAinmInfo.id)
                 {
+#if DEBUG
+                    Log.Info("[SetupMotionIK] Clearing motion IK.");
+#endif
                     mi.ForEach(mik => mik.Release());
                     mi.Clear();
 
