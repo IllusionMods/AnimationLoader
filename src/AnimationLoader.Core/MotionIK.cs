@@ -208,13 +208,17 @@ namespace AnimationLoader
                 if (motionIKDonor != nextAinmInfo.id)
                 {
 #if DEBUG
-                    Log.Info("[SetupMotionIK] Clearing motion IK.");
+                    Log.Level(LogLevel.Warning, "[SetupMotionIK] Clearing motion IK.");
 #endif
                     mi.ForEach(mik => mik.Release());
                     mi.Clear();
 
                     mi.Add(new MotionIK(female));
                     mi.Add(new MotionIK(male));
+                    if (female1 != null)
+                    {
+                        mi.Add(new MotionIK(female1));
+                    }
                     mi.ForEach(mik =>
                         {
                             mik.SetPartners(mi);
