@@ -89,6 +89,11 @@ namespace AnimationLoader
             var motionIKDonor = -2;
             var clearMotionIK = true;
 
+#if DEBUG
+            Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK female is null={motionIKFemale == null} " +
+                $"MotionIK male is null={motionIKMale == null}");
+#endif
+
             // If MotionIKDonor is a number then MotionIKDonor equals DonorPoseId
             if (swapAnimationInfo.MotionIKDonor != null)
             {
@@ -122,11 +127,10 @@ namespace AnimationLoader
                             // other methods
                             moIKA.LoadData(textAsset);
                         }
-
+#if DEBUG
                         Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK female mi[0] total {len}" +
-                            $" moIK total {moIK.data.states.Length} {path}\n");
-
-
+                            $" moIK total {moIK.data.states.Length} {path}.");
+#endif
                         if (moIK.data.states != null)
                         {
                             var loadLen = moIK.data.states.Length;
@@ -146,7 +150,13 @@ namespace AnimationLoader
                         {
                             mi[0].Release();
                         }
-
+                    }
+                    else
+                    {
+#if DEBUG
+                        Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK female reset.");
+#endif
+                        mi[0] = new MotionIK(female);
                     }
 
                     if (motionIKMale is not null)
@@ -162,7 +172,7 @@ namespace AnimationLoader
                         moIKA.LoadData(textAsset);
 
                         Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK male mi[1] total {len} " +
-                            $"moIK total {moIK.data.states.Length} {path}\n");
+                            $"moIK total {moIK.data.states.Length} {path}.");
 
                         if (moIK.data.states != null)
                         {
@@ -182,7 +192,13 @@ namespace AnimationLoader
                         {
                             mi[1].Release();
                         }
-
+                    }
+                    else
+                    {
+#if DEBUG
+                        Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK male reset.");
+#endif
+                        mi[1] = new MotionIK(male);
                     }
 
                     mi.Where((MotionIK motionIK) => motionIK.ik != null)
