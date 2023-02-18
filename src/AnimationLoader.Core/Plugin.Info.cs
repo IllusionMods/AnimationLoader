@@ -26,7 +26,7 @@ namespace AnimationLoader
 #else
         public const string PluginDisplayName = "Animation Loader";
 #endif
-        public const string Version = "1.1.3.0";
+        public const string Version = "1.1.3.1";
 #if KK
         public const string PluginName = "AnimationLoader.Koikatu";
 #else
