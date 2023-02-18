@@ -12,6 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)AnimationsNames.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AnimatorOverrideController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.AnimationLists.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LoadXML.ProcessArray.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LoadXML.VersionChecks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MotionIK.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.Studio.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin.ConfigEntries.cs" />

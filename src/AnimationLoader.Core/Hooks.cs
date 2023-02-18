@@ -95,14 +95,16 @@ namespace AnimationLoader
                     .MatchForward(false,
                         new CodeMatch(
                             OpCodes.Ldfld,
-                            AccessTools.Field(typeof(HSprite), "flags")),
+                            AccessTools.Field(typeof(HSprite),
+                            "flags")),
                         new CodeMatch(
                             OpCodes.Ldfld,
                             AccessTools.Field(typeof(HFlag),
                             "nowAnimationInfo")),
                         new CodeMatch(
                             OpCodes.Ldfld,
-                            AccessTools.Field(typeof(HSceneProc.AnimationListInfo), "id"))
+                            AccessTools.Field(typeof(HSceneProc.AnimationListInfo),
+                            "id"))
                     )
                     .MatchForward(false,
                         new CodeMatch(OpCodes.Ret)

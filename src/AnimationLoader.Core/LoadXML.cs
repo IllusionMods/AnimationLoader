@@ -1,7 +1,7 @@
 ﻿//
 // Load XML animation information
 //
-using System;
+//using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,7 +13,7 @@ using BepInEx;
 using BepInEx.Logging;
 using KKAPI;
 
-using UnityEngine;
+//using UnityEngine;
 using static HFlag;
 
 
@@ -26,7 +26,6 @@ namespace AnimationLoader
         private const string ManifestGSArrayItem = KoikatuAPI.GameProcessName;
 
         private static readonly XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
-        // TODO: Read game overrides when running in KK
 #if KKS
         private const string ManifestOverride = "GameSpecificOverrides";
         private static readonly XmlSerializer xmlOverrideSerializer = new(typeof(OverrideInfo));
@@ -79,46 +78,8 @@ namespace AnimationLoader
                 }
                 var guid = manifest?.Element("guid").Value;
                 var version = manifest?.Element("version").Value;
-                var author = manifest?.Element("author");
 
-                _animationLoaderVersion = manifest?.Element("AnimationLoaderVersion");
-
-                if (_animationLoaderVersion is not null)
-                {
-                    var alVersion = new Version(_animationLoaderVersion.Value);
-                    var pVersion = new Version(Version);
-                    if (pVersion.CompareTo(alVersion) < 0)
-                    {
-                        var tmp = author is not null ? author.Value : "N/A";
-                        Log.Level(LogLevel.Warning | LogLevel.Debug, $"0011: Manifest " +
-                            $"guid={guid} version={version} author=[{tmp}] minimum " +
-                            $"version={alVersion} AnimationLoader version={pVersion} " +
-                            $"some features may not work.");
-                    }
-                    else
-                    {
-                        var tmp = author is not null ? author.Value : "N/A";
-                        Log.Level(LogLevel.Info | LogLevel.Debug, $"0011: Manifest " +
-                            $"guid={guid} version={version} author=[{tmp}] minimum " +
-                            $"version={alVersion} AnimationLoader version={pVersion}");
-                    }
-                }
-                if (UserOverrides.Value)
-                {
-                    // setup for names
-                    overrideNames = true;
-                    _saveNames = false;
-                    if (!animationNamesDict.ContainsKey(guid))
-                    {
-                        NamesAddGuid(manifest);
-                        overrideNames = false;
-                    }
-                    else
-                    {
-                        // There are names to override the ones in the manifest
-                        overrideNames = true;
-                    }
-                }
+                VersionChecks(manifest);
 
                 // Process elements valid for any game
                 count += ProcessArray(
@@ -176,258 +137,5 @@ namespace AnimationLoader
                     "0017: No animation manifests found.");
             }
         }
-
-        private static int ProcessArray(
-            XElement root, 
-            string guid, 
-            string version,
-            bool overrideNames,
-            ref StringBuilder logLines)
-        {
-            var count = 0;
-
-            if (Sideloader.Sideloader.ZipArchives.TryGetValue(guid, out var zipFileName))
-            {
-                logLines.Append($"From {zipFileName} {guid}-{version}: " +
-                    $"{RootText(root.Name)}\n");
-            }
-            else
-            {
-                logLines.Append($"From {guid}-{version}: {RootText(root.Name)}\n");
-            }
-            foreach (var animElem in root.Elements(ManifestArrayItem))
-            {
-                if (animElem == null)
-                {
-                    continue;
-                }
-                var animation = new Animation();
-                var reader = animElem.CreateReader();
-                var overrideName = overrideNames;
-                var data = (SwapAnimationInfo)xmlSerializer.Deserialize(reader);
-                data.Guid = guid;
-                reader.Close();
-
-                if (!data.SpecificFor.IsNullOrWhiteSpace())
-                {
-                    if (!data.SpecificFor.Equals(KoikatuAPI.GameProcessName))
-                    {
-                        continue;
-                    }
-                }
-
-                if (UserOverrides.Value)
-                {
-                    if (overrideName)
-                    {
-                        // user override name
-                        // Temp to continue testing
-                        animation = animationNamesDict[guid].Anim
-                            .Where(x => (x.StudioId == data.StudioId) &&
-                                        (x.Controller == data.ControllerFemale))
-                            .FirstOrDefault();
-                        if (animation == null)
-                        {
-                            overrideName = false;
-                            animation = new Animation();
-                        }
-                        else
-                        {
-#if KKS
-                            data.AnimationName = animation.KoikatsuSunshine;
-#endif
-#if KK
-                            data.AnimationName = animation.Koikatu;
-#endif
-                        }
-                    }
-
-                    if (!overrideName)
-                    {
-                        // new name
-                        animation.StudioId = data.StudioId;
-                        animation.Controller = string.Copy(data.ControllerFemale);
-                        animation.Koikatu = string.Copy(data.AnimationName);
-                        animation.KoikatuReference = string.Copy(data.AnimationName);
-                        animation.KoikatsuSunshine = string.Copy(data.AnimationName);
-                        animation.KoikatsuSunshineReference = string
-                            .Copy(data.AnimationName);
-                    }
-                }
-#if KKS
-                // Assuming configuration is for KK like originally is and the
-                // overrides are for KKS only no the other way around.
-                // TODO: Changing it so it can be the other way around also.
-                var overrideRoot = animElem?
-                    .Element(ManifestOverride)?
-                    .Element(KoikatuAPI.GameProcessName);
-                if (overrideRoot != null)
-                {
-                    var overrideReader = overrideRoot.CreateReader();
-                    var overrideData = (OverrideInfo)xmlOverrideSerializer
-                        .Deserialize(overrideReader);
-                    overrideReader.Close();
-                    DoOverrides(ref data, overrideData, ref animation, overrideName);
-                }
-#endif
-                if (!animationDict.TryGetValue(data.Mode, out var list))
-                {
-                    animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
-                }
-                list.Add(data);
-                logLines.Append($"{GetAnimationKey(data), -30} - " +
-                    $"{Utilities.Translate(data.AnimationName)}\n");
-                count++;
-                if (UserOverrides.Value)
-                {
-                    // Save names no names were read
-                    // TODO: re-save with new animations names
-                    if (!overrideName)
-                    {
-                        animationNamesDict[guid].Anim.Add(animation);
-                        if (!_saveNames)
-                        {
-                            _saveNames = true;
-                        }
-                    }
-                }
-            }
-            logLines.Append('\n');
-            return count;
-        }
-
-        internal static Func<XName, string>
-            RootText = x => x == KoikatuAPI.GameProcessName ?
-            $"Game specific elements of {x}" : $"Root elements of {x}";
-
-#if KKS
-        private static void Override(ref string lhs, string rhs)
-        {
-            if (rhs != null)
-            {
-                lhs = rhs;
-            }
-        }
-
-        private static void Override(ref int lhs, int rhs)
-        {
-            if (rhs >= 0)
-            {
-                lhs = rhs;
-            }
-        }
-
-        private static void DoOverrides(
-            ref SwapAnimationInfo data, 
-            OverrideInfo overrides,
-            ref Animation animation,
-            bool overrideName)
-        {
-            if (overrides.PathFemale != null)
-            {
-                data.PathFemale = string.Copy(overrides.PathFemale);
-            }
-            if (overrides.ControllerFemale != null)
-            {
-                data.ControllerFemale = string.Copy(overrides.ControllerFemale);
-            }
-
-            Override(ref data.PathFemale1, overrides.PathFemale1);
-            Override(ref data.ControllerFemale1, overrides.ControllerFemale1);
-
-            if (overrides.PathMale != null)
-            {
-                data.PathMale = string.Copy(overrides.PathMale);
-            }
-            if (overrides.ControllerMale != null)
-            {
-                data.ControllerMale = string.Copy(overrides.ControllerMale);
-            }
-            if ((overrides.AnimationName != null) && !overrideName)
-            {
-                data.AnimationName = string.Copy(overrides.AnimationName);
-                if (UserOverrides.Value)
-                {
-                    animation.KoikatsuSunshine = string.Copy(overrides.AnimationName);
-                    animation.KoikatsuSunshineReference = string
-                        .Copy(overrides.AnimationName);
-                }
-            }
-            if (overrides.Mode >= 0)
-            {
-                data.Mode = overrides.Mode;
-            }
-            if (overrides.kindHoushi >= 0)
-            {
-                data.kindHoushi = overrides.kindHoushi;
-            }
-            if (overrides.categories != null)
-            {
-                overrides.categories.CopyTo(data.categories, 0);
-            }
-            if (overrides.DonorPoseId >= 0)
-            {
-                data.DonorPoseId = overrides.DonorPoseId;
-            }
-
-            if (overrides.NeckDonorId >= -1)
-            {
-                data.NeckDonorId = overrides.NeckDonorId;
-            }
-
-            Override(ref data.NeckDonorIdFemale, overrides.NeckDonorIdFemale);
-            Override(ref data.NeckDonorIdFemale1, overrides.NeckDonorIdFemale1);
-
-            if (overrides.NeckDonorIdMale >= 0)
-            {
-                data.NeckDonorIdMale = overrides.NeckDonorIdMale;
-            }
-
-            if (overrides.FileMotionNeck != null)
-            {
-                data.FileMotionNeck = string.Copy(overrides.FileMotionNeck);
-            }
-            if (overrides.FileMotionNeckMale != null)
-            {
-                data.FileMotionNeckMale = string.Copy(overrides.FileMotionNeckMale);
-            }
-            if (overrides.IsFemaleInitiative != null)
-            {
-                data.IsFemaleInitiative = overrides.IsFemaleInitiative;
-            }
-            if (overrides.FileSiruPaste != null)
-            {
-                data.FileSiruPaste = string.Copy(overrides.FileSiruPaste);
-            }
-            if (overrides.MotionIKDonor != null)
-            {
-                data.MotionIKDonor = overrides.MotionIKDonor;
-            }
-            if (overrides.MotionIKDonorFemale != null)
-            {
-                data.MotionIKDonorFemale = overrides.MotionIKDonorFemale;
-            }
-            if (overrides.MotionIKDonorFemale1 != null)
-            {
-                data.MotionIKDonorFemale1 = overrides.MotionIKDonorFemale1;
-            }
-            if (overrides.MotionIKDonorMale != null)
-            {
-                data.MotionIKDonorMale = overrides.MotionIKDonorMale;
-            }
-            if (overrides.ExpTaii >= 0) 
-            { 
-                data.ExpTaii = overrides.ExpTaii; 
-            }
-            if (overrides.PositionHeroine != Vector3.zero)
-            {
-                data.PositionHeroine = overrides.PositionHeroine;
-            }
-            if (overrides.PositionPlayer != Vector3.zero)
-            {
-                data.PositionPlayer = overrides.PositionPlayer;
-            }
-        }
-#endif
     }
 }
