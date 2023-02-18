@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+//using System.Xml.Serialization;
 
 using UnityEngine;
 
 using Illusion.Extensions;
 
-using HarmonyLib;
+//using HarmonyLib;
 
+using KKAPI;
 using KKAPI.Utilities;
-using System.Xml.Serialization;
 
 namespace AnimationLoader
 {
@@ -18,7 +19,12 @@ namespace AnimationLoader
     {
         internal class Utilities
         {
-            internal static byte _alpha = 255;
+            private static readonly byte _alpha = 255;
+            private static readonly bool _isSunshine = (KoikatuAPI.GameProcessName == "KoikatsuSunshine")
+                || (KoikatuAPI.VRProcessName == "KoikatsuSunshine_VR");
+
+            private static readonly bool _isSunshineEx = _isSunshine &&
+                (KoikatuAPI.GetGameVersion().CompareTo(new Version("1.0.8")) > 0);
 
 #pragma warning disable IDE1006 // Naming Styles
 
@@ -59,6 +65,8 @@ namespace AnimationLoader
             public static Color white => new Color32(255, 255, 255, _alpha);
 
 #pragma warning restore IDE1006 // Naming Styles
+            public static bool IsSunshine => _isSunshine;
+            public static bool IsSunshineEx => _isSunshineEx;
 
             /// <summary>
             /// Save information for template.xml
@@ -271,8 +279,6 @@ namespace AnimationLoader
                 }
                 return false;
             }
-
-
 #if KKS
             /// <summary>
             /// Returns the experience level needed for the animation to be active using cached
