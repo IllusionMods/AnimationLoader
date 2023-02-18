@@ -31,7 +31,7 @@ namespace AnimationLoader
             ///     Enough experience
             ///         White - game animation
             ///         Yellow - additional animation
-            ///     Not enough experiece
+            ///     Not enough experience
             ///         Cyan - game animation
             ///         Ping - additional animation
             ///         
@@ -195,7 +195,7 @@ namespace AnimationLoader
                                 playHlist[(int)animationInfoComponent.info.mode] =
                                     intSet = new HashSet<int>();
                             }
-                            // Show new if animation is not in used animation list.
+                            // Show new if animation is not in used animation set.
                             newLabel.SetActive(
                                 !intSet.Contains(animationInfoComponent.info.id));
                         }
@@ -205,7 +205,7 @@ namespace AnimationLoader
                     
                     if (nowPosition is not null)
                     {
-                        // Check animation to see if it correspond to current catogory
+                        // Check animation to see if it correspond to current category
                         var foundCategory = false;
                         foreach (var category in _lstAnimInfo[index].lstCategory)
                         {
@@ -215,8 +215,8 @@ namespace AnimationLoader
                                 break;
                             }
                         }
-                        // Turn on change category icon if animation categories
-                        // not have the current category
+                        // Turn on change category icon if animation categories list
+                        // does not have the current category
                         nowPosition.SetActive(!foundCategory);
                     }
 
@@ -316,7 +316,12 @@ namespace AnimationLoader
                     }
                 }
 
-                if (UseAnimationLevels.Value && !CheckExperince(hsprite, anim))
+#if DEBUG
+                Log.Level(BepInEx.Logging.LogLevel.Warning, $"CheckExperience " +
+                    $"original={CheckExperience(hsprite, anim)} " +
+                    $"TryGet={CheckExperienceT(hsprite, anim)}");
+#endif
+                if (UseAnimationLevels.Value && !CheckExperience(hsprite, anim))
                 {
                     // Not enough experience
                     return false;
@@ -329,7 +334,7 @@ namespace AnimationLoader
             /// </summary>
             /// <param name="anim"></param>
             /// <returns></returns>
-            internal static bool CheckExperince(HSprite hsprite, SwapAnimationInfo anim)
+            internal static bool CheckExperience(HSprite hsprite, SwapAnimationInfo anim)
             {
                 var hExp = hsprite.flags.lstHeroine[0].hExp;
                 var expTaii = (double)anim.ExpTaii;
@@ -353,6 +358,40 @@ namespace AnimationLoader
                 }
                 return false;
             }
+
+            /// <summary>
+            /// Checks heroine experience against ExpTaii of swap animation
+            /// </summary>
+            /// <param name="hsprite"></param>
+            /// <param name="anim"></param>
+            /// <returns></returns>
+            internal static bool CheckExperienceT(HSprite hsprite, SwapAnimationInfo anim)
+            {
+                var hExp = hsprite.flags.lstHeroine[0].hExp;
+                var expTaii = (double)anim.ExpTaii;
+
+                if (_alDicExpAddTaii.TryGetValue(anim.Guid, out var animGuid))
+                {
+                    if (animGuid.TryGetValue((int)anim.Mode, out var animMode))
+                    {
+                        if (animMode.TryGetValue($"{anim.ControllerFemale}{anim.StudioId}", out var value))
+                        {
+                            expTaii = value;
+                        }
+                        else
+                        {
+                            expTaii = -1;
+                        }
+                    }
+                }
+
+                if ((double)hExp >= expTaii)
+                {
+                    return true;
+                }
+                return false;
+            }
+
         }
     }
 }
