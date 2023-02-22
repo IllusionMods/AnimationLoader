@@ -3,6 +3,7 @@
 //
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -13,6 +14,9 @@ using Illusion.Extensions;
 
 using BepInEx.Logging;
 using HarmonyLib;
+
+using Newtonsoft.Json;
+
 
 
 namespace AnimationLoader
@@ -75,25 +79,46 @@ namespace AnimationLoader
             HSceneProc.AnimationListInfo nextAinmInfo
             )
         {
-            var motionIKFemale = swapAnimationInfo.MotionIKDonorFemale;
-            var motionIKMale = swapAnimationInfo.MotionIKDonorMale;
-
             var hspTraverse = Traverse.Create(hSceneProcInstance);
+            var lstMotionIK = hspTraverse.Field<List<MotionIK>>("lstMotionIK").Value;
             var lstFemale = hspTraverse.Field<List<ChaControl>>("lstFemale").Value;
             var female = lstFemale[0];
             var female1 = ((lstFemale.Count > 1) ? lstFemale[1] : null);
             var male = hspTraverse.Field<ChaControl>("male").Value;
-            var mi = hspTraverse.Field<List<MotionIK>>("lstMotionIK").Value;
             var flags = hspTraverse.Field<HFlag>("flags").Value;
+
+            if (!MotionIK.Value)
+            {
+#if DEBUG
+                Log.Level(LogLevel.Warning, "[SetupMotionIK] Clearing motion IK.");
+#endif
+                lstMotionIK.ForEach(mik => mik.Release());
+                lstMotionIK.Clear();
+
+                lstMotionIK.Add(new MotionIK(female));
+                lstMotionIK.Add(new MotionIK(male));
+                if (female1 != null)
+                {
+                    lstMotionIK.Add(new MotionIK(female1));
+                }
+                lstMotionIK.ForEach(mik =>
+                    {
+                        mik.SetPartners(lstMotionIK);
+                        mik.Reset();
+                    }
+                );
+                return;
+            }
+
+            var motionIKFemale = swapAnimationInfo.MotionIKDonorFemale;
+            var motionIKMale = swapAnimationInfo.MotionIKDonorMale;
 
             var motionIKDonor = -2;
             var clearMotionIK = true;
-
 #if DEBUG
             Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK female is null={motionIKFemale == null} " +
-                $"MotionIK male is null={motionIKMale == null}");
+                $"MotionIK male is null={motionIKMale == null} enabled={MotionIK.Value}");
 #endif
-
             // If MotionIKDonor is a number then MotionIKDonor equals DonorPoseId
             if (swapAnimationInfo.MotionIKDonor != null)
             {
@@ -103,50 +128,62 @@ namespace AnimationLoader
                 }
             }
 
-            if ((flags.mode == HFlag.EMode.sonyu) && MotionIK.Value)
+            if (MotionIK.Value && (flags.mode == HFlag.EMode.sonyu))
             {
                 // This are set when MotionIKDataDonor is not equal to DonorPoseId
                 if (motionIKFemale != null || motionIKMale != null)
                 {
+                    string path;
+                    TextAsset textAsset;
+                    MotionIK motionIK = null;
+                    MotionIKData motionIKData = null;
+                    MotionIK additionalMotionIK = null;
+                    MotionIKData additionalMotionIKData = null;
+                    int totalDonorPoseIdStates;
+                    int totalMotionDonorStates;
+                    var dataFound = false;
+
                     // Copy motionIK data from suitable animation
                     if (motionIKFemale is not null)
                     {
-                        var path = motionIKFemale;
-                        var textAsset = GlobalMethod
+                        path = motionIKFemale;
+                        textAsset = GlobalMethod
                             .LoadAllFolderInOneFile<TextAsset>("h/list/", path);
                         if (textAsset != null)
                         {
-                            var len = mi[0].data.states.Length;
-                            var moIK = new MotionIK(female);
-                            var moIKA = new MotionIK(female);
+                            totalDonorPoseIdStates = lstMotionIK[0].data.states.Length;
+                            motionIK = new MotionIK(female);
+                            additionalMotionIK = new MotionIK(female);
 
-                            moIK.LoadData(textAsset);
-                            if (moIK.data.states.Length < len)
+                            motionIK.LoadData(textAsset);
+                            motionIKData = motionIK.data;
+                            if (motionIKData.states.Length < totalDonorPoseIdStates)
                             {
                                 // sonyu have 24 or 48 states when motion IK model is loaded
                                 // with 24 states for a 48 states animation load a second
                                 // copy for the bottom 24. Unable to do a copy by value with
                                 // other methods
-                                moIKA.LoadData(textAsset);
+                                additionalMotionIK.LoadData(textAsset);
+                                additionalMotionIKData = additionalMotionIK.data;
                             }
 #if DEBUG
                         Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK female " +
-                            $"mi[0] total {len} moIK total {moIK.data.states.Length} " +
+                            $"mi[0] total {totalDonorPoseIdStates} moIK total {motionIK.data.states.Length} " +
                             $"{path}.");
 #endif
-                            if (moIK.data.states != null)
+                            if (motionIKData.states != null)
                             {
-                                var loadLen = moIK.data.states.Length;
+                                totalMotionDonorStates = motionIKData.states.Length;
 
-                                for (var i = 0; i < moIK.data.states.Length; i++)
+                                for (var i = 0; i < motionIKData.states.Length; i++)
                                 {
-                                    mi[0].data.states[i] = moIK.data.states[i];
-                                    if (loadLen < len)
+                                    lstMotionIK[0].data.states[i] = motionIKData.states[i];
+                                    if (totalMotionDonorStates < totalDonorPoseIdStates)
                                     {
                                         // copy to additional states for short loaded
                                         // motion IK data
-                                        mi[0].data.states[i + 24] = moIKA.data.states[i];
-                                        mi[0].data.states[i + 24].name = aSates[i];
+                                        lstMotionIK[0].data.states[i + 24] = additionalMotionIK.data.states[i];
+                                        lstMotionIK[0].data.states[i + 24].name = aSates[i];
                                     }
                                 }
                             }
@@ -154,14 +191,14 @@ namespace AnimationLoader
                             {
                                 Log.Debug($"[SwapAnimation] Animation states can't be " +
                                     $"matched for TextAsset {motionIKFemale}.");
-                                mi[0] = new MotionIK(female);
+                                lstMotionIK[0] = new MotionIK(female);
                             }
                         }
                         else
                         {
                             Log.Debug($"[SwapAnimation] TextAsset {motionIKFemale} not " +
                                 $"found.");
-                            mi[0] = new MotionIK(female);
+                            lstMotionIK[0] = new MotionIK(female);
                         }   
                     }
                     else
@@ -170,39 +207,68 @@ namespace AnimationLoader
                         Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK female " +
                             $"reset.");
 #endif
-                        mi[0] = new MotionIK(female);
+                        lstMotionIK[0] = new MotionIK(female);
                     }
 
                     if (motionIKMale is not null)
                     {
-                        var path = motionIKMale;
-                        var textAsset = GlobalMethod
+                        dataFound = false;
+                        path = motionIKMale;
+                        textAsset = GlobalMethod
                             .LoadAllFolderInOneFile<TextAsset>("h/list/", path);
+                        totalDonorPoseIdStates = lstMotionIK[1].data.states.Length;
+
                         if (textAsset != null)
                         {
-                            var len = mi[1].data.states.Length;
-                            var moIK = new MotionIK(male);
-                            var moIKA = new MotionIK(female);
+                            Log.Level(LogLevel.Warning, $"[SwapAnimation] Found TextAsset " +
+                                $"{path}.");
+                            motionIK = new MotionIK(male);
+                            additionalMotionIK = new MotionIK(male);
 
-                            moIK.LoadData(textAsset);
-                            moIKA.LoadData(textAsset);
-#if DEBUG
-                        Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK male " +
-                            $"mi[1] total {len} moIK total {moIK.data.states.Length} " +
-                            $"{path}.");
-#endif
-                            if (moIK.data.states != null)
+                            motionIK.LoadData(textAsset);
+                            motionIKData = motionIK.data;
+
+                            if (motionIKData.states.Length < totalDonorPoseIdStates)
                             {
-                                var loadLen = moIK.data.states.Length;
-                                for (var i = 0; i < loadLen; i++)
+                                // sonyu have 24 or 48 states when motion IK model is loaded
+                                // with 24 states for a 48 states animation load a second
+                                // copy for the bottom 24. Unable to do a copy by value with
+                                // other methods
+                                additionalMotionIK.LoadData(textAsset);
+                                additionalMotionIKData = additionalMotionIK.data;
+                            }
+                            dataFound = true;
+                        }
+                        else
+                        {
+                            Log.Level(LogLevel.Warning, $"[SwapAnimation] Found JsonFile " +
+                                $"{path}.");
+                            motionIKData = ReadJsonFile(motionIKMale);
+                            if (motionIKData != null)
+                            {
+                                dataFound = true;
+                            }
+                        }
+
+                        if (dataFound)
+                        {
+#if DEBUG
+                            Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK male " +
+                                $"motionIKData total {motionIKData?.states.Length} " +
+                                $"{path}.");
+#endif
+                            if (motionIKData.states != null)
+                            {
+                                totalMotionDonorStates = motionIKData.states.Length;
+                                for (var i = 0; i < totalMotionDonorStates; i++)
                                 {
-                                    mi[1].data.states[i] = moIK.data.states[i];
-                                    if (loadLen < len)
+                                    lstMotionIK[1].data.states[i] = motionIKData.states[i];
+                                    if (totalMotionDonorStates < totalDonorPoseIdStates)
                                     {
                                         // copy to additional states for short loaded
                                         // motion IK data
-                                        mi[1].data.states[i + 24] = moIKA.data.states[i];
-                                        mi[1].data.states[i + 24].name = aSates[i];
+                                        lstMotionIK[1].data.states[i + 24] = additionalMotionIKData?.states[i];
+                                        lstMotionIK[1].data.states[i + 24].name = aSates[i];
                                     }
                                 }
                             }
@@ -210,14 +276,14 @@ namespace AnimationLoader
                             {
                                 Log.Debug($"[SwapAnimation] Animation states can't be " +
                                     $"matched for TextAsset {motionIKMale}.");
-                                mi[1] = new MotionIK(male);
+                                lstMotionIK[1] = new MotionIK(male);
                             }
                         }
                         else
                         {
                             Log.Debug($"[SwapAnimation] TextAsset {motionIKMale} not " +
                                 $"found.");
-                            mi[1] = new MotionIK(male);
+                            lstMotionIK[1] = new MotionIK(male);
                         }
                     }
                     else
@@ -225,10 +291,10 @@ namespace AnimationLoader
 #if DEBUG
                         Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK male reset.");
 #endif
-                        mi[1] = new MotionIK(male);
+                        lstMotionIK[1] = new MotionIK(male);
                     }
 
-                    mi.Where((MotionIK motionIK) => motionIK.ik != null)
+                    lstMotionIK.Where((MotionIK motionIK) => motionIK.ik != null)
                         .ToList()
                         .ForEach(delegate (MotionIK motionIK) { motionIK.Calc("Idle"); }
                         );
@@ -246,30 +312,88 @@ namespace AnimationLoader
 
             if ( clearMotionIK )
             {
-                // If true clear motion IK information if false use the motion IK from
-                // DonorPoseId
+                // If true clear motion IK information
+                // If false keep motion IK from DonorPoseId
                 if (motionIKDonor != nextAinmInfo.id)
                 {
 #if DEBUG
                     Log.Level(LogLevel.Warning, "[SetupMotionIK] Clearing motion IK.");
 #endif
-                    mi.ForEach(mik => mik.Release());
-                    mi.Clear();
+                    lstMotionIK.ForEach(mik => mik.Release());
+                    lstMotionIK.Clear();
 
-                    mi.Add(new MotionIK(female));
-                    mi.Add(new MotionIK(male));
+                    lstMotionIK.Add(new MotionIK(female));
+                    lstMotionIK.Add(new MotionIK(male));
                     if (female1 != null)
                     {
-                        mi.Add(new MotionIK(female1));
+                        lstMotionIK.Add(new MotionIK(female1));
                     }
-                    mi.ForEach(mik =>
+                    lstMotionIK.ForEach(mik =>
                         {
-                            mik.SetPartners(mi);
+                            mik.SetPartners(lstMotionIK);
                             mik.Reset();
                         }
                     );
                 }
             }
         }
+
+        public static MotionIKData ReadJsonFile(string strFile)
+        {
+            var rootPath = Path.Combine(UserData.Path, "AnimationLoader/MotionIK");
+            var rootDirectory = new DirectoryInfo(rootPath);
+            var files = rootDirectory.GetFiles("*.json", SearchOption.AllDirectories);
+            var fileName = strFile;
+            string stem;
+
+            foreach (var f in files)
+            {
+                stem = Path.GetFileNameWithoutExtension(f.Name);
+                if (stem == fileName)
+                {
+                    using var file = File.OpenText(f.FullName);
+
+                    var serializer = new JsonSerializer();
+                    var motionIK = (MotionIKDataSerializable)serializer
+                        .Deserialize(file, typeof(MotionIKDataSerializable));
+                    if (motionIK != null)
+                    {
+                        return motionIK.MotionIKData();
+                    }
+
+                }
+            }
+            return null;
+        }
+
+        public static MotionIKData.State ReadJsonFile(string strFile, string state = "")
+        {
+            var rootPath = Path.Combine(UserData.Path, "AnimationLoader/MotionIK");
+            var rootDirectory = new DirectoryInfo(rootPath);
+            var files = rootDirectory.GetFiles("*.json", SearchOption.AllDirectories);
+            var fileName = strFile + (state == "" ? "" : $"-{state}");
+            string stem;
+
+            Log.Warning($"[ReadJsonFile] Name={fileName}");
+            foreach (var f in files)
+            {
+                stem = Path.GetFileNameWithoutExtension(f.Name);
+                if (stem == fileName)
+                {
+                    using var file = File.OpenText(f.FullName);
+
+                    var serializer = new JsonSerializer();
+                    var motionIK = (MotionIKDataSerializable.State)serializer
+                        .Deserialize(file, typeof(MotionIKDataSerializable.State));
+                    if (motionIK != null)
+                    {
+                        return motionIK.ToState();
+                    }
+
+                }
+            }
+            return null;
+        }
+
     }
 }

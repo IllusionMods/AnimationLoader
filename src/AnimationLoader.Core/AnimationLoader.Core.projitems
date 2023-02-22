@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)LoadXML.VersionChecks.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MotionIK.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.Studio.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MotionIKDataSerializable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin.ConfigEntries.cs" />
     <Compile Include="..\AnimationLoader.Core\AnimationClipsCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Extensions.cs" />

@@ -158,6 +158,61 @@ namespace AnimationLoader
                 $"-{animation.StudioId:D3}";
         }
 
+        public static List<string> Controllers(HSceneProc.AnimationListInfo animation)
+        {
+            var result = new List<string>();
+
+            result.Clear();
+
+
+            if (swapAnimationMapping != null)
+            {
+                swapAnimationMapping.TryGetValue(animation, out var anim);
+                if (anim != null)
+                {
+                    return Controllers(anim);
+                }
+            }
+
+            if (animation.paramFemale.path.file != null)
+            {
+                result.Add(animation.paramFemale.path.file);
+            }
+            if (animation.paramMale.path.file != null)
+            {
+                result.Add(animation.paramMale.path.file);
+            }
+            if (animation.paramFemale1.path.file != null)
+            {
+                result.Add(animation.paramFemale1.path.file);
+            }
+
+            return result;
+        }
+
+
+        public static List<string> Controllers(SwapAnimationInfo animation)
+        {
+            var result = new List<string>();
+
+            result.Clear();
+
+            if (animation.ControllerFemale != null)
+            {
+                result.Add(animation.ControllerFemale);
+            }
+            if (animation.ControllerMale != null)
+            {
+                result.Add(animation.ControllerMale);
+            }
+            if (animation.ControllerFemale1 != null)
+            {
+                result.Add(animation.ControllerFemale1);
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Get a list with the positions adjustment in the manifest. If it is a regular
         /// animation it will return zero vectors

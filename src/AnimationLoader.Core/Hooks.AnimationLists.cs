@@ -263,14 +263,14 @@ namespace AnimationLoader
 #if DEBUG
                 if (!once)
                 {
-                    Log.Warning($"0012: Added animations:\n\n{addedAnimations}");
+                    Log.Warning($"0012: Added animations:\n{addedAnimations}");
                     once = true;
                 }
 #else
                 // For release log animations added
                 if (!once)
                 {
-                    Log.Debug($"0012: Added animations:\n\n{addedAnimations}");
+                    Log.Debug($"0012: Added animations:\n{addedAnimations}");
                     once = true;
                 }
 #endif
