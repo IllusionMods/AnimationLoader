@@ -152,7 +152,6 @@ namespace AnimationLoader
             if (ReloadManifests.Value.IsDown())
             {
                 LoadTestXml();
-                Log.Warning($"Scene [{SceneApi.GetAddSceneName()}]");
             }
         }
 
