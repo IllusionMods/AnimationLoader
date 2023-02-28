@@ -90,7 +90,8 @@ namespace AnimationLoader
             if (!MotionIK.Value)
             {
 #if DEBUG
-                Log.Level(LogLevel.Warning, "[SetupMotionIK] Clearing motion IK.");
+                Log.Level(LogLevel.Warning, "[SetupMotionIK] Clearing motion IK setup " +
+                    "is disabled.");
 #endif
                 lstMotionIK.ForEach(mik => mik.Release());
                 lstMotionIK.Clear();
@@ -116,8 +117,9 @@ namespace AnimationLoader
             var motionIKDonor = -2;
             var clearMotionIK = true;
 #if DEBUG
-            Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK female is null={motionIKFemale == null} " +
-                $"MotionIK male is null={motionIKMale == null} enabled={MotionIK.Value}");
+            Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK female is " +
+                $"null={motionIKFemale == null} MotionIK male is " +
+                $"null={motionIKMale == null} enabled={MotionIK.Value}");
 #endif
             // If MotionIKDonor is a number then MotionIKDonor equals DonorPoseId
             if (swapAnimationInfo.MotionIKDonor != null)
@@ -146,12 +148,14 @@ namespace AnimationLoader
                     // Copy motionIK data from suitable animation
                     if (motionIKFemale is not null)
                     {
+                        dataFound = false;
                         path = motionIKFemale;
                         textAsset = GlobalMethod
                             .LoadAllFolderInOneFile<TextAsset>("h/list/", path);
+                        totalDonorPoseIdStates = lstMotionIK[0].data.states.Length;
+
                         if (textAsset != null)
                         {
-                            totalDonorPoseIdStates = lstMotionIK[0].data.states.Length;
                             motionIK = new MotionIK(female);
                             additionalMotionIK = new MotionIK(female);
 
@@ -163,15 +167,32 @@ namespace AnimationLoader
                                 // with 24 states for a 48 states animation load a second
                                 // copy for the bottom 24. Unable to do a copy by value with
                                 // other methods
+                                Log.Warning($"[Carajo] Enter for extra");
                                 additionalMotionIK.LoadData(textAsset);
                                 additionalMotionIKData = additionalMotionIK.data;
                             }
+                            dataFound = true;
+                        }
+                        else
+                        {
+                            Log.Level(LogLevel.Warning, $"[SwapAnimation] Found JsonFile " +
+                                $"{path}.");
+                            motionIKData = ReadJsonFile(motionIKFemale);
+                            if (motionIKData != null)
+                            {
+                                dataFound = true;
+                            }
+                        }
+
+                        if (dataFound)
+                        { 
 #if DEBUG
-                        Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK female " +
-                            $"mi[0] total {totalDonorPoseIdStates} moIK total {motionIK.data.states.Length} " +
-                            $"{path}.");
+                            Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK female " +
+                                $"mi[0] total {totalDonorPoseIdStates} motionIKData total " +
+                                $"{motionIKData?.states.Length} " +
+                                $"{path}.");
 #endif
-                            if (motionIKData.states != null)
+                            if (motionIKData?.states != null)
                             {
                                 totalMotionDonorStates = motionIKData.states.Length;
 
@@ -182,8 +203,13 @@ namespace AnimationLoader
                                     {
                                         // copy to additional states for short loaded
                                         // motion IK data
-                                        lstMotionIK[0].data.states[i + 24] = additionalMotionIK.data.states[i];
-                                        lstMotionIK[0].data.states[i + 24].name = aSates[i];
+                                        if (additionalMotionIKData != null)
+                                        {
+                                            lstMotionIK[0].data.states[i + 24] = additionalMotionIKData?.states[i];
+                                            lstMotionIK[0].data.states[i + 24].name = aSates[i];
+                                            Log.Warning($"Nena Additional name={additionalMotionIKData?.states[i].name} " +
+                                                $"name={aSates[i]} for index={i + 24}");
+                                        }
                                     }
                                 }
                             }
@@ -220,8 +246,10 @@ namespace AnimationLoader
 
                         if (textAsset != null)
                         {
+#if DEBUG
                             Log.Level(LogLevel.Warning, $"[SwapAnimation] Found TextAsset " +
                                 $"{path}.");
+#endif
                             motionIK = new MotionIK(male);
                             additionalMotionIK = new MotionIK(male);
 
@@ -234,6 +262,7 @@ namespace AnimationLoader
                                 // with 24 states for a 48 states animation load a second
                                 // copy for the bottom 24. Unable to do a copy by value with
                                 // other methods
+                                Log.Warning($"[Carajo] Nene Enter for extra");
                                 additionalMotionIK.LoadData(textAsset);
                                 additionalMotionIKData = additionalMotionIK.data;
                             }
@@ -254,10 +283,10 @@ namespace AnimationLoader
                         {
 #if DEBUG
                             Log.Level(LogLevel.Warning, $"[SwapAnimation] MotionIK male " +
-                                $"motionIKData total {motionIKData?.states.Length} " +
-                                $"{path}.");
+                                $"mi[1] total {totalDonorPoseIdStates} motionIKData " +
+                                $"total {motionIKData?.states.Length} {path}.");
 #endif
-                            if (motionIKData.states != null)
+                            if (motionIKData?.states != null)
                             {
                                 totalMotionDonorStates = motionIKData.states.Length;
                                 for (var i = 0; i < totalMotionDonorStates; i++)
@@ -267,8 +296,13 @@ namespace AnimationLoader
                                     {
                                         // copy to additional states for short loaded
                                         // motion IK data
-                                        lstMotionIK[1].data.states[i + 24] = additionalMotionIKData?.states[i];
-                                        lstMotionIK[1].data.states[i + 24].name = aSates[i];
+                                        if (additionalMotionIKData != null)
+                                        {
+                                            lstMotionIK[1].data.states[i + 24] = additionalMotionIKData?.states[i];
+                                            lstMotionIK[1].data.states[i + 24].name = aSates[i];
+                                            Log.Warning($"Nene Additional name={additionalMotionIKData?.states[i].name} " +
+                                                $"name={aSates[i]} for index={i + 24}");
+                                        }
                                     }
                                 }
                             }
@@ -294,17 +328,27 @@ namespace AnimationLoader
                         lstMotionIK[1] = new MotionIK(male);
                     }
 
+                    Log.Warning($"[Carajo] Start partners calculation");
                     lstMotionIK.Where((MotionIK motionIK) => motionIK.ik != null)
                         .ToList()
                         .ForEach(delegate (MotionIK motionIK) { motionIK.Calc("Idle"); }
                         );
+                    Log.Warning($"[Carajo] End partners calculation");
 
-                    /*mi.ForEach(mik =>
+                    /*lstMotionIK.ForEach(mik =>
                     {
-                        mik.SetPartners(mi);
+                        mik.SetPartners(lstMotionIK);
                         mik.Reset();
                         mik.Calc("Idle");
-                    });*/
+                    });
+
+                    lstMotionIK.ForEach(mik =>
+                    {
+                        mik.SetPartners(lstMotionIK);
+                        mik.Reset();
+                        mik.Calc("Idle");
+                    });
+                    */
 
                     clearMotionIK = false;
                 }
@@ -312,6 +356,8 @@ namespace AnimationLoader
 
             if ( clearMotionIK )
             {
+                Log.Warning($"[Carajo] motionIKDonor={motionIKDonor} nextAnimInfo.id={nextAinmInfo.id}");
+
                 // If true clear motion IK information
                 // If false keep motion IK from DonorPoseId
                 if (motionIKDonor != nextAinmInfo.id)
