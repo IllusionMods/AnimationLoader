@@ -317,9 +317,12 @@ namespace AnimationLoader
                 }
 
 #if DEBUG
-                Log.Level(BepInEx.Logging.LogLevel.Warning, $"CheckExperience " +
-                    $"original={CheckExperience(hsprite, anim)} " +
-                    $"TryGet={CheckExperienceT(hsprite, anim)}");
+                if (CheckExperience(hsprite, anim) != CheckExperienceT(hsprite, anim))
+                {
+                    Log.Level(BepInEx.Logging.LogLevel.Warning, $"CheckExperience " +
+                        $"original={CheckExperience(hsprite, anim)} " +
+                        $"TryGet={CheckExperienceT(hsprite, anim)}");
+                }
 #endif
                 if (UseAnimationLevels.Value && !CheckExperience(hsprite, anim))
                 {
