@@ -167,7 +167,6 @@ namespace AnimationLoader
                                 // with 24 states for a 48 states animation load a second
                                 // copy for the bottom 24. Unable to do a copy by value with
                                 // other methods
-                                Log.Warning($"[Carajo] Enter for extra");
                                 additionalMotionIK.LoadData(textAsset);
                                 additionalMotionIKData = additionalMotionIK.data;
                             }
@@ -175,8 +174,10 @@ namespace AnimationLoader
                         }
                         else
                         {
+#if DEBUG
                             Log.Level(LogLevel.Warning, $"[SwapAnimation] Found JsonFile " +
                                 $"{path}.");
+#endif
                             motionIKData = ReadJsonFile(motionIKFemale);
                             if (motionIKData != null)
                             {
@@ -205,10 +206,14 @@ namespace AnimationLoader
                                         // motion IK data
                                         if (additionalMotionIKData != null)
                                         {
-                                            lstMotionIK[0].data.states[i + 24] = additionalMotionIKData?.states[i];
+                                            lstMotionIK[0].data.states[i + 24] =
+                                                additionalMotionIKData?.states[i];
                                             lstMotionIK[0].data.states[i + 24].name = aSates[i];
-                                            Log.Warning($"Nena Additional name={additionalMotionIKData?.states[i].name} " +
+#if DEBUG
+                                            Log.Warning($"Nena Additional " +
+                                                $"name={additionalMotionIKData?.states[i].name} " +
                                                 $"name={aSates[i]} for index={i + 24}");
+#endif
                                         }
                                     }
                                 }
@@ -262,7 +267,6 @@ namespace AnimationLoader
                                 // with 24 states for a 48 states animation load a second
                                 // copy for the bottom 24. Unable to do a copy by value with
                                 // other methods
-                                Log.Warning($"[Carajo] Nene Enter for extra");
                                 additionalMotionIK.LoadData(textAsset);
                                 additionalMotionIKData = additionalMotionIK.data;
                             }
@@ -270,8 +274,10 @@ namespace AnimationLoader
                         }
                         else
                         {
+#if DEBUG
                             Log.Level(LogLevel.Warning, $"[SwapAnimation] Found JsonFile " +
                                 $"{path}.");
+#endif
                             motionIKData = ReadJsonFile(motionIKMale);
                             if (motionIKData != null)
                             {
@@ -298,10 +304,15 @@ namespace AnimationLoader
                                         // motion IK data
                                         if (additionalMotionIKData != null)
                                         {
-                                            lstMotionIK[1].data.states[i + 24] = additionalMotionIKData?.states[i];
-                                            lstMotionIK[1].data.states[i + 24].name = aSates[i];
-                                            Log.Warning($"Nene Additional name={additionalMotionIKData?.states[i].name} " +
+                                            lstMotionIK[1].data.states[i + 24] =
+                                                additionalMotionIKData?.states[i];
+                                            lstMotionIK[1].data.states[i + 24].name =
+                                                aSates[i];
+#if DEBUG
+                                            Log.Warning($"Nene Additional " +
+                                                $"name={additionalMotionIKData?.states[i].name} " +
                                                 $"name={aSates[i]} for index={i + 24}");
+#endif
                                         }
                                     }
                                 }
@@ -328,12 +339,10 @@ namespace AnimationLoader
                         lstMotionIK[1] = new MotionIK(male);
                     }
 
-                    Log.Warning($"[Carajo] Start partners calculation");
                     lstMotionIK.Where((MotionIK motionIK) => motionIK.ik != null)
                         .ToList()
                         .ForEach(delegate (MotionIK motionIK) { motionIK.Calc("Idle"); }
                         );
-                    Log.Warning($"[Carajo] End partners calculation");
 
                     /*lstMotionIK.ForEach(mik =>
                     {
@@ -356,8 +365,6 @@ namespace AnimationLoader
 
             if ( clearMotionIK )
             {
-                Log.Warning($"[Carajo] motionIKDonor={motionIKDonor} nextAnimInfo.id={nextAinmInfo.id}");
-
                 // If true clear motion IK information
                 // If false keep motion IK from DonorPoseId
                 if (motionIKDonor != nextAinmInfo.id)
@@ -391,7 +398,9 @@ namespace AnimationLoader
             var files = rootDirectory.GetFiles("*.json", SearchOption.AllDirectories);
             var fileName = strFile;
             string stem;
-
+#if DEBUG
+            Log.Warning($"[ReadJsonFile] Name={fileName}");
+#endif
             foreach (var f in files)
             {
                 stem = Path.GetFileNameWithoutExtension(f.Name);
@@ -419,8 +428,9 @@ namespace AnimationLoader
             var files = rootDirectory.GetFiles("*.json", SearchOption.AllDirectories);
             var fileName = strFile + (state == "" ? "" : $"-{state}");
             string stem;
-
-            Log.Warning($"[ReadJsonFile] Name={fileName}");
+#if DEBUG
+            Log.Warning($"[ReadJsonFile.State] Name={fileName}");
+#endif
             foreach (var f in files)
             {
                 stem = Path.GetFileNameWithoutExtension(f.Name);
