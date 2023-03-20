@@ -2,23 +2,11 @@
 // Load XML animation information
 //
 using System;
-//using System.Collections.Generic;
-//using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-//using System.Xml.Serialization;
 
-//using BepInEx;
 using BepInEx.Logging;
-
-//using KKAPI;
-
-//using Sideloader;
-
-//using UnityEngine;
-
-//using static HFlag;
 
 
 namespace AnimationLoader
@@ -27,10 +15,10 @@ namespace AnimationLoader
     {
         private static void VersionChecks(XElement manifest)
         {
-            var guid = manifest?.Element("guid").Value;
-            var version = manifest?.Element("version").Value;
-            var author = manifest?.Element("author").Value;
-            var kplugBundleVersion = manifest?.Element("KPluganimBundle").Value;
+            var guid = manifest?.Element("guid")?.Value;
+            var version = manifest?.Element("version")?.Value;
+            var author = manifest?.Element("author")?.Value;
+            var kplugBundleVersion = manifest?.Element("KPluganimBundle")?.Value;
 
             _animationLoaderVersion = manifest?.Element("AnimationLoaderVersion");
 
@@ -39,46 +27,48 @@ namespace AnimationLoader
                 var lines = new StringBuilder();
                 var bundle = ".";
                 var warning = false;
-
                 var alVersion = new Version(_animationLoaderVersion.Value);
                 var pVersion = new Version(Version);
-
 
                 if (kplugBundleVersion != null)
                 {
                     var bundleVersion = BundleVersion();
                     var minVersion = new Version(kplugBundleVersion);
-                    if (bundleVersion.CompareTo(minVersion) < 0)
+                    if (bundleVersion != null)
                     {
-                        bundle = $" KPlug Animation Bundle " +
-                            $"version={bundleVersion} minimum={minVersion} some " +
-                            $"features may not work upgrade to latest version.";
+                        if (bundleVersion.CompareTo(minVersion) < 0)
+                        {
+                            bundle = $" KPlug Animation Bundle " +
+                                $"version={bundleVersion} minimum={minVersion} some " +
+                                $"features may not work upgrade to latest version.";
+                            warning = true;
+                        }
+                        else
+                        {
+                            bundle = $" KPlug Animation Bundle version={bundleVersion} " +
+                                $"minimum={minVersion}.";
+                        }
+                    }
+                }
+                if (pVersion != null)
+                {
+                    if (pVersion.CompareTo(alVersion) < 0)
+                    {
+                        var tmp = author is not null ? author : "N/A";
+                        lines.AppendLine($"0011: Manifest " +
+                            $"guid={guid} version={version} author=[{tmp}] " +
+                            $"AnimationLoader version={pVersion} minimum={alVersion} " +
+                            $"some features may not work upgrade to latest version,{bundle}");
                         warning = true;
                     }
                     else
                     {
-                        bundle = $" KPlug Animation Bundle version={bundleVersion} " +
-                            $"minimum={minVersion}.";
+                        var tmp = author is not null ? author : "N/A";
+                        lines.AppendLine($"0011: Manifest " +
+                            $"guid={guid} version={version} author=[{tmp}] " +
+                            $"AnimationLoader version={pVersion} minimum={alVersion}" +
+                            $"{bundle}");
                     }
-                }
-
-
-                if (pVersion.CompareTo(alVersion) < 0)
-                {
-                    var tmp = author is not null ? author : "N/A";
-                    lines.AppendLine($"0011: Manifest " +
-                        $"guid={guid} version={version} author=[{tmp}] " +
-                        $"AnimationLoader version={pVersion} minimum={alVersion} " +
-                        $"some features may not work upgrade to latest version,{bundle}");
-                    warning = true;
-                }
-                else
-                {
-                    var tmp = author is not null ? author : "N/A";
-                    lines.AppendLine($"0011: Manifest " +
-                        $"guid={guid} version={version} author=[{tmp}] " +
-                        $"AnimationLoader version={pVersion} minimum={alVersion}" +
-                        $"{bundle}");
                 }
                 if (warning)
                 {
