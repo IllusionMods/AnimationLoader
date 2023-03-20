@@ -178,12 +178,14 @@ namespace AnimationLoader
 
                 public Parts this[int index] => PartsArray[index];
 
-                public Parts[] PartsArray => new Parts[4] { leftHand, rightHand, leftFoot, rightFoot };
+                public Parts[] PartsArray => new Parts[4] {
+                    leftHand, rightHand, leftFoot, rightFoot };
 
                 public MotionIKData.State ToState()
                 {
-                    var result = new MotionIKData.State();
-                    result.name = name;
+                    var result = new MotionIKData.State {
+                        name = name
+                    };
 
                     var totalParts = result.parts.Length;
                     for (var j = 0; j < totalParts; j++)
