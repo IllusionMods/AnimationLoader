@@ -75,6 +75,8 @@ namespace AnimationLoader
             Log.LogSource = Logger; ;
 
             ConfigEntries();
+
+            Log.Enabled = DebugInfo.Value;
 #if KKS
             if (KoikatuAPI.GetCurrentGameMode() == GameMode.Studio)
             {
