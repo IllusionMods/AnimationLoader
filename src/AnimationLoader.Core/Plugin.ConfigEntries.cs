@@ -23,7 +23,7 @@ namespace AnimationLoader
         private static ConfigEntry<bool> UseGrid { get; set; }
 #endif
 #if DEBUG
-        static internal ConfigEntry<bool> TestMode { get; set; }
+        internal static ConfigEntry<bool> TestMode { get; set; }
 #endif
         internal static ConfigEntry<bool> DebugInfo { get; set; }
         internal static ConfigEntry<bool> UserOverrides { get; set; }
