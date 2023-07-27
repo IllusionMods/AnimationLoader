@@ -79,6 +79,10 @@ namespace AnimationLoader
             HSceneProc.AnimationListInfo nextAinmInfo
             )
         {
+#if KK
+            // Temporarily disable in KK giving problem for some users TODO: More testing
+            return;
+#endif
             var hspTraverse = Traverse.Create(hSceneProcInstance);
             var lstMotionIK = hspTraverse.Field<List<MotionIK>>("lstMotionIK").Value;
             var lstFemale = hspTraverse.Field<List<ChaControl>>("lstFemale").Value;
@@ -391,6 +395,11 @@ namespace AnimationLoader
             }
         }
 
+        /// <summary>
+        /// Read IK data from json file
+        /// </summary>
+        /// <param name="strFile">file name</param>
+        /// <returns></returns>
         public static MotionIKData ReadJsonFile(string strFile)
         {
             var rootPath = Path.Combine(UserData.Path, "AnimationLoader/MotionIK");
@@ -421,6 +430,12 @@ namespace AnimationLoader
             return null;
         }
 
+        /// <summary>
+        /// Read IK data from json file for the specific state
+        /// </summary>
+        /// <param name="strFile">file name</param>
+        /// <param name="state">state name</param>
+        /// <returns></returns>
         public static MotionIKData.State ReadJsonFile(string strFile, string state = "")
         {
             var rootPath = Path.Combine(UserData.Path, "AnimationLoader/MotionIK");
