@@ -79,10 +79,6 @@ namespace AnimationLoader
             HSceneProc.AnimationListInfo nextAinmInfo
             )
         {
-#if KK
-            // Temporarily disable in KK giving problem for some users TODO: More testing
-            return;
-#endif
             var hspTraverse = Traverse.Create(hSceneProcInstance);
             var lstMotionIK = hspTraverse.Field<List<MotionIK>>("lstMotionIK").Value;
             var lstFemale = hspTraverse.Field<List<ChaControl>>("lstFemale").Value;
@@ -91,7 +87,13 @@ namespace AnimationLoader
             var male = hspTraverse.Field<ChaControl>("male").Value;
             var flags = hspTraverse.Field<HFlag>("flags").Value;
 
-            if (!MotionIK.Value)
+            var justClear = !MotionIK.Value;
+
+#if KK
+            justClear = true;
+#endif
+
+            if (justClear)
             {
 #if DEBUG
                 Log.Level(LogLevel.Warning, "[SetupMotionIK] Clearing motion IK setup " +
@@ -404,28 +406,37 @@ namespace AnimationLoader
         {
             var rootPath = Path.Combine(UserData.Path, "AnimationLoader/MotionIK");
             var rootDirectory = new DirectoryInfo(rootPath);
-            var files = rootDirectory.GetFiles("*.json", SearchOption.AllDirectories);
-            var fileName = strFile;
-            string stem;
-#if DEBUG
-            Log.Warning($"[ReadJsonFile] Name={fileName}");
-#endif
-            foreach (var f in files)
+
+            try
             {
-                stem = Path.GetFileNameWithoutExtension(f.Name);
-                if (stem == fileName)
+                var files = rootDirectory.GetFiles("*.json", SearchOption.AllDirectories);
+
+                var fileName = strFile;
+                string stem;
+#if DEBUG
+                Log.Warning($"[ReadJsonFile] Name={fileName}");
+#endif
+                foreach (var f in files)
                 {
-                    using var file = File.OpenText(f.FullName);
-
-                    var serializer = new JsonSerializer();
-                    var motionIK = (MotionIKDataSerializable)serializer
-                        .Deserialize(file, typeof(MotionIKDataSerializable));
-                    if (motionIK != null)
+                    stem = Path.GetFileNameWithoutExtension(f.Name);
+                    if (stem == fileName)
                     {
-                        return motionIK.MotionIKData();
-                    }
+                        using var file = File.OpenText(f.FullName);
 
+                        var serializer = new JsonSerializer();
+                        var motionIK = (MotionIKDataSerializable)serializer
+                            .Deserialize(file, typeof(MotionIKDataSerializable));
+                        if (motionIK != null)
+                        {
+                            return motionIK.MotionIKData();
+                        }
+
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Log.Warning($"ReadJsonFile: File={strFile} Error={e.Message}");
             }
             return null;
         }
@@ -440,28 +451,36 @@ namespace AnimationLoader
         {
             var rootPath = Path.Combine(UserData.Path, "AnimationLoader/MotionIK");
             var rootDirectory = new DirectoryInfo(rootPath);
-            var files = rootDirectory.GetFiles("*.json", SearchOption.AllDirectories);
-            var fileName = strFile + (state == "" ? "" : $"-{state}");
-            string stem;
-#if DEBUG
-            Log.Warning($"[ReadJsonFile.State] Name={fileName}");
-#endif
-            foreach (var f in files)
+
+            try
             {
-                stem = Path.GetFileNameWithoutExtension(f.Name);
-                if (stem == fileName)
+                var files = rootDirectory.GetFiles("*.json", SearchOption.AllDirectories);
+                var fileName = strFile + (state == "" ? "" : $"-{state}");
+                string stem;
+#if DEBUG
+                Log.Warning($"[ReadJsonFile.State] Name={fileName}");
+#endif
+                foreach (var f in files)
                 {
-                    using var file = File.OpenText(f.FullName);
-
-                    var serializer = new JsonSerializer();
-                    var motionIK = (MotionIKDataSerializable.State)serializer
-                        .Deserialize(file, typeof(MotionIKDataSerializable.State));
-                    if (motionIK != null)
+                    stem = Path.GetFileNameWithoutExtension(f.Name);
+                    if (stem == fileName)
                     {
-                        return motionIK.ToState();
-                    }
+                        using var file = File.OpenText(f.FullName);
 
+                        var serializer = new JsonSerializer();
+                        var motionIK = (MotionIKDataSerializable.State)serializer
+                            .Deserialize(file, typeof(MotionIKDataSerializable.State));
+                        if (motionIK != null)
+                        {
+                            return motionIK.ToState();
+                        }
+
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Log.Warning($"State.ReadJsonFile: File={strFile} Error={e.Message}");
             }
             return null;
         }
