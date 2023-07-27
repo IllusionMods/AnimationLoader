@@ -27,6 +27,7 @@ namespace AnimationLoader
                 object __instance,
                 HSceneProc.AnimationListInfo _nextAinmInfo)
             {
+#if KKS
                 if (_nextAinmInfo == null)
                 {
                     return;
@@ -37,6 +38,8 @@ namespace AnimationLoader
                     return;
                 }
 
+                // Temporarily disable movement in KK TODO: Get start position without
+                // using the characters current position to get the value.
                 try
                 {
                     var hspTraverse = Traverse.Create(__instance);
@@ -131,6 +134,7 @@ namespace AnimationLoader
                 {
                     Log.Error($"0008: Error={e}");
                 }
+#endif
             }
 
             internal static Func<string, string> SiruPaste = x => x == string.Empty ?
@@ -208,6 +212,7 @@ namespace AnimationLoader
                     male.animBody.runtimeAnimatorController = SetupAnimatorOverrideController(
                         male.animBody.runtimeAnimatorController, maleCtrl);
                 }
+                // Temporarily disable in KK giving problem for some users TODO: More testing
                 SetupMotionIK(__instance, swapAnimationInfo, _nextAinmInfo);
             }
         }
