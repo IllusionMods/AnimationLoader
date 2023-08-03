@@ -345,10 +345,29 @@ namespace AnimationLoader
                         lstMotionIK[1] = new MotionIK(male);
                     }
 
-                    lstMotionIK.Where((MotionIK motionIK) => motionIK.ik != null)
-                        .ToList()
-                        .ForEach(delegate (MotionIK motionIK) { motionIK.Calc("Idle"); }
-                        );
+                    if (dataFound)
+                    {
+                        clearMotionIK = false;
+
+                        try
+                        {
+                            // Causing problems when Json file were not found.
+                            lstMotionIK.Where((MotionIK motionIK) => motionIK.ik != null)
+                                .ToList()
+                                .ForEach(delegate (MotionIK motionIK) { motionIK.Calc("Idle"); }
+                                );
+                        }
+                        catch
+                        {
+                            // Error making IK calculations clear configuration
+                            clearMotionIK = true;
+                        }
+                    }
+                    else
+                    {
+                        // Set lstMotionIK to empty configuration
+                        clearMotionIK = true;
+                    }
 
                     /*lstMotionIK.ForEach(mik =>
                     {
@@ -364,19 +383,17 @@ namespace AnimationLoader
                         mik.Calc("Idle");
                     });
                     */
-
-                    clearMotionIK = false;
                 }
             }
 
             if ( clearMotionIK )
             {
-                // If true clear motion IK information
-                // If false keep motion IK from DonorPoseId
+                // Clear the motion IK configuration from the donor animation
                 if (motionIKDonor != nextAinmInfo.id)
                 {
 #if DEBUG
-                    Log.Level(LogLevel.Warning, "[SetupMotionIK] Clearing motion IK.");
+                    Log.Level(LogLevel.Warning, "[SetupMotionIK] Clearing motion IK " +
+                        "configuration.");
 #endif
                     lstMotionIK.ForEach(mik => mik.Release());
                     lstMotionIK.Clear();
@@ -484,6 +501,5 @@ namespace AnimationLoader
             }
             return null;
         }
-
     }
 }
