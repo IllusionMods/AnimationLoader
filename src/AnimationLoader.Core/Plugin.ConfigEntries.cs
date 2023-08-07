@@ -1,6 +1,8 @@
 ﻿//
 // Configuration entries
 //
+using ADV.Commands.Base;
+
 using BepInEx.Configuration;
 using BepInEx.Logging;
 
@@ -26,6 +28,7 @@ namespace AnimationLoader
         internal static ConfigEntry<bool> TestMode { get; set; }
 #endif
         internal static ConfigEntry<bool> DebugInfo { get; set; }
+        internal static ConfigEntry<bool> DebugToConsole { get; set; }
         internal static ConfigEntry<bool> UserOverrides { get; set; }
         internal static ConfigEntry<KeyboardShortcut> ReloadManifests { get; set; }
 
@@ -168,9 +171,30 @@ namespace AnimationLoader
                 Log.Level(LogLevel.Info, $"0028: Log.Enabled set to {Log.Enabled}");
 #endif
             };
-            Log.Enabled = DebugInfo.Value;
+
+            DebugToConsole = Config.Bind(
+                            section: DebugSection,
+                            key: "Debug information to Console",
+                            defaultValue: false,
+                            configDescription: new ConfigDescription(
+                                description: "Show debug information in Console",
+                                acceptableValues: null,
+                                tags: new ConfigurationManagerAttributes {
+                                    Order = 27,
+                                    IsAdvanced = true
+                                }));
+            DebugToConsole.SettingChanged += (_sender, _args) =>
+            {
+                Log.DebugToConsole = DebugToConsole.Value;
+#if DEBUG
+                Log.Level(LogLevel.Info, $"[ConfigEntries] Log.DebugToConsole set to " +
+                    $"{Log.DebugToConsole}");
+#endif
+            };
 #if DEBUG
             Log.Level(LogLevel.Info, $"0028: Log.Enabled set to {Log.Enabled}");
+
+
             TestMode = Config.Bind(
                 section: DebugSection,
                 key: "Enable Test Mode",
@@ -178,7 +202,7 @@ namespace AnimationLoader
                 configDescription: new ConfigDescription(
                     description: "Allow unused animations in Free-H",
                     acceptableValues: null,
-                    tags: new ConfigurationManagerAttributes { Order = 27, IsAdvanced = true }));
+                    tags: new ConfigurationManagerAttributes { Order = 26, IsAdvanced = true }));
 #endif
         }
     }

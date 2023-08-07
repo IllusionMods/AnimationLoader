@@ -77,6 +77,7 @@ namespace AnimationLoader
             ConfigEntries();
 
             Log.Enabled = DebugInfo.Value;
+            Log.DebugToConsole = DebugToConsole.Value;
 #if KKS
             if (KoikatuAPI.GetCurrentGameMode() == GameMode.Studio)
             {
@@ -101,6 +102,11 @@ namespace AnimationLoader
 
         private void Start()
         {
+#if DEBUG
+            var stopWatch = new Stopwatch();
+
+            stopWatch.Start();
+#endif
             //
             // Save names for animations for users who update them and not overwritten with updates
             //
@@ -109,14 +115,8 @@ namespace AnimationLoader
             //
             // Load manifests
             //
-#if DEBUG
-            var stopWatch = new Stopwatch();
-
-            stopWatch.Start();
-#endif
 
             LoadXmls(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
-
 #if DEBUG
             stopWatch.Stop();
             var ts = stopWatch.Elapsed;
