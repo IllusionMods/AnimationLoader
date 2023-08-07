@@ -1,11 +1,12 @@
 ﻿//
-// For people who keep their own names for the animations or translate them to oder
+// For people who keep their own names for the animations or translate them to other
 // language.
 //
 // Save animations names to UserData/AnimationLoader/Names so they are not overwritten by
 // updates. They can be maintained and updated there.
 //
-// Only new animations are added to the file.
+// Only animations not in the file are added. No animation in the file will be
+// overwritten
 //
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+
+using Sideloader;
 
 
 namespace AnimationLoader
@@ -78,6 +81,7 @@ namespace AnimationLoader
         {
             if (!UserOverrides.Value)
             {
+                Log.Debug($"[LoadNamesXml]: Animations names disabled by user.");
                 return;
             }
 
@@ -92,7 +96,26 @@ namespace AnimationLoader
                     return;
                 }
             }
+            // Create empty dictionary
+            InitAnimationNamesDict();
             Log.Debug("0002: No names found.");
+        }
+
+        /// <summary>
+        /// Create empty dictionary for any animation bundle found
+        /// </summary>
+        private static void InitAnimationNamesDict()
+        {
+            var manifests = Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument);
+
+            foreach (var manifest in manifests
+                .Select(x => x.Root)
+                .Where(x => x?.Element(ManifestRootElement) != null))
+            {
+                var guid = manifest?.Element("guid").Value;
+                Log.Debug($"InitAnimationNamesDict: Add GUID={guid}");
+                NamesAddGuidHelper(manifest);
+            }
         }
 
         /// <summary>
@@ -114,10 +137,22 @@ namespace AnimationLoader
                     var names = (Names)xmlNamesSerializer.Deserialize(reader);
                     reader.Close();
                     animationNamesDict.Add(names.guid, names);
+#if DEBUG
+                    if (names?.Anim.Count > 0)
+                    {
+                        foreach (var a in names.Anim)
+                        {
+                            Log.Info($"Animation {a.StudioId} ref={a.KoikatuReference} " +
+                                $"trans={a.KoikatsuSunshine}");
+                        }
+                    }
+#endif
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"0003: Error trying to read names file. {ex}");
+                    Log.Error($"0003: Error trying to read names file. " +
+                        $"GUID={animElem.Name} " +
+                        $"{ex.Message}");
                 }
             }
         }
@@ -133,16 +168,22 @@ namespace AnimationLoader
                 return;
             }
 
+            NamesAddGuidHelper(manifest);
+        }
+
+        private static void NamesAddGuidHelper(XElement manifest)
+        {
             // new names
             var names = new Names();
+
             // initialize fields with manifest date
             names.guid = manifest.Element(nameof(names.guid)).Value;
             names.name = manifest.Element(nameof(names.name)).Value;
             names.version = manifest.Element(nameof(names.version)).Value;
             names.author = manifest.Element(nameof(names.author)).Value;
-            //names.description = manifest.Element(nameof(names.description)).Value;
             names.description = "Modify the items Koikatu and KoikatsuSunshine only.";
             names.website = manifest.Element(nameof(names.website)).Value;
+
             // add new names to dictionary
             animationNamesDict.Add(names.guid, names);
         }
