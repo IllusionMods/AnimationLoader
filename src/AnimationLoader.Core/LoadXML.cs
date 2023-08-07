@@ -58,7 +58,7 @@ namespace AnimationLoader
         {
             animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
             var count = 0;
-            var overrideNames = false;
+            var overrideNames = UserOverrides.Value;
             var logLines = new StringBuilder();
 
             // Select the only manifests that AnimationLoader will process
