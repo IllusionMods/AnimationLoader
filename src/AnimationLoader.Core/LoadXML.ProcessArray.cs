@@ -24,11 +24,11 @@ namespace AnimationLoader
     public partial class SwapAnim
     {
         private static int ProcessArray(
-    XElement root,
-    string guid,
-    string version,
-    bool overrideNames,
-    ref StringBuilder logLines)
+            XElement root,
+            string guid,
+            string version,
+            bool overrideNames,
+            ref StringBuilder logLines)
         {
             var count = 0;
 
@@ -64,41 +64,56 @@ namespace AnimationLoader
 
                 if (UserOverrides.Value)
                 {
-                    if (overrideName)
+                    // user override name
+                    animation.StudioId = data.StudioId;
+                    animation.Controller = string.Copy(data.ControllerFemale);
+                    animation.Koikatu = string.Copy(data.AnimationName);
+                    animation.KoikatuReference = string.Copy(data.AnimationName);
+                    animation.KoikatsuSunshine = string.Copy(data.AnimationName);
+                    animation.KoikatsuSunshineReference = string
+                        .Copy(data.AnimationName);
+
+                    overrideName = false;
+                    var animationOverride = new Animation();
+
+                    if (animationNamesDict.TryGetValue(guid, out var names))
                     {
-                        // user override name
-                        // Temp to continue testing
-                        animation = animationNamesDict[guid].Anim
-                            .Where(x => (x.StudioId == data.StudioId) &&
+                        if (names.Anim.Count > 0)
+                        {
+                            animationOverride = names.Anim
+                                .Where(x => (x.StudioId == data.StudioId) &&
                                         (x.Controller == data.ControllerFemale))
-                            .FirstOrDefault();
-                        if (animation == null)
-                        {
-                            overrideName = false;
-                            animation = new Animation();
-                        }
-                        else
-                        {
-#if KKS
-                            data.AnimationName = animation.KoikatsuSunshine;
-#endif
-#if KK
-                            data.AnimationName = animation.Koikatu;
-#endif
+                                .FirstOrDefault();
+                            if (animationOverride != null)
+                            {
+                                overrideName = true;
+                            }
                         }
                     }
 
-                    if (!overrideName)
+                    if (overrideName)
                     {
-                        // new name
-                        animation.StudioId = data.StudioId;
-                        animation.Controller = string.Copy(data.ControllerFemale);
-                        animation.Koikatu = string.Copy(data.AnimationName);
-                        animation.KoikatuReference = string.Copy(data.AnimationName);
-                        animation.KoikatsuSunshine = string.Copy(data.AnimationName);
-                        animation.KoikatsuSunshineReference = string
-                            .Copy(data.AnimationName);
+                        var name = data.AnimationName;
+#if KKS
+                        data.AnimationName = animationOverride?.KoikatsuSunshine;
+#endif
+#if KK
+                        data.AnimationName = animationOverride?.Koikatu;
+#endif
+#if DEBUG
+                        Log.Debug($"ProcessArray: Replacing name={name} with " +
+                            $"replace={data.AnimationName}.");
+#endif
                     }
+                    else if (animationNamesDict.ContainsKey(guid))
+                    {
+                        animationNamesDict[guid].Anim.Add(animation);
+                        if (!_saveNames)
+                        {
+                            _saveNames = true;
+                        }
+                    }
+
                 }
 #if KKS
                 // Assuming configuration is for KK like originally is and the
@@ -124,19 +139,6 @@ namespace AnimationLoader
                 logLines.Append($"{GetAnimationKey(data),-30} - " +
                     $"{Utilities.Translate(data.AnimationName)}\n");
                 count++;
-                if (UserOverrides.Value)
-                {
-                    // Save names no names were read
-                    // TODO: re-save with new animations names
-                    if (!overrideName)
-                    {
-                        animationNamesDict[guid].Anim.Add(animation);
-                        if (!_saveNames)
-                        {
-                            _saveNames = true;
-                        }
-                    }
-                }
             }
             logLines.Append('\n');
             return count;
