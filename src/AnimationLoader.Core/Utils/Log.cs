@@ -80,7 +80,14 @@ internal static class Log
     {
         if (_enabled)
         {
-            _logSource.LogError(data);
+            if (_debugToConsole)
+            {
+                _logSource.LogError(data);
+            }
+            else
+            {
+                _logSource.LogError(data);
+            }
         }
     }
 
