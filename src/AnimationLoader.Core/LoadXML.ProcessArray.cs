@@ -133,7 +133,7 @@ namespace AnimationLoader
 #endif
                 if (!animationDict.TryGetValue(data.Mode, out var list))
                 {
-                    animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
+                    animationDict[data.Mode] = list = [];
                 }
                 list.Add(data);
                 logLines.Append($"{GetAnimationKey(data),-30} - " +

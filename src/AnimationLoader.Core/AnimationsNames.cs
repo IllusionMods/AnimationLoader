@@ -23,7 +23,7 @@ namespace AnimationLoader
     public partial class SwapAnim
     {
         private static readonly XmlSerializer xmlNamesSerializer = new(typeof(Names));
-        private static Dictionary<string, Names> animationNamesDict = new();
+        private static Dictionary<string, Names> animationNamesDict = [];
 
         #region Serializable classes
         [XmlRoot("Names")]
@@ -49,7 +49,7 @@ namespace AnimationLoader
             public string website = string.Empty;
 
             [XmlArray("AnimationLoader")]
-            public List<Animation> Anim = new();
+            public List<Animation> Anim = [];
         }
 
         //

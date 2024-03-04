@@ -23,7 +23,7 @@ namespace AnimationLoader
 
         public AnimationClipsCache()
         {
-            Clips = new Dictionary<string,List<string>>();
+            Clips = [];
             Clips.Clear();
         }
 
@@ -62,7 +62,7 @@ namespace AnimationLoader
 
         public AnimationClipsByType()
         {
-            Clips = new Dictionary<string, List<string>>();
+            Clips = [];
             Clips.Clear();
         }
 

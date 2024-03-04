@@ -38,7 +38,7 @@ namespace AnimationLoader
                 Utilities.SaveAnimInfo(lstAnimInfo);
 #endif
                 swapAnimationMapping =
-                    new Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>();
+                    [];
 
                 _gameAnimations = lstAnimInfo;
 
@@ -255,7 +255,14 @@ namespace AnimationLoader
                         swapAnimationMapping[donorInfo] = anim;
                         countAL++;
                     }
+
+
                 }
+
+#if KKS
+                _animationsUseStats.Init(lstAnimInfo);
+#endif
+
                 // log footer
                 addedAnimations.Append($"\n{countAL + countGA} animations available: Game " +
                     $"standard = {countGA} " +
@@ -263,7 +270,11 @@ namespace AnimationLoader
 #if DEBUG
                 if (!once)
                 {
+#if KKS
+                    Log.Warning($"0012: Added animations:\n{addedAnimations}\n\nStats:\n{_animationsUseStats}");
+#else
                     Log.Warning($"0012: Added animations:\n{addedAnimations}");
+#endif
                     once = true;
                 }
 #else
@@ -274,7 +285,7 @@ namespace AnimationLoader
                     once = true;
                 }
 #endif
+                }
             }
-        }
     }
 }
