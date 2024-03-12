@@ -52,12 +52,14 @@ namespace AnimationLoader
                     heroine.chaCtrl.SetClothesState(
                         (int)ChaFileDefine.ClothesKind.shoes_inner,
                         (byte)State.Off);
-                    Log.Debug("0019: [ChangeAnimatorPrefix] Taking shoes off.");
+                    //Log.Debug("0019: [ChangeAnimatorPrefix] Taking shoes off.");
+                    Log.Warning("0019: [ChangeAnimatorPrefix] Taking shoes off.");
                 }
 #if DEBUG
                 if (heroine == null)
                 {
-                    Log.Debug("0019: [ChangeAnimatorPrefix] Heroine null.");
+                    //Log.Debug("0019: [ChangeAnimatorPrefix] Taking shoes off.");
+                    Log.Warning("0019: [ChangeAnimatorPrefix] Taking shoes off.");
                 }
 #endif
                 // This is not an error what I was thinking?
