@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AnimationsNames.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AnimatorOverrideController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FootJobAnimations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.AnimationLists.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LoadXML.ProcessArray.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LoadXML.VersionChecks.cs" />
@@ -18,6 +19,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Hooks.Studio.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MotionIKDataSerializable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Plugin.ConfigEntries.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)utils\AnimationUsage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\UsedAnimations.cs" />
     <Compile Include="..\AnimationLoader.Core\AnimationClipsCache.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Fixes\Move.Controller.cs" />

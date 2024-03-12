@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-//using System.Xml.Serialization;
 
 using UnityEngine;
 
 using Illusion.Extensions;
 
-//using HarmonyLib;
-
 using KKAPI;
 using KKAPI.Utilities;
+
 
 namespace AnimationLoader
 {
@@ -26,6 +24,7 @@ namespace AnimationLoader
             private static readonly bool _isSunshineEx = _isSunshine &&
                 (KoikatuAPI.GetGameVersion().CompareTo(new Version("1.0.8")) > 0);
 
+            #region Color properties
 #pragma warning disable IDE1006 // Naming Styles
 
             public static Color red => new Color32(255, 0, 0, _alpha);
@@ -65,6 +64,8 @@ namespace AnimationLoader
             public static Color white => new Color32(255, 255, 255, _alpha);
 
 #pragma warning restore IDE1006 // Naming Styles
+            #endregion
+
             public static bool IsSunshine => _isSunshine;
             public static bool IsSunshineEx => _isSunshineEx;
 
@@ -300,6 +301,22 @@ namespace AnimationLoader
                 return -1;
             }
 
+            internal static int GetExpTaiiT(int mode, int id)
+            {
+                if (_dicExpAddTaii != null)
+                {
+                    if (_dicExpAddTaii.TryGetValue(mode, out var dID))
+                    {
+                        if (dID.TryGetValue(id, out var idValue))
+                        {
+                            return idValue;
+                        }
+                    }
+                    return 0;
+                }
+                return -1;
+            }
+
             /// <summary>
             /// Save ExpTaii in dictionary
             /// </summary>
@@ -313,14 +330,12 @@ namespace AnimationLoader
                     {
                         if(!_alDicExpAddTaii.ContainsKey(anim.Guid))
                         {
-                            _alDicExpAddTaii.Add(anim.Guid,
-                                new Dictionary<int, Dictionary<string, int>>());
+                            _alDicExpAddTaii.Add(anim.Guid, []);
                             _alDicExpAddTaii[anim.Guid].Clear();
                         }
                         if(!_alDicExpAddTaii[anim.Guid].ContainsKey((int)anim.Mode))
                         {
-                            _alDicExpAddTaii[anim.Guid].Add((int)anim.Mode,
-                                new Dictionary<string, int>());
+                            _alDicExpAddTaii[anim.Guid].Add((int)anim.Mode, []);
                             _alDicExpAddTaii[anim.Guid][(int)anim.Mode].Clear();
                         }
                         _alDicExpAddTaii[anim.Guid][(int)anim.Mode]

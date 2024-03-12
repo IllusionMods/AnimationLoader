@@ -11,6 +11,9 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
+        internal static UsedAnimations _usedAnimations = new();
+        internal static AnimationsUseStats _animationsUseStats = new();
+
         internal partial class Hooks
         {
             internal static bool once = false;
@@ -38,7 +41,7 @@ namespace AnimationLoader
                 Utilities.SaveAnimInfo(lstAnimInfo);
 #endif
                 swapAnimationMapping =
-                    new Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>();
+                    [];
 
                 _gameAnimations = lstAnimInfo;
 
@@ -255,7 +258,14 @@ namespace AnimationLoader
                         swapAnimationMapping[donorInfo] = anim;
                         countAL++;
                     }
+
+
                 }
+
+#if KKS
+                _animationsUseStats.Init(lstAnimInfo);
+#endif
+
                 // log footer
                 addedAnimations.Append($"\n{countAL + countGA} animations available: Game " +
                     $"standard = {countGA} " +
@@ -263,7 +273,16 @@ namespace AnimationLoader
 #if DEBUG
                 if (!once)
                 {
+#if KKS
+                    Log.Warning($"0012: Added animations:\n{addedAnimations}\n\nStats:\n{_animationsUseStats}");
+                    Log.Warning($"0012: Foot jobs.");
+                    foreach (var fj in _footJobAnimations)
+                    {
+                        Log.Warning(fj.ToString());
+                    }
+#else
                     Log.Warning($"0012: Added animations:\n{addedAnimations}");
+#endif
                     once = true;
                 }
 #else
@@ -274,7 +293,7 @@ namespace AnimationLoader
                     once = true;
                 }
 #endif
+                }
             }
-        }
     }
 }

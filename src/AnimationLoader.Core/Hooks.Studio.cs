@@ -255,7 +255,7 @@ namespace AnimationLoader
                                     grp.dicCategory.Add(swapAnimInfo.StudioId, animName);
                                     var animCat = new Dictionary<int, Info.AnimeLoadInfo>();
                                     animGrp.Add(swapAnimInfo.StudioId, animCat);
-                                    List<string> clipsName = new();
+                                    List<string> clipsName = [];
 
                                     var controller = AssetBundleManager.LoadAsset(
                                         path,

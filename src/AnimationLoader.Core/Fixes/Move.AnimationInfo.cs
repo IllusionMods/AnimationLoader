@@ -221,7 +221,7 @@ namespace AnimationLoader
         /// <returns></returns>
         public static List<Vector3> GetAnimationMovement(HSceneProc.AnimationListInfo animation)
         {
-            List<Vector3> result = new() { new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
+            List<Vector3> result = [new Vector3(0, 0, 0), new Vector3(0, 0, 0)];
 
             if (swapAnimationMapping != null)
             {

@@ -16,7 +16,7 @@ namespace AnimationLoader
     public class UsedAnimations
     {
         [XmlElement]
-        public HashSet<string> Keys = new();
+        public HashSet<string> Keys = [];
 
         private static readonly string _path = Path.Combine(UserData.Path, "save");
         private static readonly string _fileName = $"{_path}/animations.xml";

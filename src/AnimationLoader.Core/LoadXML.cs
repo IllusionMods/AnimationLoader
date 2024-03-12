@@ -56,7 +56,7 @@ namespace AnimationLoader
 
         private static void LoadXmls(IEnumerable<XDocument> manifests)
         {
-            animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
+            animationDict = [];
             var count = 0;
             var overrideNames = UserOverrides.Value;
             var logLines = new StringBuilder();
