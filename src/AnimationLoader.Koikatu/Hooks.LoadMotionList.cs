@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using TMPro;
@@ -9,6 +10,7 @@ using UnityEngine.UI;
 using IllusionUtility.GetUtility;
 
 using HarmonyLib;
+using static ADV.Info;
 
 
 namespace AnimationLoader
@@ -24,10 +26,13 @@ namespace AnimationLoader
                 List<HSceneProc.AnimationListInfo> _lstAnimInfo,
                 GameObject _objParent)
             {
+                Console.WriteLine("\n\n\n\n\n[LoadMotionList] LoadMotionList");
+
                 if (_lstAnimInfo == null || _lstAnimInfo.Count == 0)
                 {
                     return;
                 }
+                Console.WriteLine("[LoadMotionList] LoadMotionList GO!!!!");
 
                 var buttonParent = _objParent.transform;
                 var buttons = _objParent.transform.Cast<Transform>().ToList();
@@ -97,7 +102,7 @@ namespace AnimationLoader
                     label.text = anim.nameAnimation;
                     label.color = Color.black;
 
-                    //TODO: wat
+                    //TODO: what
                     var tgl = btn.GetComponent<Toggle>();
                     tgl.group = _objParent.GetComponent<ToggleGroup>();
                     tgl.enabled = false;
@@ -121,6 +126,7 @@ namespace AnimationLoader
                             .FindLoop("Background").GetComponent<Image>().color = buttonColor;
                         label.text = swap.AnimationName;
                     }
+                    Console.WriteLine($"[LoadMotionList] Adding {label.text}");
                 }
 
                 // order all buttons by name
