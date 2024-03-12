@@ -5,7 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0022:Use block body for methods", Justification = "Community usage", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.MoveController.SetOriginalPosition")]
+//[assembly: SuppressMessage("Style", "IDE0022:Use block body for methods", Justification = "Community usage", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.MoveController.SetOriginalPosition")]
 [assembly: SuppressMessage("Style", "IDE0022:Use block body for methods", Justification = "Community usage", Scope = "member", Target = "~M:AnimationLoader.SwapAnim.GetMoveController(ChaControl)~AnimationLoader.SwapAnim.MoveController")]
 [assembly: SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations", Justification = "KK does not have Array.Empty", Scope = "member", Target = "~F:AnimationLoader.OverrideInfo.categories")]
 [assembly: SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations", Justification = "KK does not have Array.Empty", Scope = "member", Target = "~F:AnimationLoader.SwapAnimationInfo.categories")]
