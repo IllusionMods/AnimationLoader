@@ -16,8 +16,6 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        internal static UsedAnimations _usedAnimations = new();
-        internal static AnimationsUseStats _animationsUseStats = new();
         internal static Dictionary<int, Dictionary<int, int>> _dicExpAddTaii = [];
         internal static Dictionary<string,
             Dictionary<int, Dictionary<string, int>>> _alDicExpAddTaii = [];
@@ -320,7 +318,7 @@ namespace AnimationLoader
 #if DEBUG
                 if (CheckExperience(hsprite, anim) != CheckExperienceT(hsprite, anim))
                 {
-                    Log.Level(BepInEx.Logging.LogLevel.Warning, $"CheckExperience " +
+                    Log.Level(BepInEx.Logging.LogLevel.Error, $"CheckExperience " +
                         $"original={CheckExperience(hsprite, anim)} " +
                         $"TryGet={CheckExperienceT(hsprite, anim)}");
                 }
