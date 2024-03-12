@@ -93,8 +93,6 @@ namespace AnimationLoader
             // Register move characters controller
             CharacterApi.RegisterExtraBehaviour<MoveController>(GUID);
 #if KKS
-            // Read used animations
-            _usedAnimations.Read();
             // To save used animations on H exit
             GameAPI.RegisterExtraBehaviour<AnimationLoaderGameController>(GUID);
 #endif
@@ -107,6 +105,14 @@ namespace AnimationLoader
 
             stopWatch.Start();
 #endif
+#if KKS
+            // Read used animations
+            _usedAnimations.Read();
+            _animationsUseStats.Read();
+#endif
+            // Read foot job animations
+            _footJobAnimations.Read();
+
             //
             // Save names for animations for users who update them and not overwritten with updates
             //
@@ -154,6 +160,7 @@ namespace AnimationLoader
             if (ReloadManifests.Value.IsDown())
             {
                 LoadTestXml();
+                _footJobAnimations.Read();
             }
         }
 

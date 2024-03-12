@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-using H;
+using KKAPI.MainGame;
 
 #if DEBUG
 using BepInEx.Logging;
@@ -15,6 +15,8 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
+        internal enum State { On = 0, Shift = 1, Hang = 2, Off = 3 }
+
         internal partial class Hooks
         {
             /// <summary>
@@ -27,7 +29,8 @@ namespace AnimationLoader
                 object __instance,
                 HSceneProc.AnimationListInfo _nextAinmInfo)
             {
-#if KKS
+                // Temporarily disable movement in KK TODO: Get start position without
+                // using the characters current position to get the value.
                 if (_nextAinmInfo == null)
                 {
                     return;
@@ -38,8 +41,31 @@ namespace AnimationLoader
                     return;
                 }
 
-                // Temporarily disable movement in KK TODO: Get start position without
-                // using the characters current position to get the value.
+                var heroine = GameAPI.GetCurrentHeroine();
+                var animationKey = GetAnimationKey(_nextAinmInfo);
+
+                // Get shoes off for footjob animations in
+                // <Game>/BepInEx/config/AnimationLoader/FootJob/FootJobAnimations.xml
+                // TODO: Check in KK outside
+                if ((heroine != null) && _footJobAnimations.Contains(animationKey))
+                {
+                    heroine.chaCtrl.SetClothesState(
+                        (int)ChaFileDefine.ClothesKind.shoes_inner,
+                        (byte)State.Off);
+                    Log.Debug("0019: [ChangeAnimatorPrefix] Taking shoes off.");
+                }
+#if DEBUG
+                if (heroine == null)
+                {
+                    Log.Debug("0019: [ChangeAnimatorPrefix] Heroine null.");
+                }
+#endif
+                // This is not an error what I was thinking?
+                //if (!_footJobAnimations.Contains(animationKey))
+                //{
+                //    Log.Debug($"0019: [ChangeAnimatorPrefix] key={animationKey} name={_nextAinmInfo.nameAnimation} not found.");
+                //}
+#if KKS
                 try
                 {
                     var hspTraverse = Traverse.Create(__instance);
@@ -48,6 +74,11 @@ namespace AnimationLoader
                         .Field<Vector3>("nowHpointDataPos").Value;
                     var lstFemales = hspTraverse
                         .Field<List<ChaControl>>("lstFemale").Value;
+                    var key = GetAnimationKey(_nextAinmInfo);
+                    if (_animationsUseStats.Stats.ContainsKey(key))
+                    {
+                        _animationsUseStats.Stats[key] += 1;
+                    }
 #if DEBUG
                     var nowAnimName = "None";
                     if (flags.nowAnimationInfo != null)
@@ -120,13 +151,11 @@ namespace AnimationLoader
                                         .Move(nextAnim.SwapAnim.PositionPlayer);
                                 }
                             }
-#if KKS
                             // Save used animation
                             if (nextAnim.IsAnimationLoader)
                             {
                                 _usedAnimations.Keys.Add(nextAnim.Key);
                             }
-#endif
                         }
                     }
                 }
