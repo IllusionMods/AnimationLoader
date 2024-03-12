@@ -1,7 +1,8 @@
 ﻿using System;
-using System.IO;
-using KKAPI.MainGame;
+
 using UnityEngine;
+
+using KKAPI.MainGame;
 
 using static AnimationLoader.SwapAnim;
 
@@ -22,6 +23,7 @@ namespace AnimationLoader
             try 
             { 
                 _usedAnimations.Save();
+                _animationsUseStats.Save();
             }
             catch (Exception ex)
             {
