@@ -301,6 +301,22 @@ namespace AnimationLoader
                 return -1;
             }
 
+            internal static int GetExpTaiiT(int mode, int id)
+            {
+                if (_dicExpAddTaii != null)
+                {
+                    if (_dicExpAddTaii.TryGetValue(mode, out var dID))
+                    {
+                        if (dID.TryGetValue(id, out var idValue))
+                        {
+                            return idValue;
+                        }
+                    }
+                    return 0;
+                }
+                return -1;
+            }
+
             /// <summary>
             /// Save ExpTaii in dictionary
             /// </summary>
@@ -314,14 +330,12 @@ namespace AnimationLoader
                     {
                         if(!_alDicExpAddTaii.ContainsKey(anim.Guid))
                         {
-                            _alDicExpAddTaii.Add(anim.Guid,
-                                []);
+                            _alDicExpAddTaii.Add(anim.Guid, []);
                             _alDicExpAddTaii[anim.Guid].Clear();
                         }
                         if(!_alDicExpAddTaii[anim.Guid].ContainsKey((int)anim.Mode))
                         {
-                            _alDicExpAddTaii[anim.Guid].Add((int)anim.Mode,
-                                []);
+                            _alDicExpAddTaii[anim.Guid].Add((int)anim.Mode, []);
                             _alDicExpAddTaii[anim.Guid][(int)anim.Mode].Clear();
                         }
                         _alDicExpAddTaii[anim.Guid][(int)anim.Mode]
