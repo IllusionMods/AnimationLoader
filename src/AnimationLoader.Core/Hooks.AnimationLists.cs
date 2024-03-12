@@ -11,6 +11,9 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
+        internal static UsedAnimations _usedAnimations = new();
+        internal static AnimationsUseStats _animationsUseStats = new();
+
         internal partial class Hooks
         {
             internal static bool once = false;
@@ -272,6 +275,11 @@ namespace AnimationLoader
                 {
 #if KKS
                     Log.Warning($"0012: Added animations:\n{addedAnimations}\n\nStats:\n{_animationsUseStats}");
+                    Log.Warning($"0012: Foot jobs.");
+                    foreach (var fj in _footJobAnimations)
+                    {
+                        Log.Warning(fj.ToString());
+                    }
 #else
                     Log.Warning($"0012: Added animations:\n{addedAnimations}");
 #endif
