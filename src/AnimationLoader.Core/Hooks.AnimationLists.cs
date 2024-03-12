@@ -11,7 +11,9 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
+#if KKS
         internal static UsedAnimations _usedAnimations = new();
+#endif
         internal static AnimationsUseStats _animationsUseStats = new();
 
         internal partial class Hooks
