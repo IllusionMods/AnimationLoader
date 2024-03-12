@@ -316,12 +316,12 @@ namespace AnimationLoader
                 }
 
 #if DEBUG
-                if (CheckExperience(hsprite, anim) != CheckExperienceT(hsprite, anim))
-                {
-                    Log.Level(BepInEx.Logging.LogLevel.Error, $"CheckExperience " +
-                        $"original={CheckExperience(hsprite, anim)} " +
-                        $"TryGet={CheckExperienceT(hsprite, anim)}");
-                }
+                //if (CheckExperience(hsprite, anim) != CheckExperienceT(hsprite, anim))
+                //{
+                //    Log.Level(BepInEx.Logging.LogLevel.Error, $"CheckExperience " +
+                //        $"original={CheckExperience(hsprite, anim)} " +
+                //        $"TryGet={CheckExperienceT(hsprite, anim)}");
+                //}
 #endif
                 if (UseAnimationLevels.Value && !CheckExperienceT(hsprite, anim))
                 {
@@ -336,30 +336,30 @@ namespace AnimationLoader
             /// </summary>
             /// <param name="anim"></param>
             /// <returns></returns>
-            internal static bool CheckExperience(HSprite hsprite, SwapAnimationInfo anim)
-            {
-                var hExp = hsprite.flags.lstHeroine[0].hExp;
-                var expTaii = (double)anim.ExpTaii;
-
-                if(_alDicExpAddTaii.ContainsKey(anim.Guid))
-                {
-                    if (_alDicExpAddTaii[anim.Guid].ContainsKey((int)anim.Mode)
-                    && _alDicExpAddTaii[anim.Guid][(int)anim.Mode]
-                        .ContainsKey($"{anim.ControllerFemale}{anim.StudioId}"))
-                    { 
-                        expTaii = _alDicExpAddTaii[anim.Guid][(int)anim.Mode][$"{anim.ControllerFemale}{anim.StudioId}"];
-                    }
-                    else
-                    {
-                        expTaii = -1;
-                    }
-                }
-                if ((double)hExp >= expTaii)
-                {
-                    return true;
-                }
-                return false;
-            }
+            //internal static bool CheckExperience(HSprite hsprite, SwapAnimationInfo anim)
+            //{
+            //    var hExp = hsprite.flags.lstHeroine[0].hExp;
+            //   var expTaii = (double)anim.ExpTaii;
+            //
+            //    if(_alDicExpAddTaii.ContainsKey(anim.Guid))
+            //    {
+            //        if (_alDicExpAddTaii[anim.Guid].ContainsKey((int)anim.Mode)
+            //        && _alDicExpAddTaii[anim.Guid][(int)anim.Mode]
+            //            .ContainsKey($"{anim.ControllerFemale}{anim.StudioId}"))
+            //        { 
+            //            expTaii = _alDicExpAddTaii[anim.Guid][(int)anim.Mode][$"{anim.ControllerFemale}{anim.StudioId}"];
+            //        }
+            //        else
+            //        {
+            //            expTaii = -1;
+            //        }
+            //    }
+            //    if ((double)hExp >= expTaii)
+            //    {
+            //        return true;
+            //    }
+            //    return false;
+            //}
 
             /// <summary>
             /// Checks heroine experience against ExpTaii of swap animation
