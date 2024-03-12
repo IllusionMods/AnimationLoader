@@ -26,14 +26,10 @@ namespace AnimationLoader
                 List<HSceneProc.AnimationListInfo> _lstAnimInfo,
                 GameObject _objParent)
             {
-                Console.WriteLine("\n\n\n\n\n[LoadMotionList] LoadMotionList");
-
                 if (_lstAnimInfo == null || _lstAnimInfo.Count == 0)
                 {
                     return;
                 }
-                Console.WriteLine("[LoadMotionList] LoadMotionList GO!!!!");
-
                 var buttonParent = _objParent.transform;
                 var buttons = _objParent.transform.Cast<Transform>().ToList();
                 Transform scrollT = null;
@@ -126,7 +122,6 @@ namespace AnimationLoader
                             .FindLoop("Background").GetComponent<Image>().color = buttonColor;
                         label.text = swap.AnimationName;
                     }
-                    Console.WriteLine($"[LoadMotionList] Adding {label.text}");
                 }
 
                 // order all buttons by name
