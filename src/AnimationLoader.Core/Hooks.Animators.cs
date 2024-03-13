@@ -44,37 +44,31 @@ namespace AnimationLoader
                 var heroine = GameAPI.GetCurrentHeroine();
                 var animationKey = GetAnimationKey(_nextAinmInfo);
 
-                // Get shoes off for footjob animations in
+                // Get shoes off for foot job animations in
                 // <Game>/BepInEx/config/AnimationLoader/FootJob/FootJobAnimations.xml
-                // TODO: Check in KK outside
+                // Check in KK somehow works not that intuitive
                 if ((heroine != null) && _footJobAnimations.Contains(animationKey))
                 {
                     heroine.chaCtrl.SetClothesState(
                         (int)ChaFileDefine.ClothesKind.shoes_inner,
                         (byte)State.Off);
-                    //Log.Debug("0019: [ChangeAnimatorPrefix] Taking shoes off.");
-                    Log.Warning("0019: [ChangeAnimatorPrefix] Taking shoes off.");
+                    Log.Debug("0019: [ChangeAnimatorPrefix] Taking shoes off.");
                 }
 #if DEBUG
                 if (heroine == null)
                 {
-                    //Log.Debug("0019: [ChangeAnimatorPrefix] Taking shoes off.");
-                    Log.Warning("0019: [ChangeAnimatorPrefix] Taking shoes off.");
+                    Log.Debug("0019: [ChangeAnimatorPrefix] Heroine is null.");
                 }
 #endif
-                // This is not an error what I was thinking?
-                //if (!_footJobAnimations.Contains(animationKey))
-                //{
-                //    Log.Debug($"0019: [ChangeAnimatorPrefix] key={animationKey} name={_nextAinmInfo.nameAnimation} not found.");
-                //}
+
 #if KKS
                 try
                 {
-                    var hspTraverse = Traverse.Create(__instance);
-                    var flags = hspTraverse.Field<HFlag>("flags").Value;
-                    var position = hspTraverse
+                    var hSceneTraverse = Traverse.Create(__instance);
+                    var flags = hSceneTraverse.Field<HFlag>("flags").Value;
+                    var position = hSceneTraverse
                         .Field<Vector3>("nowHpointDataPos").Value;
-                    var lstFemales = hspTraverse
+                    var lstFemales = hSceneTraverse
                         .Field<List<ChaControl>>("lstFemale").Value;
                     var key = GetAnimationKey(_nextAinmInfo);
                     if (_animationsUseStats.Stats.ContainsKey(key))
@@ -102,7 +96,8 @@ namespace AnimationLoader
                     {
                         var nowAnimationInfo = flags.nowAnimationInfo;
                         var nowAnim = new AnimationInfo(flags.nowAnimationInfo);
-                        // var heroinePos = GetMoveController(_heroine).ChaControl.transform.position;
+                        // var heroinePos =
+                        //     GetMoveController(_heroine).ChaControl.transform.position;
                         // Cannot use _heroine this call is prior to HSceneProc.SetShortcut
                         // _heroine is still null
                         var heroinePos = lstFemales[0].transform.position;
@@ -138,7 +133,7 @@ namespace AnimationLoader
                             {
                                 // The position of characters as set by the current
                                 // animation pose
-                                position = hspTraverse
+                                position = hSceneTraverse
                                     .Field<Vector3>("nowHpointDataPos").Value;
 
                                 Utilities.SetOriginalPositionAll(position);
@@ -182,7 +177,8 @@ namespace AnimationLoader
                 object __instance,
                 HSceneProc.AnimationListInfo _nextAinmInfo)
             {
-                if (!swapAnimationMapping.TryGetValue(_nextAinmInfo, out var swapAnimationInfo))
+                if (!swapAnimationMapping.TryGetValue(
+                    _nextAinmInfo, out var swapAnimationInfo))
                 {
                     return;
                 }

@@ -23,16 +23,17 @@ namespace AnimationLoader
                 new List<HSceneProc.AnimationListInfo>[8];
 
             /// <summary>
-            /// Add new animations to lstAnimInfo (list of all animations available) aibu and sonyu
+            /// Add new animations to lstAnimInfo (list of all animations available)
+            /// aibu and sonyu
             /// </summary>
             /// <param name="__instance"></param>
             [HarmonyPostfix]
             [HarmonyPatch(typeof(HSceneProc), nameof(HSceneProc.CreateAllAnimationList))]
             private static void ExtendList(object __instance)
             {
-                var hsceneTraverse = Traverse.Create(__instance);
+                var hSceneTraverse = Traverse.Create(__instance);
                 var addedAnimations = new StringBuilder();
-                var lstAnimInfo = hsceneTraverse
+                var lstAnimInfo = hSceneTraverse
                     .Field<List<HSceneProc.AnimationListInfo>[]>("lstAnimInfo").Value;
 
                 var countGA = 0;
@@ -66,35 +67,37 @@ namespace AnimationLoader
 
                         if (donorInfo == null)
                         {
-                            Log.Level(LogLevel.Warning, $"0009: No donor: mode={anim.Mode} " +
-                                $"DonorPoseId={anim.DonorPoseId} animation={anim.AnimationName}");
+                            Log.Level(LogLevel.Error, $"0009: No donor found: " +
+                                $"mode={anim.Mode} DonorPoseId={anim.DonorPoseId} " +
+                                $"animation={anim.AnimationName}");
                             continue;
                         }
-
-                        // There are cases where one Id works for the female but not the male and
-                        // vice-versa
-
-
+                        //
+                        // There are cases where one Id works for the female but not the
+                        // male and vice-versa
+                        //
                         // Female donor
 #if KK
                         // Don't touch KK for now treat NeckDonorId like previous version
                         // only apply it to the female
                         if (anim.NeckDonorId >= 0 && anim.NeckDonorId != anim.DonorPoseId)
                         {
-                            // PR #23 Change to Log.Level to always show log, update log ID's
-                            // use temp variable to add log to log list
+                            // PR #23 Change to Log.Level to always show log,
+                            // update log ID's use temp variable to add log to log list
                             var newNeckDonor = animListInfo
                                 .FirstOrDefault(x => x.id == anim.NeckDonorId);
                             if (newNeckDonor == null)
                             {
                                 strTmp = $"0029: Invalid or missing " +
-                                    $"NeckDonorId: mode={anim.Mode} NeckDonorId={anim.NeckDonorId}";
+                                    $"NeckDonorId: mode={anim.Mode} " +
+                                    $"NeckDonorId={anim.NeckDonorId}";
                                 Log.Level(LogLevel.Warning, strTmp);
                                 addedAnimations.Append(strTmp);
                             }
                             else
                             {
-                                var newMotionNeck = newNeckDonor?.paramFemale?.fileMotionNeck;
+                                var newMotionNeck =
+                                    newNeckDonor?.paramFemale?.fileMotionNeck;
                                 if (newMotionNeck == null)
                                 {
                                     strTmp = $"0030: NeckDonorId didn't point to" +
@@ -147,7 +150,8 @@ namespace AnimationLoader
                         // Female1 donor
                         if (anim.ControllerFemale1 != null)
                         {
-                            if (anim.NeckDonorIdFemale1 >= 0 && anim.NeckDonorIdFemale1 != anim.DonorPoseId)
+                            if (anim.NeckDonorIdFemale1 >= 0
+                                && anim.NeckDonorIdFemale1 != anim.DonorPoseId)
                             {
                                 var newNeckDonor = animListInfo
                                     .FirstOrDefault(x => x.id == anim.NeckDonorIdFemale1);
@@ -162,7 +166,8 @@ namespace AnimationLoader
                                 }
                                 else
                                 {
-                                    var newMotionNeck = newNeckDonor?.paramFemale1?.fileMotionNeck;
+                                    var newMotionNeck =
+                                        newNeckDonor?.paramFemale1?.fileMotionNeck;
                                     if (newMotionNeck == null)
                                     {
                                         strTmp = $"0030: NeckDonorId didn't point to" +
@@ -175,16 +180,18 @@ namespace AnimationLoader
                                     }
                                     else
                                     {
-                                        donorInfo.paramFemale1.fileMotionNeck = newMotionNeck;
+                                        donorInfo.paramFemale1.fileMotionNeck =
+                                            newMotionNeck;
                                     }
                                 }
                             }
                         }
 
                         // Male donor did not have NeckDonor applied to it
-                        // TODO: Treat NeckDonorId as global and apply it to everyone when there
-                        // no specific one must remove from manifest
-                        if (anim.NeckDonorIdMale >= 0 && anim.NeckDonorIdMale != anim.DonorPoseId)
+                        // TODO: Treat NeckDonorId as global and apply it to everyone
+                        // when there no specific one must remove from manifest
+                        if (anim.NeckDonorIdMale >= 0
+                            && anim.NeckDonorIdMale != anim.DonorPoseId)
                         {
                             var newNeckDonor = animListInfo
                                 .FirstOrDefault(x => x.id == anim.NeckDonorIdMale);
@@ -204,7 +211,8 @@ namespace AnimationLoader
                                 {
                                     strTmp = $"0030B: NeckDonorIdMale didn't point to" +
                                         $" a usable fileMotionNeck: " +
-                                        $"mode={anim.Mode} NeckDonorIdMale={anim.NeckDonorIdMale} " +
+                                        $"mode={anim.Mode} " +
+                                        $"NeckDonorIdMale={anim.NeckDonorIdMale} " +
                                         $"Animation={anim.AnimationName}";
                                     Log.Level(LogLevel.Warning, strTmp);
                                     addedAnimations.Append(strTmp);
@@ -223,7 +231,7 @@ namespace AnimationLoader
 
                         if (!string.IsNullOrEmpty(anim.FileSiruPaste))
                         {
-                            // Check if FileSuruPaset is on dictionary first
+                            // Check if FileSiruPaste is on dictionary first
                             if (SiruPasteFiles.TryGetValue(
                                 anim.FileSiruPaste.ToLower(), out var fileSiruPaste))
                             {
@@ -231,8 +239,10 @@ namespace AnimationLoader
                             }
                             else
                             {
-                                // TODO: Check that it is a valid name in anim.FileSiruPaste
-                                donorInfo.paramFemale.fileSiruPaste = anim.FileSiruPaste.ToLower();
+                                // TODO: Check that it is a valid name in
+                                // anim.FileSiruPaste
+                                donorInfo.paramFemale.fileSiruPaste =
+                                    anim.FileSiruPaste.ToLower();
                             }
                         }
 
@@ -276,15 +286,18 @@ namespace AnimationLoader
                 if (!once)
                 {
 #if KKS
-                    Log.Warning($"0012: Added animations:\n{addedAnimations}\n\nStats:\n{_animationsUseStats}");
-                    Log.Warning($"0012: Foot jobs.");
-                    foreach (var fj in _footJobAnimations)
-                    {
-                        Log.Warning(fj.ToString());
-                    }
+                    Log.Warning($"0012: Added animations:\n{addedAnimations}\n\n" +
+                        $"Stats:\n{_animationsUseStats}");
 #else
                     Log.Warning($"0012: Added animations:\n{addedAnimations}");
 #endif
+                    var logLines = new StringBuilder();
+
+                    foreach (var fj in _footJobAnimations)
+                    {
+                        logLines.AppendLine(fj.ToString());
+                    }
+                    Log.Warning($"0012: Foot jobs.\n{logLines}");
                     once = true;
                 }
 #else

@@ -294,7 +294,8 @@ namespace AnimationLoader
                                     }
                                     if (!_animationClipsCache.Clips.ContainsKey($"{grpKey}-{ctrl}"))
                                     {
-                                        _animationClipsCache.Clips.Add($"{grpKey}-{ctrl}", clipsName);
+                                        _animationClipsCache.Clips.Add(
+                                            $"{grpKey}-{ctrl}", clipsName);
                                     }
 
                                     var elementKey = string.Empty;
@@ -308,9 +309,16 @@ namespace AnimationLoader
                                         elementKey = $"{keyVal.Key}";
                                     }
 
-                                    if (!_animationClipsByType.Clips.ContainsKey(elementKey))
+                                    //if (!_animationClipsByType.Clips.ContainsKey(elementKey))
+                                    if (_animationClipsByType.Clips
+                                        .TryGetValue(elementKey, out var ek))
                                     {
-                                        _animationClipsByType.Clips.Add(elementKey, clipsName);
+                                        if (ek == null)
+                                        {
+                                            _animationClipsByType.Clips.Add(
+                                                elementKey,
+                                                clipsName);
+                                        }
                                     }
                 
                                     if (!_animationClipsByType.Clips[elementKey]
