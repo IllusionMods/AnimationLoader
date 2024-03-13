@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
+using System.Text;
 
 using BepInEx;
 
@@ -74,8 +75,17 @@ namespace AnimationLoader
                 }
                 else
                 {
-                    Log.Error("FILE NOT FOUND>");
+                    Log.Error("[FootJobAnimations.Read] File not found.");
                 }
+#if DEBUG
+                var logLines = new StringBuilder();
+
+                foreach (var fj in _footJobAnimations)
+                {
+                    logLines.AppendLine(fj.ToString());
+                }
+                Log.Debug($"0012: Foot jobs.\n{logLines}");
+#endif
             }
         }
     }
