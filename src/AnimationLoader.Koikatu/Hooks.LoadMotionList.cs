@@ -142,7 +142,8 @@ namespace AnimationLoader
                         t.SetAsLastSibling();
                     }
 
-                    var textMeshGo = t.FindLoop("TextMeshPro Text").gameObject;
+                    //var textMeshGo = t.FindLoop("TextMeshPro Text").gameObject;
+                    var textMeshGo = t.FindLoop("TextMeshPro Text");
                     var textMesh = textMeshGo.GetComponent<TextMeshProUGUI>();
                     textMesh.enableWordWrapping = false;
                     textMesh.overflowMode = TextOverflowModes.Overflow; // disable ... after text

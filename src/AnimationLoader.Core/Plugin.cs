@@ -65,9 +65,10 @@ namespace AnimationLoader
         /// <summary>
         /// Make information available for other plugins
         /// </summary>
-        public static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo> SwapAnimationMapping {
-            get { return swapAnimationMapping; }
-            private set { swapAnimationMapping = value; }
+        public static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>
+            SwapAnimationMapping {
+                get { return swapAnimationMapping; }
+                private set { swapAnimationMapping = value; }
         }
 
         private void Awake()
@@ -110,19 +111,21 @@ namespace AnimationLoader
             _usedAnimations.Read();
             _animationsUseStats.Read();
 #endif
-            // Read foot job animations
-            _footJobAnimations.Read();
-
             //
-            // Save names for animations for users who update them and not overwritten with updates
+            // Save names for animations for users who update them and not overwritten
+            // with updates
             //
             LoadNamesXml();
 
             //
-            // Load manifests
+            // Get loaded manifests
             //
+            LoadXml(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
 
-            LoadXmls(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
+            //
+            // Read foot job animations
+            //
+            _footJobAnimations.Read();
 #if DEBUG
             stopWatch.Stop();
             var ts = stopWatch.Elapsed;

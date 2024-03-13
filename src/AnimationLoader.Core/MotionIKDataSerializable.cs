@@ -114,16 +114,9 @@ namespace AnimationLoader
             /// Structure to use instead of Unity Vector3 so the class can be
             /// serialized to json
             /// </summary>
-            public struct Vector3
+            public struct Vector3(float x, float y, float z)
             {
-                public float x, y, z;
-
-                public Vector3(float x, float y, float z)
-                {
-                    this.x = x;
-                    this.y = y;
-                    this.z = z;
-                }
+                public float x = x, y = y, z = z;
 
                 public float this[int index]
                 {
@@ -178,8 +171,8 @@ namespace AnimationLoader
 
                 public Parts this[int index] => PartsArray[index];
 
-                public Parts[] PartsArray => new Parts[4] {
-                    leftHand, rightHand, leftFoot, rightFoot };
+                public Parts[] PartsArray => [
+                    leftHand, rightHand, leftFoot, rightFoot ];
 
                 public MotionIKData.State ToState()
                 {
@@ -392,9 +385,9 @@ namespace AnimationLoader
                     }
                 }
 
-                public float[] PosArray => new float[3] { pos.x, pos.y, pos.z };
+                public float[] PosArray => [pos.x, pos.y, pos.z];
 
-                public float[] AngArray => new float[3] { ang.x, ang.y, ang.z };
+                public float[] AngArray => [ang.x, ang.y, ang.z];
             }
 
             public State[] States  // original states
@@ -691,7 +684,7 @@ namespace AnimationLoader
 #if KK
                     return new string[] { };
 #else
-                    return Array.Empty<string>();
+                    return [];
 #endif
                 }
             }
