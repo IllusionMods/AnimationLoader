@@ -88,7 +88,7 @@ namespace AnimationLoader
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"Error ByType reading {ex}");
+                    Log.Error($"[AnimationClipsByType] Reading Error: {ex}");
                 }
             }
         }
