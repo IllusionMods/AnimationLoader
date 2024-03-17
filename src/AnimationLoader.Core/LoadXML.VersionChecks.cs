@@ -83,7 +83,8 @@ namespace AnimationLoader
 
         private static Version BundleVersion()
         {
-            var manifests = Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument);
+            var manifests = Sideloader.Sideloader.Manifests.Values
+                .Select(x => x.manifestDocument);
             if (manifests != null)
             {
                 var manifest = manifests

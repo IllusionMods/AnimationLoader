@@ -31,6 +31,8 @@ namespace AnimationLoader
             ref StringBuilder logLines)
         {
             var count = 0;
+            var specificLog = new StringBuilder();
+            var specificFor = false;
 
             if (Sideloader.Sideloader.ZipArchives.TryGetValue(guid, out var zipFileName))
             {
@@ -56,8 +58,13 @@ namespace AnimationLoader
 
                 if (!data.SpecificFor.IsNullOrWhiteSpace())
                 {
-                    if (!data.SpecificFor.Equals(KoikatuAPI.GameProcessName))
+                    if (data.SpecificFor.Equals(KoikatuAPI.GameProcessName))
                     {
+                        specificFor = true;
+                    }
+                    else
+                    {
+                        // Not for current game
                         continue;
                     }
                 }
@@ -105,12 +112,16 @@ namespace AnimationLoader
                             $"replace={data.AnimationName}.");
 #endif
                     }
-                    else if (animationNamesDict.ContainsKey(guid))
+                    else if (animationNamesDict.TryGetValue(guid, out var name))
                     {
-                        animationNamesDict[guid].Anim.Add(animation);
-                        if (!_saveNames)
+                        if (name != null)
                         {
-                            _saveNames = true;
+                            name.Anim.Add(animation);
+                            //animationNamesDict[guid].Anim.Add(animation);
+                            if (!_saveNames)
+                            {
+                                _saveNames = true;
+                            }
                         }
                     }
 
@@ -133,12 +144,26 @@ namespace AnimationLoader
 #endif
                 if (!animationDict.TryGetValue(data.Mode, out var list))
                 {
-                    animationDict[data.Mode] = list = new List<SwapAnimationInfo>();
+                    animationDict[data.Mode] = list = [];
                 }
                 list.Add(data);
-                logLines.Append($"{GetAnimationKey(data),-30} - " +
-                    $"{Utilities.Translate(data.AnimationName)}\n");
+                if (specificFor)
+                {
+                    specificLog.Append($"{GetAnimationKey(data),-37} - " +
+                        $"{Utilities.Translate(data.AnimationName)}\n");
+                    specificFor = false;
+                }
+                else
+                {
+                    logLines.Append($"{GetAnimationKey(data),-37} - " +
+                        $"{Utilities.Translate(data.AnimationName)}\n");
+                }
                 count++;
+            }
+            if (specificLog.Length > 0)
+            {
+                logLines.AppendLine($"\nAnimations specific for " +
+                    $"{KoikatuAPI.GameProcessName}:\n\n{specificLog}");
             }
             logLines.Append('\n');
             return count;

@@ -52,8 +52,9 @@ namespace AnimationLoader
         
         [XmlArray]
         [XmlArrayItem("category", Type = typeof(PositionCategory))]
-        public PositionCategory[] categories = new PositionCategory[0];
-        
+        public PositionCategory[] categories = [];
+        //public PositionCategory[] categories = new PositionCategory[0];
+
         [XmlElement]
         public int DonorPoseId = -1;
 
@@ -157,7 +158,8 @@ namespace AnimationLoader
 
         [XmlArray]
         [XmlArrayItem("category", Type = typeof(PositionCategory))]
-        public PositionCategory[] categories = new PositionCategory[0];
+        //public PositionCategory[] categories = new PositionCategory[0];
+        public PositionCategory[] categories = [];
 
         [XmlElement]
         public int DonorPoseId = -1;

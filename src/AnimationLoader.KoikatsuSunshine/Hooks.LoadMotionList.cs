@@ -16,10 +16,9 @@ namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        internal static UsedAnimations _usedAnimations = new();
-        internal static Dictionary<int, Dictionary<int, int>> _dicExpAddTaii = new();
+        internal static Dictionary<int, Dictionary<int, int>> _dicExpAddTaii = [];
         internal static Dictionary<string,
-            Dictionary<int, Dictionary<string, int>>> _alDicExpAddTaii = new();
+            Dictionary<int, Dictionary<string, int>>> _alDicExpAddTaii = [];
 
         internal partial class Hooks
         {
@@ -33,7 +32,7 @@ namespace AnimationLoader
             ///         Yellow - additional animation
             ///     Not enough experience
             ///         Cyan - game animation
-            ///         Ping - additional animation
+            ///         Pink - additional animation
             ///         
             ///     Green - HPoint animations accessed by asking for sex
             ///     
@@ -193,7 +192,7 @@ namespace AnimationLoader
                             {
                                 // Add missing category
                                 playHlist[(int)animationInfoComponent.info.mode] =
-                                    intSet = new HashSet<int>();
+                                    intSet = [];
                             }
                             // Show new if animation is not in used animation set.
                             newLabel.SetActive(
@@ -269,7 +268,7 @@ namespace AnimationLoader
             [HarmonyPatch(
                 typeof(HSceneProc),
                 nameof(HSceneProc.LoadAddTaii),
-                new Type[] { typeof(List<AddTaiiData.Param>) })]
+                [typeof(List<AddTaiiData.Param>)])]
             private static void LoadAddTaiiPostfix(
                 object __instance, List<AddTaiiData.Param> param)
             {
@@ -317,14 +316,14 @@ namespace AnimationLoader
                 }
 
 #if DEBUG
-                if (CheckExperience(hsprite, anim) != CheckExperienceT(hsprite, anim))
-                {
-                    Log.Level(BepInEx.Logging.LogLevel.Warning, $"CheckExperience " +
-                        $"original={CheckExperience(hsprite, anim)} " +
-                        $"TryGet={CheckExperienceT(hsprite, anim)}");
-                }
+                //if (CheckExperience(hsprite, anim) != CheckExperienceT(hsprite, anim))
+                //{
+                //    Log.Level(BepInEx.Logging.LogLevel.Error, $"CheckExperience " +
+                //        $"original={CheckExperience(hsprite, anim)} " +
+                //        $"TryGet={CheckExperienceT(hsprite, anim)}");
+                //}
 #endif
-                if (UseAnimationLevels.Value && !CheckExperience(hsprite, anim))
+                if (UseAnimationLevels.Value && !CheckExperienceT(hsprite, anim))
                 {
                     // Not enough experience
                     return false;
@@ -337,30 +336,30 @@ namespace AnimationLoader
             /// </summary>
             /// <param name="anim"></param>
             /// <returns></returns>
-            internal static bool CheckExperience(HSprite hsprite, SwapAnimationInfo anim)
-            {
-                var hExp = hsprite.flags.lstHeroine[0].hExp;
-                var expTaii = (double)anim.ExpTaii;
-
-                if(_alDicExpAddTaii.ContainsKey(anim.Guid))
-                {
-                    if (_alDicExpAddTaii[anim.Guid].ContainsKey((int)anim.Mode)
-                    && _alDicExpAddTaii[anim.Guid][(int)anim.Mode]
-                        .ContainsKey($"{anim.ControllerFemale}{anim.StudioId}"))
-                    { 
-                        expTaii = _alDicExpAddTaii[anim.Guid][(int)anim.Mode][$"{anim.ControllerFemale}{anim.StudioId}"];
-                    }
-                    else
-                    {
-                        expTaii = -1;
-                    }
-                }
-                if ((double)hExp >= expTaii)
-                {
-                    return true;
-                }
-                return false;
-            }
+            //internal static bool CheckExperience(HSprite hsprite, SwapAnimationInfo anim)
+            //{
+            //    var hExp = hsprite.flags.lstHeroine[0].hExp;
+            //   var expTaii = (double)anim.ExpTaii;
+            //
+            //    if(_alDicExpAddTaii.ContainsKey(anim.Guid))
+            //    {
+            //        if (_alDicExpAddTaii[anim.Guid].ContainsKey((int)anim.Mode)
+            //        && _alDicExpAddTaii[anim.Guid][(int)anim.Mode]
+            //            .ContainsKey($"{anim.ControllerFemale}{anim.StudioId}"))
+            //        { 
+            //            expTaii = _alDicExpAddTaii[anim.Guid][(int)anim.Mode][$"{anim.ControllerFemale}{anim.StudioId}"];
+            //        }
+            //        else
+            //        {
+            //            expTaii = -1;
+            //        }
+            //    }
+            //    if ((double)hExp >= expTaii)
+            //    {
+            //        return true;
+            //    }
+            //    return false;
+            //}
 
             /// <summary>
             /// Checks heroine experience against ExpTaii of swap animation

@@ -25,10 +25,12 @@ namespace AnimationLoader
         private const string ManifestArrayItem = "Animation";
         private const string ManifestGSArrayItem = KoikatuAPI.GameProcessName;
 
-        private static readonly XmlSerializer xmlSerializer = new(typeof(SwapAnimationInfo));
+        private static readonly XmlSerializer xmlSerializer =
+            new(typeof(SwapAnimationInfo));
 #if KKS
         private const string ManifestOverride = "GameSpecificOverrides";
-        private static readonly XmlSerializer xmlOverrideSerializer = new(typeof(OverrideInfo));
+        private static readonly XmlSerializer xmlOverrideSerializer =
+            new(typeof(OverrideInfo));
 #endif
         private static XElement _animRoot;
         private static XElement _animRootGS;
@@ -41,12 +43,13 @@ namespace AnimationLoader
             var path = Path.Combine(Paths.ConfigPath, "AnimationLoader");
             if(Directory.Exists(path))
             {
-                var docs = Directory.GetFiles(path, "*.xml").Select(XDocument.Load).ToList();
+                var docs = Directory.GetFiles(path, "*.xml")
+                    .Select(XDocument.Load).ToList();
                 if(docs.Count > 0)
                 {
                     Log.Level(LogLevel.Message, $"0014: [{PluginName}] Loading test " +
                         $"animations");
-                    LoadXmls(docs);
+                    LoadXml(docs);
                     return;
                 }
             }
@@ -54,9 +57,9 @@ namespace AnimationLoader
                 "config/AnimationLoader folder to test animations");
         }
 
-        private static void LoadXmls(IEnumerable<XDocument> manifests)
+        private static void LoadXml(IEnumerable<XDocument> manifests)
         {
-            animationDict = new Dictionary<EMode, List<SwapAnimationInfo>>();
+            animationDict = [];
             var count = 0;
             var overrideNames = UserOverrides.Value;
             var logLines = new StringBuilder();
@@ -94,6 +97,7 @@ namespace AnimationLoader
                 }
 
                 // Process game specific animations
+                // Not needed from 1.5.3 on.
                 var _animSpecific = _animRoot?.Elements(ManifestGSArrayItem);
 
                 if (_animSpecific is not null)
@@ -123,12 +127,9 @@ namespace AnimationLoader
 #if KKS
                 Utilities.AlDicExpAddTaii();
 #endif
-                logLines.Append($"\n{count} animations processed from manifests.\n");
-#if DEBUG
-                Log.Info($"0016: Animations loaded:\n\n{logLines}");
-#else
-                Log.Debug($"0016: Animations loaded:\n\n{logLines}");
-#endif
+                logLines.Append($"A total of {count} animations processed from " +
+                    "manifests.");
+                Log.Debug($"0016: Animations loaded:\n\n{logLines}\n");
             }
             else
             {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using TMPro;
@@ -9,6 +10,7 @@ using UnityEngine.UI;
 using IllusionUtility.GetUtility;
 
 using HarmonyLib;
+using static ADV.Info;
 
 
 namespace AnimationLoader
@@ -28,7 +30,6 @@ namespace AnimationLoader
                 {
                     return;
                 }
-
                 var buttonParent = _objParent.transform;
                 var buttons = _objParent.transform.Cast<Transform>().ToList();
                 Transform scrollT = null;
@@ -97,7 +98,7 @@ namespace AnimationLoader
                     label.text = anim.nameAnimation;
                     label.color = Color.black;
 
-                    //TODO: wat
+                    //TODO: what
                     var tgl = btn.GetComponent<Toggle>();
                     tgl.group = _objParent.GetComponent<ToggleGroup>();
                     tgl.enabled = false;
@@ -141,7 +142,8 @@ namespace AnimationLoader
                         t.SetAsLastSibling();
                     }
 
-                    var textMeshGo = t.FindLoop("TextMeshPro Text").gameObject;
+                    //var textMeshGo = t.FindLoop("TextMeshPro Text").gameObject;
+                    var textMeshGo = t.FindLoop("TextMeshPro Text");
                     var textMesh = textMeshGo.GetComponent<TextMeshProUGUI>();
                     textMesh.enableWordWrapping = false;
                     textMesh.overflowMode = TextOverflowModes.Overflow; // disable ... after text

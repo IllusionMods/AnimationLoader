@@ -22,7 +22,6 @@ namespace AnimationLoader
  
             try 
             { 
-                _usedAnimations.Save();
                 _animationsUseStats.Save();
             }
             catch (Exception ex)

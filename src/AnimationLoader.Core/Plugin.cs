@@ -65,9 +65,10 @@ namespace AnimationLoader
         /// <summary>
         /// Make information available for other plugins
         /// </summary>
-        public static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo> SwapAnimationMapping {
-            get { return swapAnimationMapping; }
-            private set { swapAnimationMapping = value; }
+        public static Dictionary<HSceneProc.AnimationListInfo, SwapAnimationInfo>
+            SwapAnimationMapping {
+                get { return swapAnimationMapping; }
+                private set { swapAnimationMapping = value; }
         }
 
         private void Awake()
@@ -93,8 +94,6 @@ namespace AnimationLoader
             // Register move characters controller
             CharacterApi.RegisterExtraBehaviour<MoveController>(GUID);
 #if KKS
-            // Read used animations
-            _usedAnimations.Read();
             // To save used animations on H exit
             GameAPI.RegisterExtraBehaviour<AnimationLoaderGameController>(GUID);
 #endif
@@ -107,16 +106,26 @@ namespace AnimationLoader
 
             stopWatch.Start();
 #endif
+#if KKS
+            // Read used animations
+            _usedAnimations.Read();
+            _animationsUseStats.Read();
+#endif
             //
-            // Save names for animations for users who update them and not overwritten with updates
+            // Save names for animations for users who update them and not overwritten
+            // with updates
             //
             LoadNamesXml();
 
             //
-            // Load manifests
+            // Get loaded manifests
             //
+            LoadXml(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
 
-            LoadXmls(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
+            //
+            // Read foot job animations
+            //
+            _footJobAnimations.Read();
 #if DEBUG
             stopWatch.Stop();
             var ts = stopWatch.Elapsed;
@@ -154,6 +163,7 @@ namespace AnimationLoader
             if (ReloadManifests.Value.IsDown())
             {
                 LoadTestXml();
+                _footJobAnimations.Read();
             }
         }
 

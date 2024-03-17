@@ -24,8 +24,8 @@ namespace AnimationLoader
     public partial class SwapAnim
     {
         // Additional state names included in the 48 states animations
-        private static readonly List<string> aSates = new()
-            {
+        private static readonly List<string> aSates =
+            [
                 "A_Idle",
                 "A_Insert",
                 "A_InsertIdle",
@@ -50,7 +50,7 @@ namespace AnimationLoader
                 "A_OUT_A",
                 "A_Pull",
                 "A_Drop"
-            };
+            ];
 
         /// <summary>
         ///

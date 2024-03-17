@@ -23,7 +23,7 @@ namespace AnimationLoader
 
         public AnimationClipsCache()
         {
-            Clips = new Dictionary<string,List<string>>();
+            Clips = [];
             Clips.Clear();
         }
 
@@ -39,7 +39,7 @@ namespace AnimationLoader
         {
             if (_fileInfo.Exists)
             {
-                using FileStream fileStream = File.Open(_fileName, FileMode.Open, FileAccess.Read);
+                using var fileStream = File.Open(_fileName, FileMode.Open, FileAccess.Read);
                 var tmp = _serializer.ReadObject(fileStream) as AnimationClipsCache;
                 fileStream.Close();
 
@@ -62,7 +62,7 @@ namespace AnimationLoader
 
         public AnimationClipsByType()
         {
-            Clips = new Dictionary<string, List<string>>();
+            Clips = [];
             Clips.Clear();
         }
 
@@ -84,11 +84,11 @@ namespace AnimationLoader
                     var tmp = _serializer.ReadObject(reader) as AnimationClipsByType;
                     reader.Close();
 
-                    this.Clips = tmp?.Clips;
+                    Clips = tmp?.Clips;
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"Error ByType reading {ex}");
+                    Log.Error($"[AnimationClipsByType] Reading Error: {ex}");
                 }
             }
         }
