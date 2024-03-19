@@ -1,5 +1,11 @@
 # Changelog
 
+#### <u>v1.1.3.4 - 2024-03-16</u>
+
+##### Added
+
+- If the animation is a foot job the heroine shoes will be removed automatically
+
 #### <u>v1.1.2.0 - 2022-06-16</u>
 
 ##### Added
