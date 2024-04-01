@@ -68,6 +68,8 @@ namespace AnimationLoader
                     var flags = hSceneTraverse.Field<HFlag>("flags").Value;
                     var position = hSceneTraverse
                         .Field<Vector3>("nowHpointDataPos").Value;
+                    var hpoint = hSceneTraverse
+                        .Field<string>("nowHpointData").Value;
                     var lstFemales = hSceneTraverse
                         .Field<List<ChaControl>>("lstFemale").Value;
                     var key = GetAnimationKey(_nextAinmInfo);
@@ -89,6 +91,7 @@ namespace AnimationLoader
                         $"Animation {Utilities.TranslateName(_nextAinmInfo.nameAnimation)} " +
                         $"Key={GetAnimationKey(_nextAinmInfo)}  " +
                         $"SiruPaste={SiruPaste(_nextAinmInfo.paramFemale.fileSiruPaste)}\n" +
+                        $"hpoint={hpoint} " +
                         $"nowHpointDataPos={position.Format()}");
 #endif
                     // Reposition characters before animation starts
