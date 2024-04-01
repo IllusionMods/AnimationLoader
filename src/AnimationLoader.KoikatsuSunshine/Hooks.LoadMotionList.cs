@@ -323,7 +323,7 @@ namespace AnimationLoader
                 //        $"TryGet={CheckExperienceT(hsprite, anim)}");
                 //}
 #endif
-                if (UseAnimationLevels.Value && !CheckExperienceT(hsprite, anim))
+                if (UseAnimationLevels.Value && !CheckExperience(hsprite, anim))
                 {
                     // Not enough experience
                     return false;
@@ -367,7 +367,7 @@ namespace AnimationLoader
             /// <param name="hsprite"></param>
             /// <param name="anim"></param>
             /// <returns></returns>
-            internal static bool CheckExperienceT(HSprite hsprite, SwapAnimationInfo anim)
+            internal static bool CheckExperience(HSprite hsprite, SwapAnimationInfo anim)
             {
                 var hExp = hsprite.flags.lstHeroine[0].hExp;
                 var expTaii = (double)anim.ExpTaii;
