@@ -83,11 +83,19 @@ namespace AnimationLoader
         {
             if (_fileInfo.Exists)
             {
-                using var fileStream = File.Open(_fileName, FileMode.Open, FileAccess.Read);
-                var tmp = _serializer.ReadObject(fileStream) as AnimationsUseStats;
-                fileStream.Close();
+                try
+                {
+                    using var fileStream = File.Open(_fileName, FileMode.Open, FileAccess.Read);
+                    var tmp = _serializer.ReadObject(fileStream) as AnimationsUseStats;
+                    fileStream.Close();
 
-                Stats = tmp?.Stats;
+                    Stats = tmp?.Stats;
+                }
+                catch
+                {
+                    Log.Error($"[AnimationsUseStats.Read] File: {_fileName} corrupt " +
+                        "the file will be overwritten on game exit.");
+                }
             }
         }
 

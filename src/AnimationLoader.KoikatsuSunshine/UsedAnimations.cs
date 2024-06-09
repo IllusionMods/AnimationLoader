@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
+using BepInEx.Logging;
+
 
 namespace AnimationLoader
 {
@@ -56,14 +58,22 @@ namespace AnimationLoader
         {
             if (_fileInfo.Exists)
             {
-                StreamReader reader = new(_fileName);
-                var tmp = (UsedAnimations)_xmlSerializer.Deserialize(reader.BaseStream);
-                reader.Close();
-                // This can be removed later for some reason was using a List instead of
-                // a HashSet Removing duplicates.
-                foreach (var e in tmp.Keys)
+                try
                 {
-                    Keys.Add(e);
+                    StreamReader reader = new(_fileName);
+                    var tmp = (UsedAnimations)_xmlSerializer.Deserialize(reader.BaseStream);
+                    reader.Close();
+                    // This can be removed later for some reason was using a List instead of
+                    // a HashSet Removing duplicates.
+                    foreach (var e in tmp.Keys)
+                    {
+                        Keys.Add(e);
+                    }
+                }
+                catch
+                {
+                    Log.Level(LogLevel.Error, $"[UsedAnimations.Read] File: {_fileName} corrupt " +
+                        "the file will be overwritten on game exit.");
                 }
             }
         }
