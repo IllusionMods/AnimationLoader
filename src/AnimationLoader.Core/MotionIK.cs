@@ -87,6 +87,7 @@ namespace AnimationLoader
             var male = hspTraverse.Field<ChaControl>("male").Value;
             var flags = hspTraverse.Field<HFlag>("flags").Value;
 
+            // Is MotionIK setup disabled?
             var justClear = !MotionIK.Value;
 
 #if KK
