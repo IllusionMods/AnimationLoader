@@ -151,7 +151,15 @@ namespace AnimationLoader
                             // Save used animation
                             if (nextAnim.IsAnimationLoader)
                             {
-                                _usedAnimations.Keys.Add(nextAnim.Key);
+                                try
+                                {
+                                    _usedAnimations.Keys.Add(nextAnim.Key);
+                                }
+                                catch
+                                {
+                                    Log.Debug("[Hooks.ChangeAnimatorPrefix] Can't save used " +
+                                        "animation key.");
+                                }
                             }
                         }
                     }
