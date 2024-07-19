@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ADV.Commands.Base;
+
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -96,6 +98,7 @@ namespace AnimationLoader
 #if KKS
             // To save used animations on H exit
             GameAPI.RegisterExtraBehaviour<AnimationLoaderGameController>(GUID);
+            KoikatuAPI.Quitting += OnGameExit;
 #endif
         }
 
@@ -165,6 +168,25 @@ namespace AnimationLoader
                 LoadTestXml();
                 _footJobAnimations.Read();
             }
+        }
+
+        /// <summary>
+        /// Game exit event handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        internal static void OnGameExit(object sender, EventArgs e)
+        {
+#if KKS
+            try
+            {
+                _usedAnimations.Save();
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"0033: Error saving used animations - {ex}");
+            }
+#endif
         }
 
         /// <summary>
