@@ -20,8 +20,10 @@ namespace AnimationLoader
 
         private static readonly string _path = Path.Combine(UserData.Path, "AnimationLoader/Usage");
         private static readonly string _fileName = $"{_path}/AnimationsUsage.xml";
+        private static readonly string _bkFileName = $"{_path}/AnimationsUsage.bk";
         private static readonly DataContractSerializer _serializer = new(typeof(AnimationsUseStats));
         private static readonly FileInfo _fileInfo = new(_fileName);
+        private static readonly FileInfo _bkFileInfo = new(_fileName);
 
         public int this[string key]
         {
@@ -90,11 +92,64 @@ namespace AnimationLoader
                     fileStream.Close();
 
                     Stats = tmp?.Stats;
+
+                    // Make backup at this point data read
+                    if (!_bkFileInfo.Exists)
+                    {
+                        _fileInfo.CopyTo(_bkFileName, true);
+                    }
+                    else
+                    {
+                        // This assumes no manual editing (maybe crc32 someday)
+                        if (_bkFileInfo.Length != _fileInfo.Length)
+                        {
+                            _fileInfo.CopyTo(_bkFileName, true);
+                        }
+                    }
                 }
                 catch
                 {
-                    Log.Error($"[AnimationsUseStats.Read] File: {_fileName} corrupt " +
+                    Log.Error($"[AnimationsUseStats.Read] File: {_fileInfo.FullName} corrupt " +
+                        "trying to read from backup.");
+                    if (_bkFileInfo.Exists) {
+                        try
+                        {
+                            using var fileStream = File.Open(_bkFileName, FileMode.Open, FileAccess.Read);
+                            var tmp = _serializer.ReadObject(fileStream) as AnimationsUseStats;
+                            fileStream.Close();
+
+                            Stats = tmp?.Stats;
+                        }
+                        catch
+                        {
+                            Log.Error($"[AnimationsUseStats.Read] File: Can't read from backup " +
+                            "the file will be overwritten on game exit.");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Log.Error($"[AnimationsUseStats.Read] File: {_fileInfo.FullName} does not exits. " +
+                    "Trying a backup.");
+                if (_bkFileInfo.Exists)
+                {
+                    try
+                    {
+                        using var fileStream = File.Open(_bkFileName, FileMode.Open, FileAccess.Read);
+                        var tmp = _serializer.ReadObject(fileStream) as AnimationsUseStats;
+                        fileStream.Close();
+
+                        Stats = tmp?.Stats;
+                    }
+                    catch
+                    {
+                        Log.Error($"[AnimationsUseStats.Read] File: Can't read from backup " +
                         "the file will be overwritten on game exit.");
+                    }
+                }
+                {
+                    Log.Error($"[AnimationsUseStats.Read] No badkup found.");
                 }
             }
         }
