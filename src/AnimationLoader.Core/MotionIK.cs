@@ -5,53 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-
-using UnityEngine;
-
-using H;
-using Illusion.Extensions;
 
 using BepInEx.Logging;
 using HarmonyLib;
 
+// Depends on XUnity.AutoTranslator copy TODO: study using MessagePack for distribution
 using Newtonsoft.Json;
-
 
 
 namespace AnimationLoader
 {
     public partial class SwapAnim
     {
-        // Additional state names included in the 48 states animations
-        private static readonly List<string> aSates =
-            [
-                "A_Idle",
-                "A_Insert",
-                "A_InsertIdle",
-                "A_WLoop",
-                "A_SLoop",
-                "A_OLoop",
-                "A_M_IN_Start",
-                "A_M_IN_Loop",
-                "A_WF_IN_Start",
-                "A_WF_IN_Loop",
-                "A_WS_IN_Start",
-                "A_WS_IN_Loop",
-                "A_WS_IN_A",
-                "A_SF_IN_Start",
-                "A_SF_IN_Loop",
-                "A_SS_IN_Start",
-                "A_SS_IN_Loop",
-                "A_SS_IN_A",
-                "A_IN_A",
-                "A_M_OUT_Start",
-                "A_M_OUT_Loop",
-                "A_OUT_A",
-                "A_Pull",
-                "A_Drop"
-            ];
-
         /// <summary>
         ///
         /// This is valid for sonyu animations:
@@ -91,7 +56,8 @@ namespace AnimationLoader
             var justClear = !MotionIK.Value;
 
 #if KK
-            justClear = true;
+            // Hard disable for KK TODO: Test for KK
+            // justClear = true;
 #endif
 
             if (justClear)
@@ -137,17 +103,14 @@ namespace AnimationLoader
                 }
             }
 
+            // Only use Json files this way should work on KK (TODO: Test this.)
             if (MotionIK.Value && (flags.mode == HFlag.EMode.sonyu))
             {
                 // This are set when MotionIKDataDonor is not equal to DonorPoseId
                 if (motionIKFemale != null || motionIKMale != null)
                 {
                     string path;
-                    TextAsset textAsset;
-                    MotionIK motionIK = null;
                     MotionIKData motionIKData = null;
-                    MotionIK additionalMotionIK = null;
-                    MotionIKData additionalMotionIKData = null;
                     int totalDonorPoseIdStates;
                     int totalMotionDonorStates;
                     var dataFound = false;
@@ -156,40 +119,18 @@ namespace AnimationLoader
                     if (motionIKFemale is not null)
                     {
                         dataFound = false;
-                        path = motionIKFemale;
-                        textAsset = GlobalMethod
-                            .LoadAllFolderInOneFile<TextAsset>("h/list/", path);
                         totalDonorPoseIdStates = lstMotionIK[0].data.states.Length;
+                        path = motionIKFemale;
 
-                        if (textAsset != null)
+                        motionIKData = ReadJsonFile(motionIKFemale);
+                        if (motionIKData != null)
                         {
-                            motionIK = new MotionIK(female);
-                            additionalMotionIK = new MotionIK(female);
-
-                            motionIK.LoadData(textAsset);
-                            motionIKData = motionIK.data;
-                            if (motionIKData.states.Length < totalDonorPoseIdStates)
-                            {
-                                // sonyu have 24 or 48 states when motion IK model is loaded
-                                // with 24 states for a 48 states animation load a second
-                                // copy for the bottom 24. Unable to do a copy by value with
-                                // other methods
-                                additionalMotionIK.LoadData(textAsset);
-                                additionalMotionIKData = additionalMotionIK.data;
-                            }
+                            
                             dataFound = true;
-                        }
-                        else
-                        {
 #if DEBUG
                             Log.Level(LogLevel.Warning, $"[SwapAnimation] Found JsonFile " +
-                                $"{path}.");
+                                $"{path}. States=[{motionIKData?.states.Length}].");
 #endif
-                            motionIKData = ReadJsonFile(motionIKFemale);
-                            if (motionIKData != null)
-                            {
-                                dataFound = true;
-                            }
                         }
 
                         if (dataFound)
@@ -207,22 +148,6 @@ namespace AnimationLoader
                                 for (var i = 0; i < motionIKData.states.Length; i++)
                                 {
                                     lstMotionIK[0].data.states[i] = motionIKData.states[i];
-                                    if (totalMotionDonorStates < totalDonorPoseIdStates)
-                                    {
-                                        // copy to additional states for short loaded
-                                        // motion IK data
-                                        if (additionalMotionIKData != null)
-                                        {
-                                            lstMotionIK[0].data.states[i + 24] =
-                                                additionalMotionIKData?.states[i];
-                                            lstMotionIK[0].data.states[i + 24].name = aSates[i];
-#if DEBUG
-                                            Log.Warning($"Nena Additional " +
-                                                $"name={additionalMotionIKData?.states[i].name} " +
-                                                $"name={aSates[i]} for index={i + 24}");
-#endif
-                                        }
-                                    }
                                 }
                             }
                             else
@@ -251,45 +176,16 @@ namespace AnimationLoader
                     if (motionIKMale is not null)
                     {
                         dataFound = false;
-                        path = motionIKMale;
-                        textAsset = GlobalMethod
-                            .LoadAllFolderInOneFile<TextAsset>("h/list/", path);
                         totalDonorPoseIdStates = lstMotionIK[1].data.states.Length;
-
-                        if (textAsset != null)
+                        path = motionIKMale;
+                        motionIKData = ReadJsonFile(motionIKMale);
+                        if (motionIKData != null)
                         {
-#if DEBUG
-                            Log.Level(LogLevel.Warning, $"[SwapAnimation] Found TextAsset " +
-                                $"{path}.");
-#endif
-                            motionIK = new MotionIK(male);
-                            additionalMotionIK = new MotionIK(male);
-
-                            motionIK.LoadData(textAsset);
-                            motionIKData = motionIK.data;
-
-                            if (motionIKData.states.Length < totalDonorPoseIdStates)
-                            {
-                                // sonyu have 24 or 48 states when motion IK model is loaded
-                                // with 24 states for a 48 states animation load a second
-                                // copy for the bottom 24. Unable to do a copy by value with
-                                // other methods
-                                additionalMotionIK.LoadData(textAsset);
-                                additionalMotionIKData = additionalMotionIK.data;
-                            }
                             dataFound = true;
-                        }
-                        else
-                        {
 #if DEBUG
                             Log.Level(LogLevel.Warning, $"[SwapAnimation] Found JsonFile " +
-                                $"{path}.");
+                                    $"{path}. States=[{motionIKData?.states.Length}].");
 #endif
-                            motionIKData = ReadJsonFile(motionIKMale);
-                            if (motionIKData != null)
-                            {
-                                dataFound = true;
-                            }
                         }
 
                         if (dataFound)
@@ -305,23 +201,6 @@ namespace AnimationLoader
                                 for (var i = 0; i < totalMotionDonorStates; i++)
                                 {
                                     lstMotionIK[1].data.states[i] = motionIKData.states[i];
-                                    if (totalMotionDonorStates < totalDonorPoseIdStates)
-                                    {
-                                        // copy to additional states for short loaded
-                                        // motion IK data
-                                        if (additionalMotionIKData != null)
-                                        {
-                                            lstMotionIK[1].data.states[i + 24] =
-                                                additionalMotionIKData?.states[i];
-                                            lstMotionIK[1].data.states[i + 24].name =
-                                                aSates[i];
-#if DEBUG
-                                            Log.Warning($"Nene Additional " +
-                                                $"name={additionalMotionIKData?.states[i].name} " +
-                                                $"name={aSates[i]} for index={i + 24}");
-#endif
-                                        }
-                                    }
                                 }
                             }
                             else
@@ -369,21 +248,6 @@ namespace AnimationLoader
                         // Set lstMotionIK to empty configuration
                         clearMotionIK = true;
                     }
-
-                    /*lstMotionIK.ForEach(mik =>
-                    {
-                        mik.SetPartners(lstMotionIK);
-                        mik.Reset();
-                        mik.Calc("Idle");
-                    });
-
-                    lstMotionIK.ForEach(mik =>
-                    {
-                        mik.SetPartners(lstMotionIK);
-                        mik.Reset();
-                        mik.Calc("Idle");
-                    });
-                    */
                 }
             }
 
