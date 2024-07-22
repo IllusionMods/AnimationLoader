@@ -16,6 +16,8 @@ namespace AnimationLoader
 #endif
         internal static AnimationsUseStats _animationsUseStats = new();
 
+        internal static List<HSceneProc.AnimationListInfo>[] _lstAnimationsInfo;
+
         internal partial class Hooks
         {
             internal static bool once = false;
@@ -40,6 +42,12 @@ namespace AnimationLoader
                 var countAL = 0;
                 var strTmp = string.Empty;
                 countGA = Utilities.CountAnimations(lstAnimInfo);
+
+                _lstAnimationsInfo = new List<HSceneProc.AnimationListInfo>[8];
+                for (var i = 0; i < _lstAnimationsInfo.Length; i++)
+                {
+                    _lstAnimationsInfo[i] = new List<HSceneProc.AnimationListInfo>(lstAnimInfo[i]);
+                }
 #if DEBUG
                 Utilities.SaveAnimInfo(lstAnimInfo);
 #endif
