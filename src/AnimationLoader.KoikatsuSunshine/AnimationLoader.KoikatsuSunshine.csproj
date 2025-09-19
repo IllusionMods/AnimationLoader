@@ -20,26 +20,16 @@
     </PropertyGroup>
     
     <ItemGroup>
-      <PackageReference Include="ExtensibleSaveFormat.KoikatsuSunshine" Version="17.0.0">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="IllusionLibs.BepInEx" Version="5.4.15" />
-      <PackageReference Include="IllusionLibs.KoikatsuSunshine.Assembly-CSharp" Version="2021.9.17" />
-      <PackageReference Include="IllusionLibs.KoikatsuSunshine.Assembly-CSharp-firstpass" Version="2021.9.17" />
+      <PackageReference Include="ExtensibleSaveFormat.KoikatsuSunshine" Version="20.0.0" />
       <PackageReference Include="IllusionLibs.KoikatsuSunshine.Unity.TextMeshPro" Version="2019.4.9" />
       <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.AnimationModule" Version="2019.4.9" />
-      <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.CoreModule" Version="2019.4.9" />
-      <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.TextRenderingModule" Version="2019.4.9" />
-      <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.UI" Version="2019.4.9" />
-      <PackageReference Include="IllusionLibs.KoikatsuSunshine.UnityEngine.UIModule" Version="2019.4.9" />
-      <PackageReference Include="IllusionModdingAPI.KKSAPI" Version="1.31.2" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-      <PackageReference Include="Sideloader.KoikatsuSunshine" Version="16.9.2" />
+      <PackageReference Include="IllusionModdingAPI.KKSAPI" Version="1.39" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+      <PackageReference Include="Sideloader.KoikatsuSunshine" Version="20.0.0" />
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Update="Microsoft.Unity.Analyzers" Version="1.12.0">
+      <PackageReference Update="Microsoft.Unity.Analyzers" Version="1.25.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>

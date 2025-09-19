@@ -84,18 +84,15 @@ namespace AnimationLoader
         private static Version BundleVersion()
         {
             var manifests = Sideloader.Sideloader.Manifests.Values
-                .Select(x => x.manifestDocument);
-            if (manifests != null)
-            {
-                var manifest = manifests
-                    .Select(x => x.Root)
-                    .Where(x => x?.Element("guid").Value == "kpluganim.bundle")
-                    .FirstOrDefault();
+                .Select(x => x.ManifestDocument);
+            var manifest = manifests
+                           .Select(x => x.Root)
+                           .Where(x => x?.Element("guid").Value == "kpluganim.bundle")
+                           .FirstOrDefault();
 
-                if (manifest != null)
-                {
-                    return new Version(manifest?.Element("version").Value);
-                }
+            if (manifest != null)
+            {
+                return new Version(manifest.Element("version").Value);
             }
             return null;
         }

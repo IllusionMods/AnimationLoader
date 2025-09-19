@@ -120,7 +120,7 @@ namespace AnimationLoader
             //
             // Get loaded manifests
             //
-            LoadXml(Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument));
+            LoadXml(Sideloader.Sideloader.Manifests.Values.Select(x => x.ManifestDocument));
 
             //
             // Read foot job animations

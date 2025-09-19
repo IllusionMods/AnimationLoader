@@ -85,8 +85,8 @@ namespace AnimationLoader
                                 {
                                     var newSlot = UniversalAutoResolver.GetUniqueSlotID();
 
-                                    UniversalAutoResolver.LoadedStudioResolutionInfo
-                                        .Add(new StudioResolveInfo { 
+                                    UniversalAutoResolver.AddStudioResolutionInfo(
+                                        new StudioResolveInfo { 
                                             GUID = swapAnimInfo.Guid,
                                             Slot = i,
                                             ResolveItem = true,
@@ -187,14 +187,15 @@ namespace AnimationLoader
                                     {
                                         var newSlot = UniversalAutoResolver.GetUniqueSlotID();
 
-                                        UniversalAutoResolver.LoadedStudioResolutionInfo.Add(new StudioResolveInfo {
-                                            GUID = swapAnimInfo.Guid,
-                                            Slot = i,
-                                            ResolveItem = true,
-                                            LocalSlot = newSlot,
-                                            Group = grpId,
-                                            Category = swapAnimInfo.StudioId
-                                        });
+                                        UniversalAutoResolver.AddStudioResolutionInfo(
+                                            new StudioResolveInfo {
+                                                GUID = swapAnimInfo.Guid,
+                                                Slot = i,
+                                                ResolveItem = true,
+                                                LocalSlot = newSlot,
+                                                Group = grpId,
+                                                Category = swapAnimInfo.StudioId
+                                            });
 
                                         animCat.Add(newSlot, new Info.AnimeLoadInfo {
                                             name = clips[i],
@@ -274,8 +275,8 @@ namespace AnimationLoader
                                     {
                                         var newSlot = UniversalAutoResolver.GetUniqueSlotID();
 
-                                        UniversalAutoResolver.LoadedStudioResolutionInfo
-                                            .Add(new StudioResolveInfo {
+                                        UniversalAutoResolver.AddStudioResolutionInfo(
+                                            new StudioResolveInfo {
                                                 GUID = swapAnimInfo.Guid,
                                                 Slot = i,
                                                 ResolveItem = true,
@@ -407,8 +408,8 @@ namespace AnimationLoader
                                 {
                                     var newSlot = UniversalAutoResolver.GetUniqueSlotID();
 
-                                    UniversalAutoResolver.LoadedStudioResolutionInfo
-                                        .Add(new StudioResolveInfo {
+                                    UniversalAutoResolver.AddStudioResolutionInfo(
+                                        new StudioResolveInfo {
                                             GUID = swapAnimInfo.Guid,
                                             Slot = i,
                                             ResolveItem = true,
