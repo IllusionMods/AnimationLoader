@@ -106,13 +106,13 @@ namespace AnimationLoader
         /// </summary>
         private static void InitAnimationNamesDict()
         {
-            var manifests = Sideloader.Sideloader.Manifests.Values.Select(x => x.manifestDocument);
+            var manifests = Sideloader.Sideloader.Manifests.Values.Select(x => x.ManifestDocument);
 
             foreach (var manifest in manifests
                 .Select(x => x.Root)
                 .Where(x => x?.Element(ManifestRootElement) != null))
             {
-                var guid = manifest?.Element("guid").Value;
+                var guid = manifest.Element("guid")?.Value;
                 Log.Debug($"InitAnimationNamesDict: Add GUID={guid}");
                 NamesAddGuidHelper(manifest);
             }

@@ -5,7 +5,7 @@ See the [template](template.xml) for how to configure animations in your own mod
 
 ## How to install
 1. Install the latest build of [BepInEx](https://github.com/BepInEx/BepInEx/releases)
-2. Install [KKAPI](https://github.com/IllusionMods/IllusionModdingAPI/releases/tag/v1.31.2) 1.31.2
+2. Install IllusionModdingAPI 1.39 and BepisPlugins 20.0 (or newer)
 4. Download the latest release from [the releases page](../../releases)
 4. Drop the dll to `bepinex/plugins`
 5. Add animation packages to the mods folder. (These can usually be downloaded with KKManager)
