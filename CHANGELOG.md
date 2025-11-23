@@ -55,7 +55,7 @@ Update libraries used.
 - [KK] Fixed button duplication in Grid
 - [@Kokaiinum] fix exception when setting NeckDonorId
 
-When posting issues one thing that may help to find a solution faster is turning on Debug Information (Advance Settings) and post the output_log.txt in [GitHub](https://github.com/IllusionMods/AnimationLoader/issues). If you post it only on Discord and don't address IDontHaveIdea I may not see it.
+When posting issues one thing that may help to find a solution faster is turning on Debug Information (Advance Settings) and post the output_log.txt in [GitHub](https://gitgoon.dev/IllusionMods/AnimationLoader/issues). If you post it only on Discord and don't address IDontHaveIdea I may not see it.
 
 
 

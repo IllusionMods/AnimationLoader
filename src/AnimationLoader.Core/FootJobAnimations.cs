@@ -16,7 +16,7 @@ namespace AnimationLoader
     {
         internal static FootJobAnimations _footJobAnimations = [];
 
-        [DataContract(Name = "FootJobAnimations", Namespace = "https://github.com/IllusionMods/AnimationLoader")]
+        [DataContract(Name = "FootJobAnimations", Namespace = "https://gitgoon.dev/IllusionMods/AnimationLoader")]
         public class FootJobAnimations : IEnumerable
         {
             [DataMember]

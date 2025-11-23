@@ -1,6 +1,6 @@
 # AnimationLoader
 A plugin for loading animations from Sideloader zipmods.  
-Thank you Essu for the [main bulk of the code](https://github.com/IllusionMods/AnimationLoader/commit/402c02af3bbb5a6e1b3015bd0caa3f0a7db618fc)  
+Thank you Essu for the [main bulk of the code](https://gitgoon.dev/IllusionMods/AnimationLoader/commit/402c02af3bbb5a6e1b3015bd0caa3f0a7db618fc)  
 See the [template](template.xml) for how to configure animations in your own mod.
 
 ## How to install
@@ -94,4 +94,4 @@ Setting this field will apply levels to the animations. In the example above the
 available after the heroine reaches 50% experience.
 
 More detailed information in the
-[wiki](https://github.com/IllusionMods/AnimationLoader/wiki/manifest.xml).
+[wiki](https://gitgoon.dev/IllusionMods/AnimationLoader/wiki/manifest.xml).

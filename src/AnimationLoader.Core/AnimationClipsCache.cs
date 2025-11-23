@@ -1,4 +1,4 @@
-﻿//
+//
 // Save key of used animations
 //
 using System;
@@ -10,7 +10,7 @@ using BepInEx;
 
 namespace AnimationLoader
 {
-    [DataContract(Name = "AnimationLoader", Namespace = "https://github.com/IllusionMods/AnimationLoader")]
+    [DataContract(Name = "AnimationLoader", Namespace = "https://gitgoon.dev/IllusionMods/AnimationLoader")]
     public class AnimationClipsCache
     {
         [DataMember]

@@ -12,7 +12,7 @@ using static AnimationLoader.SwapAnim;
 
 namespace AnimationLoader
 {
-    [DataContract(Name = "AnimationsUsage", Namespace = "https://github.com/IllusionMods/AnimationLoader")]
+    [DataContract(Name = "AnimationsUsage", Namespace = "https://gitgoon.dev/IllusionMods/AnimationLoader")]
     public class AnimationsUseStats
     {
         [DataMember]
